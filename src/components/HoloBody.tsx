@@ -1,6 +1,7 @@
 'use client'
 import { useEffect, useRef } from 'react'
 import * as THREE from 'three'
+import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader.js'
 
 export default function HoloBody({ score = 72 }: { score?: number }) {
   const mountRef = useRef<HTMLDivElement>(null)
@@ -10,13 +11,12 @@ export default function HoloBody({ score = 72 }: { score?: number }) {
     if (!mount) return
 
     const W = mount.clientWidth || 390
-    const H = mount.clientHeight || 500
+    const H = mount.clientHeight || 600
 
-    // SCENE
     const scene = new THREE.Scene()
     const camera = new THREE.PerspectiveCamera(45, W / H, 0.1, 100)
-    camera.position.set(0, 1.2, 4.5)
-    camera.lookAt(0, 0.8, 0)
+    camera.position.set(0, 1.4, 4.2)
+    camera.lookAt(0, 1.0, 0)
 
     const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true })
     renderer.setSize(W, H)
@@ -24,250 +24,191 @@ export default function HoloBody({ score = 72 }: { score?: number }) {
     renderer.setClearColor(0x000000, 0)
     mount.appendChild(renderer.domElement)
 
-    // MATERIALS
-    const holoMat = new THREE.MeshPhongMaterial({
-      color: 0x00aaff,
-      emissive: 0x0044aa,
+    // HOLOGRAPHIC MATERIALS
+    const skinMat = new THREE.MeshPhongMaterial({
+      color: 0x0044aa,
+      emissive: 0x001144,
       transparent: true,
-      opacity: 0.18,
+      opacity: 0.22,
       side: THREE.DoubleSide,
-      wireframe: false,
       depthWrite: false,
     })
     const skelMat = new THREE.MeshPhongMaterial({
-      color: 0x00ddff,
-      emissive: 0x0088cc,
+      color: 0x00ccff,
+      emissive: 0x0066aa,
       transparent: true,
-      opacity: 0.85,
-      shininess: 120,
+      opacity: 0.9,
+      shininess: 150,
     })
-    const glowMat = new THREE.MeshPhongMaterial({
-      color: 0x00ffff,
-      emissive: 0x00ccff,
+    const wireMat = new THREE.MeshBasicMaterial({
+      color: 0x00aaff,
+      wireframe: true,
       transparent: true,
-      opacity: 0.6,
-      shininess: 200,
+      opacity: 0.08,
     })
 
-    // PIVOT pour rotation
     const pivot = new THREE.Group()
     scene.add(pivot)
 
-    // ---- BODY SILHOUETTE ----
-    const bodyGroup = new THREE.Group()
-    pivot.add(bodyGroup)
+    // LOAD GLB MODEL
+    const loader = new GLTFLoader()
+    loader.load('/human.glb', (gltf) => {
+      const model = gltf.scene
 
-    function addPart(geo: THREE.BufferGeometry, mat: THREE.Material, x: number, y: number, z: number) {
-      const m = new THREE.Mesh(geo, mat)
-      m.position.set(x, y, z)
-      bodyGroup.add(m)
-      return m
-    }
+      // Centrer et scaler le modèle
+      const box = new THREE.Box3().setFromObject(model)
+      const center = box.getCenter(new THREE.Vector3())
+      const size = box.getSize(new THREE.Vector3())
+      const maxDim = Math.max(size.x, size.y, size.z)
+      const scale = 2.2 / maxDim
+      model.scale.setScalar(scale)
+      model.position.sub(center.multiplyScalar(scale))
+      model.position.y += 0.1
 
-    // Torse
-    addPart(new THREE.CylinderGeometry(0.22, 0.18, 0.7, 16), holoMat, 0, 1.05, 0)
-    // Épaules
-    addPart(new THREE.SphereGeometry(0.12, 12, 8), holoMat, -0.32, 1.35, 0)
-    addPart(new THREE.SphereGeometry(0.12, 12, 8), holoMat, 0.32, 1.35, 0)
-    // Bassin
-    addPart(new THREE.CylinderGeometry(0.2, 0.15, 0.35, 16), holoMat, 0, 0.62, 0)
-    // Tête
-    addPart(new THREE.SphereGeometry(0.18, 16, 12), holoMat, 0, 1.88, 0)
-    // Cou
-    addPart(new THREE.CylinderGeometry(0.06, 0.07, 0.2, 10), holoMat, 0, 1.65, 0)
-    // Bras gauche
-    addPart(new THREE.CylinderGeometry(0.055, 0.045, 0.42, 10), holoMat, -0.44, 1.18, 0).rotation.z = 0.35
-    addPart(new THREE.CylinderGeometry(0.045, 0.035, 0.38, 10), holoMat, -0.62, 0.87, 0).rotation.z = 0.15
-    // Bras droit
-    addPart(new THREE.CylinderGeometry(0.055, 0.045, 0.42, 10), holoMat, 0.44, 1.18, 0).rotation.z = -0.35
-    addPart(new THREE.CylinderGeometry(0.045, 0.035, 0.38, 10), holoMat, 0.62, 0.87, 0).rotation.z = -0.15
-    // Mains
-    addPart(new THREE.SphereGeometry(0.06, 8, 6), holoMat, -0.75, 0.69, 0)
-    addPart(new THREE.SphereGeometry(0.06, 8, 6), holoMat, 0.75, 0.69, 0)
-    // Cuisses
-    addPart(new THREE.CylinderGeometry(0.1, 0.08, 0.55, 12), holoMat, -0.14, 0.22, 0)
-    addPart(new THREE.CylinderGeometry(0.1, 0.08, 0.55, 12), holoMat, 0.14, 0.22, 0)
-    // Genoux
-    addPart(new THREE.SphereGeometry(0.09, 10, 8), holoMat, -0.14, -0.08, 0)
-    addPart(new THREE.SphereGeometry(0.09, 10, 8), holoMat, 0.14, -0.08, 0)
-    // Tibias
-    addPart(new THREE.CylinderGeometry(0.07, 0.055, 0.5, 12), holoMat, -0.14, -0.38, 0)
-    addPart(new THREE.CylinderGeometry(0.07, 0.055, 0.5, 12), holoMat, 0.14, -0.38, 0)
-    // Pieds
-    addPart(new THREE.BoxGeometry(0.12, 0.07, 0.22), holoMat, -0.14, -0.66, 0.04)
-    addPart(new THREE.BoxGeometry(0.12, 0.07, 0.22), holoMat, 0.14, -0.66, 0.04)
+      // Appliquer effet holographique sur tous les meshes
+      model.traverse((child) => {
+        if ((child as THREE.Mesh).isMesh) {
+          const mesh = child as THREE.Mesh
+          // Skin translucide bleu
+          mesh.material = skinMat.clone()
 
-    // ---- SKELETON ----
-    const skelGroup = new THREE.Group()
-    pivot.add(skelGroup)
+          // Wireframe overlay
+          const wire = new THREE.Mesh(mesh.geometry, wireMat.clone())
+          wire.scale.setScalar(1.002)
+          mesh.add(wire)
+        }
+      })
 
-    function bone(x1: number, y1: number, x2: number, y2: number) {
-      const dx = x2 - x1, dy = y2 - y1
-      const len = Math.sqrt(dx*dx + dy*dy)
-      const geo = new THREE.CylinderGeometry(0.018, 0.012, len, 6)
-      const m = new THREE.Mesh(geo, skelMat)
-      m.position.set((x1+x2)/2, (y1+y2)/2, 0)
-      m.rotation.z = Math.atan2(dx, dy)
-      skelGroup.add(m)
-    }
-    function joint(x: number, y: number, r = 0.035) {
-      const m = new THREE.Mesh(new THREE.SphereGeometry(r, 8, 6), glowMat)
-      m.position.set(x, y, 0)
-      skelGroup.add(m)
-    }
+      pivot.add(model)
 
-    // Colonne vertébrale
-    bone(0, 1.65, 0, 0.55)
-    // Thorax
-    bone(-0.2, 1.42, 0.2, 1.42)
-    bone(-0.18, 1.25, 0.18, 1.25)
-    bone(-0.16, 1.08, 0.16, 1.08)
-    bone(-0.15, 0.92, 0.15, 0.92)
-    // Clavicules
-    bone(0, 1.52, -0.3, 1.38)
-    bone(0, 1.52, 0.3, 1.38)
-    // Bras G
-    bone(-0.3, 1.38, -0.52, 1.1)
-    bone(-0.52, 1.1, -0.68, 0.82)
-    // Bras D
-    bone(0.3, 1.38, 0.52, 1.1)
-    bone(0.52, 1.1, 0.68, 0.82)
-    // Bassin
-    bone(-0.18, 0.62, 0.18, 0.62)
-    bone(0, 0.62, -0.16, 0.44)
-    bone(0, 0.62, 0.16, 0.44)
-    // Jambes G
-    bone(-0.14, 0.44, -0.14, -0.06)
-    bone(-0.14, -0.06, -0.14, -0.56)
-    // Jambes D
-    bone(0.14, 0.44, 0.14, -0.06)
-    bone(0.14, -0.06, 0.14, -0.56)
-    // Crâne
-    const skull = new THREE.Mesh(new THREE.SphereGeometry(0.12, 12, 10), skelMat)
-    skull.position.set(0, 1.88, 0)
-    skelGroup.add(skull)
-    // Joints clés
-    joint(0, 1.65, 0.025) // cou
-    joint(-0.3, 1.38); joint(0.3, 1.38) // épaules
-    joint(-0.52, 1.1); joint(0.52, 1.1) // coudes
-    joint(-0.16, 0.44); joint(0.16, 0.44) // hanches
-    joint(-0.14, -0.06); joint(0.14, -0.06) // genoux
-    joint(-0.14, -0.56); joint(0.14, -0.56) // chevilles
-
-    // ---- SOL HOLOGRAPHIQUE ----
-    const platformGeo = new THREE.CylinderGeometry(1.0, 1.0, 0.012, 64)
-    const platformMat = new THREE.MeshPhongMaterial({
-      color: 0x00aaff, emissive: 0x004488,
-      transparent: true, opacity: 0.25,
+      // Clone wireframe pour effet squelette
+      const skelModel = gltf.scene.clone()
+      skelModel.scale.setScalar(scale * 0.998)
+      skelModel.position.copy(model.position)
+      skelModel.traverse((child) => {
+        if ((child as THREE.Mesh).isMesh) {
+          ;(child as THREE.Mesh).material = skelMat.clone()
+        }
+      })
+      pivot.add(skelModel)
     })
-    const platform = new THREE.Mesh(platformGeo, platformMat)
-    platform.position.y = -0.72
+
+    // SOL HOLOGRAPHIQUE
+    const platform = new THREE.Mesh(
+      new THREE.CylinderGeometry(1.1, 1.1, 0.015, 64),
+      new THREE.MeshPhongMaterial({ color: 0x0044ff, emissive: 0x002288, transparent: true, opacity: 0.3 })
+    )
+    platform.position.y = -1.05
     scene.add(platform)
 
-    // Rayons du sol
-    for (let i = 0; i < 12; i++) {
-      const rGeo = new THREE.PlaneGeometry(0.015, 1.2)
-      const rMat = new THREE.MeshBasicMaterial({ color: 0x00ccff, transparent: true, opacity: 0.12, side: THREE.DoubleSide })
-      const r = new THREE.Mesh(rGeo, rMat)
-      r.rotation.x = -Math.PI / 2
-      r.rotation.z = (i / 12) * Math.PI * 2
-      r.position.set(Math.cos((i/12)*Math.PI*2)*0.5, -0.71, Math.sin((i/12)*Math.PI*2)*0.5)
-      scene.add(r)
+    // Rayons sol
+    for (let i = 0; i < 16; i++) {
+      const ray = new THREE.Mesh(
+        new THREE.PlaneGeometry(0.012, 1.3),
+        new THREE.MeshBasicMaterial({ color: 0x00aaff, transparent: true, opacity: 0.1, side: THREE.DoubleSide })
+      )
+      ray.rotation.x = -Math.PI / 2
+      ray.rotation.z = (i / 16) * Math.PI * 2
+      ray.position.set(Math.cos((i/16)*Math.PI*2)*0.55, -1.04, Math.sin((i/16)*Math.PI*2)*0.55)
+      scene.add(ray)
     }
 
-    // ---- ANNEAUX ORBITAUX ----
-    function addRing(radius: number, y: number, color: number, opacity: number, speed: number) {
-      const geo = new THREE.TorusGeometry(radius, 0.008, 8, 80)
-      const mat = new THREE.MeshBasicMaterial({ color, transparent: true, opacity })
-      const mesh = new THREE.Mesh(geo, mat)
+    // ANNEAUX ORBITAUX
+    const rings: { mesh: THREE.Mesh; speed: number }[] = []
+    ;[
+      { r: 0.9,  y: 1.0,  c: 0x00ffff, o: 0.6, s: 0.5 },
+      { r: 1.1,  y: 0.4,  c: 0x0088ff, o: 0.3, s: -0.3 },
+      { r: 1.25, y: -0.1, c: 0x4444ff, o: 0.2, s: 0.2 },
+    ].forEach(({ r, y, c, o, s }) => {
+      const mesh = new THREE.Mesh(
+        new THREE.TorusGeometry(r, 0.009, 8, 90),
+        new THREE.MeshBasicMaterial({ color: c, transparent: true, opacity: o })
+      )
       mesh.position.y = y
       mesh.rotation.x = Math.PI / 2
       scene.add(mesh)
-      return { mesh, speed }
-    }
+      rings.push({ mesh, speed: s })
 
-    const rings = [
-      addRing(0.85, 0.9, 0x00ffff, 0.5, 0.4),
-      addRing(1.05, 0.3, 0x00aaff, 0.3, -0.25),
-      addRing(1.2, -0.1, 0x4488ff, 0.2, 0.15),
-    ]
+      // Points sur l'anneau
+      for (let i = 0; i < 6; i++) {
+        const dot = new THREE.Mesh(
+          new THREE.SphereGeometry(0.022, 6, 6),
+          new THREE.MeshBasicMaterial({ color: 0x00ffff })
+        )
+        const a = (i / 6) * Math.PI * 2
+        dot.position.set(Math.cos(a) * r, y, Math.sin(a) * r)
+        scene.add(dot)
+      }
+    })
 
-    // Petits points sur l'anneau principal
-    const dotsMat = new THREE.MeshBasicMaterial({ color: 0x00ffff })
-    for (let i = 0; i < 8; i++) {
-      const dot = new THREE.Mesh(new THREE.SphereGeometry(0.018, 6, 6), dotsMat)
-      const a = (i / 8) * Math.PI * 2
-      dot.position.set(Math.cos(a) * 0.85, 0.9, Math.sin(a) * 0.85)
-      scene.add(dot)
-    }
-
-    // ---- SCAN LINE ----
-    const scanLineMat = new THREE.MeshBasicMaterial({ color: 0x00ffff, transparent: true, opacity: 0.5, side: THREE.DoubleSide })
-    const scanLine = new THREE.Mesh(new THREE.PlaneGeometry(1.2, 0.012), scanLineMat)
+    // SCAN LINE
+    const scanMat = new THREE.MeshBasicMaterial({ color: 0x00ffff, transparent: true, opacity: 0.5, side: THREE.DoubleSide })
+    const scanLine = new THREE.Mesh(new THREE.PlaneGeometry(1.4, 0.015), scanMat)
     scene.add(scanLine)
 
-    // ---- PARTICULES ----
-    const particleCount = 120
-    const positions = new Float32Array(particleCount * 3)
-    for (let i = 0; i < particleCount; i++) {
+    // PARTICULES
+    const pCount = 150
+    const pPos = new Float32Array(pCount * 3)
+    for (let i = 0; i < pCount; i++) {
       const a = Math.random() * Math.PI * 2
-      const r = 0.5 + Math.random() * 0.9
-      positions[i*3] = Math.cos(a) * r
-      positions[i*3+1] = -0.7 + Math.random() * 2.8
-      positions[i*3+2] = Math.sin(a) * r
+      const r = 0.6 + Math.random() * 1.0
+      pPos[i*3] = Math.cos(a) * r
+      pPos[i*3+1] = -1.0 + Math.random() * 3.2
+      pPos[i*3+2] = Math.sin(a) * r
     }
-    const partGeo = new THREE.BufferGeometry()
-    partGeo.setAttribute('position', new THREE.BufferAttribute(positions, 3))
-    const partMat = new THREE.PointsMaterial({ color: 0x00aaff, size: 0.018, transparent: true, opacity: 0.6 })
-    const particles = new THREE.Points(partGeo, partMat)
+    const pGeo = new THREE.BufferGeometry()
+    pGeo.setAttribute('position', new THREE.BufferAttribute(pPos, 3))
+    const particles = new THREE.Points(pGeo, new THREE.PointsMaterial({ color: 0x0088ff, size: 0.02, transparent: true, opacity: 0.5 }))
     scene.add(particles)
 
-    // ---- LUMIÈRES ----
-    scene.add(new THREE.AmbientLight(0x001133, 2))
-    const keyLight = new THREE.PointLight(0x00aaff, 3, 8)
-    keyLight.position.set(0, 2.5, 2)
-    scene.add(keyLight)
-    const rimLight = new THREE.PointLight(0x0044ff, 2, 6)
-    rimLight.position.set(-2, 1, -1)
-    scene.add(rimLight)
-    const bottomLight = new THREE.PointLight(0x00ffff, 4, 3)
-    bottomLight.position.set(0, -0.5, 0)
-    scene.add(bottomLight)
+    // LUMIÈRES
+    scene.add(new THREE.AmbientLight(0x002244, 3))
+    const key = new THREE.PointLight(0x0088ff, 5, 10)
+    key.position.set(0, 3, 3)
+    scene.add(key)
+    const rim = new THREE.PointLight(0x00ffff, 3, 8)
+    rim.position.set(-2, 1.5, -1)
+    scene.add(rim)
+    const bot = new THREE.PointLight(0x00aaff, 5, 4)
+    bot.position.set(0, -0.8, 0)
+    scene.add(bot)
+    const front = new THREE.PointLight(0x004488, 2, 6)
+    front.position.set(0, 1, 4)
+    scene.add(front)
 
-    // ---- ANIMATION ----
+    // ANIMATION
     let frame: number
     let t = 0
     const animate = () => {
       frame = requestAnimationFrame(animate)
       t += 0.016
-
-      pivot.rotation.y += 0.008
-
-      rings.forEach(({ mesh, speed }) => {
-        mesh.rotation.z += speed * 0.01
-      })
-
-      // scan line qui monte et descend
-      const scanY = -0.68 + ((Math.sin(t * 0.5) + 1) / 2) * 2.6
+      pivot.rotation.y += 0.007
+      rings.forEach(({ mesh, speed }) => { mesh.rotation.z += speed * 0.012 })
+      const scanY = -1.0 + ((Math.sin(t * 0.6) + 1) / 2) * 3.0
       scanLine.position.y = scanY
-      scanLine.position.x = 0
       scanLine.rotation.y = pivot.rotation.y
-      ;(scanLineMat as THREE.MeshBasicMaterial).opacity = 0.3 + Math.sin(t * 2) * 0.2
-
-      particles.rotation.y -= 0.002
-
+      scanMat.opacity = 0.3 + Math.sin(t * 2.5) * 0.2
+      particles.rotation.y -= 0.0015
       renderer.render(scene, camera)
     }
     animate()
 
+    const onResize = () => {
+      const w = mount.clientWidth
+      const h = mount.clientHeight
+      camera.aspect = w / h
+      camera.updateProjectionMatrix()
+      renderer.setSize(w, h)
+    }
+    window.addEventListener('resize', onResize)
+
     return () => {
       cancelAnimationFrame(frame)
+      window.removeEventListener('resize', onResize)
       renderer.dispose()
       if (mount.contains(renderer.domElement)) mount.removeChild(renderer.domElement)
     }
   }, [])
 
-  return (
-    <div ref={mountRef} style={{ width: '100%', height: '100%', position: 'absolute', inset: 0 }} />
-  )
+  return <div ref={mountRef} style={{ width: '100%', height: '100%', position: 'absolute', inset: 0 }} />
 }
