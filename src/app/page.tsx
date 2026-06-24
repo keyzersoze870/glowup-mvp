@@ -1,111 +1,110 @@
 'use client'
+import dynamic from 'next/dynamic'
 import Link from 'next/link'
 import { useState, useEffect } from 'react'
 
-const SCORES = [42, 67, 89, 73, 55, 91, 38, 76]
+const HoloBody = dynamic(() => import('@/components/HoloBody'), { ssr: false })
+
+const METRICS = [
+  { label: 'TRAINING', val: '9.1', color: '#C8FF00', pct: 91, side: 'left', top: '22%' },
+  { label: 'EAU',      val: '7.4', color: '#00F5FF', pct: 74, side: 'left', top: '40%' },
+  { label: 'SOMMEIL',  val: '6.2', color: '#A78BFA', pct: 62, side: 'left', top: '58%' },
+  { label: 'NUTRITION',val: '8.5', color: '#C8FF00', pct: 85, side: 'right', top: '22%' },
+  { label: 'SKINCARE', val: '5.0', color: '#FF6B35', pct: 50, side: 'right', top: '40%' },
+  { label: 'STEPS',    val: '9.2', color: '#00F5FF', pct: 92, side: 'right', top: '58%' },
+]
 
 export default function LandingPage() {
-  const [displayScore, setDisplayScore] = useState(0)
-  const [idx, setIdx] = useState(0)
+  const [score, setScore] = useState(0)
 
   useEffect(() => {
-    let frame: number
-    let current = 0
-    const target = SCORES[idx]
-    const step = () => {
-      current += Math.ceil((target - current) / 8)
-      setDisplayScore(current)
-      if (current < target) frame = requestAnimationFrame(step)
-    }
-    frame = requestAnimationFrame(step)
-    return () => cancelAnimationFrame(frame)
-  }, [idx])
-
-  useEffect(() => {
-    const t = setInterval(() => setIdx(i => (i + 1) % SCORES.length), 2200)
+    let s = 0
+    const t = setInterval(() => {
+      s += 1
+      setScore(s)
+      if (s >= 72) clearInterval(t)
+    }, 22)
     return () => clearInterval(t)
   }, [])
 
-  const circumference = 2 * Math.PI * 52
-  const offset = circumference - (displayScore / 100) * circumference
-
   return (
-    <main className="min-h-screen flex flex-col" style={{ background: 'var(--bg)' }}>
+    <main style={{ minHeight: '100vh', background: '#06060F', fontFamily: "'JetBrains Mono', monospace", overflow: 'hidden' }}>
+
       {/* NAV */}
-      <nav className="flex items-center justify-between px-6 py-4 border-b" style={{ borderColor: 'var(--border)' }}>
-        <span className="font-display text-xl font-black tracking-wide" style={{ color: 'var(--acid)' }}>GLOWUP</span>
-        <div className="flex items-center gap-3">
-          <Link href="/login" className="text-sm font-medium" style={{ color: 'var(--muted)' }}>Se connecter</Link>
-          <Link href="/onboarding" className="font-display font-bold text-sm uppercase tracking-wider px-5 py-2 rounded-xl transition-all"
-            style={{ background: 'var(--acid)', color: '#000' }}>
-            Commencer →
+      <nav style={{ position: 'fixed', top: 0, left: 0, right: 0, zIndex: 100, padding: '14px 20px', display: 'flex', justifyContent: 'space-between', alignItems: 'center', borderBottom: '1px solid rgba(200,255,0,0.08)', background: 'rgba(6,6,15,0.85)', backdropFilter: 'blur(8px)' }}>
+        <span style={{ fontFamily: "'Barlow Condensed', sans-serif", fontSize: 22, fontWeight: 800, color: '#C8FF00', letterSpacing: 3 }}>GLOWUP</span>
+        <div style={{ display: 'flex', gap: 12, alignItems: 'center' }}>
+          <Link href="/login" style={{ fontSize: 11, color: 'rgba(255,255,255,0.3)', textDecoration: 'none', letterSpacing: 1 }}>CONNEXION</Link>
+          <Link href="/onboarding" style={{ fontFamily: "'Barlow Condensed', sans-serif", fontWeight: 800, fontSize: 13, color: '#000', background: '#C8FF00', padding: '8px 18px', borderRadius: 20, textDecoration: 'none', letterSpacing: 1 }}>
+            COMMENCER →
           </Link>
         </div>
       </nav>
 
-      {/* HERO */}
-      <section className="flex-1 flex flex-col items-center justify-center text-center px-6 pt-16 pb-12">
-        <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full text-xs font-mono mb-8 border"
-          style={{ borderColor: 'var(--acid-border)', background: 'var(--acid-dim)', color: 'var(--acid)' }}>
-          ✦ GLOW UP SCORE — IA personnalisée
-        </div>
+      {/* HERO — HOLOGRAPHIC SCANNER */}
+      <div style={{ position: 'relative', height: '100vh', width: '100%' }}>
 
-        <h1 className="font-display font-black uppercase leading-none mb-6" style={{ fontSize: 'clamp(48px, 10vw, 96px)' }}>
-          Ta transformation<br />
-          <span style={{ color: 'var(--acid)' }}>commence ici.</span>
-        </h1>
+        {/* Grid background */}
+        <div style={{ position: 'absolute', inset: 0, opacity: 0.04, backgroundImage: 'linear-gradient(rgba(200,255,0,1) 1px,transparent 1px),linear-gradient(90deg,rgba(200,255,0,1) 1px,transparent 1px)', backgroundSize: '36px 36px' }} />
 
-        <p className="max-w-md text-base mb-12" style={{ color: 'var(--muted)', lineHeight: 1.7 }}>
-          5 questions. 2 minutes. Un score holistique généré par IA qui mesure ton corps, ta peau et ton mindset — et un plan pour l'améliorer.
-        </p>
+        {/* Corner brackets */}
+        {[['top:60px;left:16px', '1.5px 0 0 1.5px'], ['top:60px;right:16px', '1.5px 1.5px 0 0'], ['bottom:16px;left:16px', '0 0 1.5px 1.5px'], ['bottom:16px;right:16px', '0 1.5px 1.5px 0']].map(([pos, bw], i) => (
+          <div key={i} style={{ position: 'absolute', ...Object.fromEntries(pos.split(';').map(s => s.split(':'))), width: 20, height: 20, borderColor: 'rgba(200,255,0,0.4)', borderStyle: 'solid', borderWidth: bw }} />
+        ))}
 
-        {/* SCORE RING DEMO */}
-        <div className="relative mb-12">
-          <svg width="160" height="160" viewBox="0 0 120 120" className="ring-pulse">
-            <circle cx="60" cy="60" r="52" fill="none" stroke="var(--surface2)" strokeWidth="8" />
-            <circle cx="60" cy="60" r="52" fill="none" stroke="var(--acid)" strokeWidth="8"
-              strokeLinecap="round" strokeDasharray={circumference} strokeDashoffset={offset}
-              transform="rotate(-90 60 60)" style={{ transition: 'stroke-dashoffset 0.05s' }} />
-            <text x="60" y="55" textAnchor="middle" dominantBaseline="middle"
-              className="font-display" style={{ fontFamily: 'Barlow Condensed', fontWeight: 900, fontSize: 28, fill: 'var(--acid)' }}>
-              {displayScore}
-            </text>
-            <text x="60" y="72" textAnchor="middle" dominantBaseline="middle"
-              style={{ fontFamily: 'JetBrains Mono', fontSize: 9, fill: 'var(--muted)' }}>
-              / 100
-            </text>
-          </svg>
-          <div className="absolute -bottom-2 left-1/2 -translate-x-1/2 whitespace-nowrap text-xs font-mono"
-            style={{ color: 'var(--muted)' }}>score en temps réel</div>
-        </div>
+        {/* Three.js canvas */}
+        <HoloBody score={score} />
 
-        <Link href="/onboarding"
-          className="font-display font-black uppercase text-lg tracking-wider px-10 py-4 rounded-xl transition-all hover:scale-105 active:scale-95"
-          style={{ background: 'var(--acid)', color: '#000' }}>
-          Calculer mon score — gratuit
-        </Link>
-        <p className="mt-3 text-xs" style={{ color: 'var(--muted)' }}>Aucune CB requise · 2 min chrono</p>
-      </section>
-
-      {/* FEATURES */}
-      <section className="grid grid-cols-1 md:grid-cols-3 gap-4 px-6 pb-12 max-w-4xl mx-auto w-full">
-        {[
-          { icon: '⚡', title: 'Score en 2 min', desc: '5 questions, IA analyse ton profil complet et génère ton score personnalisé.' },
-          { icon: '📊', title: '6 dimensions', desc: 'Training, nutrition, hydratation, sommeil, skincare, steps. Rien ne t\'échappe.' },
-          { icon: '🔥', title: 'Plan semaine 1', desc: 'Actions concrètes pour bouger ton score dès demain. Pas de blabla.' },
-        ].map((f) => (
-          <div key={f.title} className="rounded-xl p-5 border" style={{ background: 'var(--surface)', borderColor: 'var(--border)' }}>
-            <div className="text-2xl mb-3">{f.icon}</div>
-            <h3 className="font-display font-bold uppercase text-sm tracking-wide mb-2">{f.title}</h3>
-            <p className="text-sm" style={{ color: 'var(--muted)', lineHeight: 1.6 }}>{f.desc}</p>
+        {/* METRICS — superposés sur le canvas */}
+        {METRICS.map((m) => (
+          <div key={m.label} style={{
+            position: 'absolute',
+            [m.side]: 14,
+            top: m.top,
+            zIndex: 10,
+            textAlign: m.side === 'right' ? 'right' : 'left',
+          }}>
+            {/* Ligne leader */}
+            <div style={{ width: 32, height: 1, background: m.color, opacity: 0.3, marginBottom: 4, marginLeft: m.side === 'right' ? 'auto' : 0 }} />
+            <div style={{ fontFamily: "'Barlow Condensed', sans-serif", fontSize: 22, fontWeight: 800, color: m.color, lineHeight: 1 }}>{m.val}</div>
+            <div style={{ fontSize: 8, color: 'rgba(255,255,255,0.35)', letterSpacing: 1, marginTop: 2 }}>{m.label}</div>
+            <div style={{ width: 36, height: 2, background: 'rgba(255,255,255,0.08)', borderRadius: 1, marginTop: 4, marginLeft: m.side === 'right' ? 'auto' : 0 }}>
+              <div style={{ width: `${m.pct}%`, height: '100%', background: m.color, borderRadius: 1 }} />
+            </div>
           </div>
         ))}
-      </section>
 
-      {/* FOOTER */}
-      <footer className="text-center pb-8 text-xs" style={{ color: 'var(--muted)' }}>
-        © 2025 GlowUp · <Link href="/privacy" className="hover:text-white transition-colors">Confidentialité</Link>
-      </footer>
+        {/* SCORE CENTRAL — en bas */}
+        <div style={{ position: 'absolute', bottom: 100, left: '50%', transform: 'translateX(-50%)', textAlign: 'center', zIndex: 10 }}>
+          <div style={{ fontSize: 9, color: 'rgba(200,255,0,0.5)', letterSpacing: 3, marginBottom: 4 }}>GLOW UP SCORE</div>
+          <div style={{ fontFamily: "'Barlow Condensed', sans-serif", fontSize: 72, fontWeight: 800, color: '#C8FF00', lineHeight: 1 }}>{score}</div>
+          <div style={{ fontSize: 9, color: 'rgba(200,255,0,0.4)', letterSpacing: 2, marginTop: 2 }}>/ 100</div>
+        </div>
+
+        {/* LIVE badge */}
+        <div style={{ position: 'absolute', top: 76, left: '50%', transform: 'translateX(-50%)', display: 'flex', alignItems: 'center', gap: 6, background: 'rgba(200,255,0,0.06)', border: '1px solid rgba(200,255,0,0.15)', padding: '5px 14px', borderRadius: 20, zIndex: 10 }}>
+          <div style={{ width: 5, height: 5, borderRadius: '50%', background: '#C8FF00', animation: 'blink 1s infinite' }} />
+          <span style={{ fontSize: 9, color: '#C8FF00', letterSpacing: 2 }}>SCAN ACTIF</span>
+        </div>
+
+        {/* CTA bottom */}
+        <div style={{ position: 'absolute', bottom: 28, left: '50%', transform: 'translateX(-50%)', zIndex: 10, textAlign: 'center' }}>
+          <Link href="/onboarding" style={{
+            fontFamily: "'Barlow Condensed', sans-serif", fontWeight: 800, fontSize: 16,
+            color: '#000', background: '#C8FF00', padding: '14px 36px', borderRadius: 30,
+            textDecoration: 'none', letterSpacing: 2, display: 'inline-block',
+          }}>
+            CALCULER MON SCORE — GRATUIT
+          </Link>
+          <div style={{ fontSize: 9, color: 'rgba(255,255,255,0.25)', marginTop: 8, letterSpacing: 1 }}>2 MIN · AUCUNE CB</div>
+        </div>
+      </div>
+
+      <style>{`
+        @import url('https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@700;800&family=JetBrains+Mono:wght@500&display=swap');
+        @keyframes blink { 0%,100%{opacity:1} 50%{opacity:0.1} }
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+      `}</style>
     </main>
   )
 }
