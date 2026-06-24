@@ -1,0 +1,49 @@
+@import url('https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@700;800;900&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@500;600&display=swap');
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --bg: #08080E;
+  --surface: #111118;
+  --surface2: #18181F;
+  --surface3: #202028;
+  --acid: #C8FF00;
+  --acid-dim: rgba(200,255,0,0.08);
+  --acid-border: rgba(200,255,0,0.2);
+  --orange: #FF6B35;
+  --orange-dim: rgba(255,107,53,0.08);
+  --text: #EFEFEF;
+  --muted: #666680;
+  --border: rgba(255,255,255,0.07);
+  --border-hover: rgba(255,255,255,0.12);
+}
+
+* { box-sizing: border-box; }
+html, body { background: var(--bg); color: var(--text); font-family: 'Inter', sans-serif; }
+body { min-height: 100vh; }
+
+.font-display { font-family: 'Barlow Condensed', sans-serif; }
+.font-mono { font-family: 'JetBrains Mono', monospace; }
+
+/* Scrollbar */
+::-webkit-scrollbar { width: 4px; }
+::-webkit-scrollbar-thumb { background: var(--border-hover); border-radius: 2px; }
+
+/* Ring animation */
+@keyframes pulse-ring {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.7; }
+}
+.ring-pulse { animation: pulse-ring 3s ease-in-out infinite; }
+
+@keyframes fade-up {
+  from { opacity: 0; transform: translateY(12px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+.fade-up { animation: fade-up 0.4s ease forwards; }
+
+@keyframes score-count {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
