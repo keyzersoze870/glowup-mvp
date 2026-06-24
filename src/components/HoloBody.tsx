@@ -11,12 +11,12 @@ export default function HoloBody({ score = 72 }: { score?: number }) {
     if (!mount) return
 
     const W = mount.clientWidth || 390
-    const H = mount.clientHeight || 600
+    const H = mount.clientHeight || 700
 
     const scene = new THREE.Scene()
-    const camera = new THREE.PerspectiveCamera(45, W / H, 0.1, 100)
-    camera.position.set(0, 1.4, 4.2)
-    camera.lookAt(0, 1.0, 0)
+    const camera = new THREE.PerspectiveCamera(50, W / H, 0.1, 100)
+    camera.position.set(0, 0, 4.5)
+    camera.lookAt(0, 0, 0)
 
     const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true })
     renderer.setSize(W, H)
@@ -27,7 +27,6 @@ export default function HoloBody({ score = 72 }: { score?: number }) {
     const pivot = new THREE.Group()
     scene.add(pivot)
 
-    // HOLOGRAPHIC MATERIALS
     const skinMat = new THREE.MeshPhongMaterial({
       color: 0x0055cc,
       emissive: 0x001155,
@@ -36,43 +35,30 @@ export default function HoloBody({ score = 72 }: { score?: number }) {
       side: THREE.DoubleSide,
       depthWrite: false,
     })
-    const wireMat = new THREE.MeshBasicMaterial({
-      color: 0x00aaff,
-      wireframe: true,
-      transparent: true,
-      opacity: 0.12,
-    })
 
-    // LOAD GLB
     const loader = new GLTFLoader()
     loader.load(
       '/human.glb',
       (gltf) => {
         const model = gltf.scene
 
-        // Scale et centrage
         const box = new THREE.Box3().setFromObject(model)
         const center = box.getCenter(new THREE.Vector3())
         const size = box.getSize(new THREE.Vector3())
         const maxDim = Math.max(size.x, size.y, size.z)
-        const scale = 2.2 / maxDim
+        const scale = 2.6 / maxDim
         model.scale.setScalar(scale)
+        // Centrer parfaitement
         model.position.x = -center.x * scale
-        model.position.y = -center.y * scale + 0.15
+        model.position.y = -center.y * scale
         model.position.z = -center.z * scale
 
-        // Appliquer effet holo + wireframe
         model.traverse((child) => {
           if ((child as THREE.Mesh).isMesh) {
             const mesh = child as THREE.Mesh
-            const geo = mesh.geometry
-
-            // Skin translucide
             mesh.material = skinMat.clone()
-
-            // Wireframe séparé (pas de clone du mesh)
             const wireframe = new THREE.LineSegments(
-              new THREE.WireframeGeometry(geo),
+              new THREE.WireframeGeometry(mesh.geometry),
               new THREE.LineBasicMaterial({ color: 0x00ccff, transparent: true, opacity: 0.15 })
             )
             mesh.add(wireframe)
@@ -82,34 +68,34 @@ export default function HoloBody({ score = 72 }: { score?: number }) {
         pivot.add(model)
       },
       undefined,
-      (err) => console.error('GLB load error:', err)
+      (err) => console.error('GLB error:', err)
     )
 
     // SOL
     const platform = new THREE.Mesh(
-      new THREE.CylinderGeometry(1.1, 1.1, 0.015, 64),
+      new THREE.CylinderGeometry(1.1, 1.1, 0.012, 64),
       new THREE.MeshPhongMaterial({ color: 0x0044ff, emissive: 0x002288, transparent: true, opacity: 0.3 })
     )
-    platform.position.y = -1.05
+    platform.position.y = -1.4
     scene.add(platform)
 
     for (let i = 0; i < 16; i++) {
       const ray = new THREE.Mesh(
-        new THREE.PlaneGeometry(0.012, 1.3),
+        new THREE.PlaneGeometry(0.01, 1.2),
         new THREE.MeshBasicMaterial({ color: 0x00aaff, transparent: true, opacity: 0.08, side: THREE.DoubleSide })
       )
       ray.rotation.x = -Math.PI / 2
       ray.rotation.z = (i / 16) * Math.PI * 2
-      ray.position.set(Math.cos((i / 16) * Math.PI * 2) * 0.55, -1.04, Math.sin((i / 16) * Math.PI * 2) * 0.55)
+      ray.position.set(Math.cos((i / 16) * Math.PI * 2) * 0.5, -1.39, Math.sin((i / 16) * Math.PI * 2) * 0.5)
       scene.add(ray)
     }
 
     // ANNEAUX
     const rings: { mesh: THREE.Mesh; speed: number }[] = []
     ;[
-      { r: 0.9, y: 1.0, c: 0x00ffff, o: 0.6, s: 0.5 },
-      { r: 1.1, y: 0.4, c: 0x0088ff, o: 0.3, s: -0.3 },
-      { r: 1.25, y: -0.1, c: 0x4444ff, o: 0.2, s: 0.2 },
+      { r: 0.9,  y: 0.3,  c: 0x00ffff, o: 0.6, s: 0.5 },
+      { r: 1.1,  y: -0.3, c: 0x0088ff, o: 0.3, s: -0.3 },
+      { r: 1.25, y: -0.8, c: 0x4444ff, o: 0.2, s: 0.2 },
     ].forEach(({ r, y, c, o, s }) => {
       const mesh = new THREE.Mesh(
         new THREE.TorusGeometry(r, 0.009, 8, 90),
@@ -121,7 +107,7 @@ export default function HoloBody({ score = 72 }: { score?: number }) {
       rings.push({ mesh, speed: s })
       for (let i = 0; i < 6; i++) {
         const dot = new THREE.Mesh(
-          new THREE.SphereGeometry(0.022, 6, 6),
+          new THREE.SphereGeometry(0.02, 6, 6),
           new THREE.MeshBasicMaterial({ color: 0x00ffff })
         )
         const a = (i / 6) * Math.PI * 2
@@ -132,7 +118,7 @@ export default function HoloBody({ score = 72 }: { score?: number }) {
 
     // SCAN LINE
     const scanMat = new THREE.MeshBasicMaterial({ color: 0x00ffff, transparent: true, opacity: 0.5, side: THREE.DoubleSide })
-    const scanLine = new THREE.Mesh(new THREE.PlaneGeometry(1.4, 0.015), scanMat)
+    const scanLine = new THREE.Mesh(new THREE.PlaneGeometry(1.4, 0.012), scanMat)
     scene.add(scanLine)
 
     // PARTICULES
@@ -141,8 +127,8 @@ export default function HoloBody({ score = 72 }: { score?: number }) {
     for (let i = 0; i < pCount; i++) {
       const a = Math.random() * Math.PI * 2
       const r = 0.6 + Math.random() * 1.0
-      pPos[i * 3] = Math.cos(a) * r
-      pPos[i * 3 + 1] = -1.0 + Math.random() * 3.2
+      pPos[i * 3]     = Math.cos(a) * r
+      pPos[i * 3 + 1] = -1.4 + Math.random() * 3.2
       pPos[i * 3 + 2] = Math.sin(a) * r
     }
     const pGeo = new THREE.BufferGeometry()
@@ -159,7 +145,7 @@ export default function HoloBody({ score = 72 }: { score?: number }) {
     rim.position.set(-2, 1.5, -1)
     scene.add(rim)
     const bot = new THREE.PointLight(0x00aaff, 5, 4)
-    bot.position.set(0, -0.8, 0)
+    bot.position.set(0, -1, 0)
     scene.add(bot)
 
     // ANIMATION
@@ -170,7 +156,7 @@ export default function HoloBody({ score = 72 }: { score?: number }) {
       t += 0.016
       pivot.rotation.y += 0.007
       rings.forEach(({ mesh, speed }) => { mesh.rotation.z += speed * 0.012 })
-      const scanY = -1.0 + ((Math.sin(t * 0.6) + 1) / 2) * 3.0
+      const scanY = -1.4 + ((Math.sin(t * 0.6) + 1) / 2) * 3.0
       scanLine.position.y = scanY
       scanLine.rotation.y = pivot.rotation.y
       scanMat.opacity = 0.3 + Math.sin(t * 2.5) * 0.2
