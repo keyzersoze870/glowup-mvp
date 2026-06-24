@@ -11,12 +11,12 @@ export default function HoloBody({ score = 72 }: { score?: number }) {
     if (!mount) return
 
     const W = mount.clientWidth || 390
-    const H = mount.clientHeight || 700
+    const H = mount.clientHeight || 500
 
     const scene = new THREE.Scene()
-    const camera = new THREE.PerspectiveCamera(55, W / H, 0.1, 100)
-    camera.position.set(0, 0.2, 5.5)
-    camera.lookAt(0, 0.2, 0)
+    const camera = new THREE.PerspectiveCamera(42, W / H, 0.1, 100)
+    camera.position.set(0, 0.1, 4.0)
+    camera.lookAt(0, 0.1, 0)
 
     const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true })
     renderer.setSize(W, H)
@@ -29,7 +29,7 @@ export default function HoloBody({ score = 72 }: { score?: number }) {
 
     const skinMat = new THREE.MeshPhongMaterial({
       color: 0x0055cc, emissive: 0x001155,
-      transparent: true, opacity: 0.22,
+      transparent: true, opacity: 0.28,
       side: THREE.DoubleSide, depthWrite: false,
     })
 
@@ -40,7 +40,7 @@ export default function HoloBody({ score = 72 }: { score?: number }) {
       const center = box.getCenter(new THREE.Vector3())
       const size = box.getSize(new THREE.Vector3())
       const maxDim = Math.max(size.x, size.y, size.z)
-      const scale = 2.0 / maxDim
+      const scale = 2.8 / maxDim
       model.scale.setScalar(scale)
       model.position.x = -center.x * scale
       model.position.y = -center.y * scale
@@ -52,7 +52,7 @@ export default function HoloBody({ score = 72 }: { score?: number }) {
           mesh.material = skinMat.clone()
           const wf = new THREE.LineSegments(
             new THREE.WireframeGeometry(mesh.geometry),
-            new THREE.LineBasicMaterial({ color: 0x00ccff, transparent: true, opacity: 0.12 })
+            new THREE.LineBasicMaterial({ color: 0x00ccff, transparent: true, opacity: 0.14 })
           )
           mesh.add(wf)
         }
@@ -62,21 +62,21 @@ export default function HoloBody({ score = 72 }: { score?: number }) {
 
     // SOL
     const platform = new THREE.Mesh(
-      new THREE.CylinderGeometry(0.9, 0.9, 0.01, 64),
-      new THREE.MeshPhongMaterial({ color: 0x0044ff, emissive: 0x002288, transparent: true, opacity: 0.3 })
+      new THREE.CylinderGeometry(0.85, 0.85, 0.01, 64),
+      new THREE.MeshPhongMaterial({ color: 0x0044ff, emissive: 0x002288, transparent: true, opacity: 0.35 })
     )
-    platform.position.y = -1.1
+    platform.position.y = -1.45
     scene.add(platform)
 
     // ANNEAUX
     const rings: { mesh: THREE.Mesh; speed: number }[] = []
     ;[
-      { r: 0.75, y: 0.2,  c: 0x00ffff, o: 0.6, s: 0.5 },
-      { r: 0.95, y: -0.2, c: 0x0088ff, o: 0.3, s: -0.3 },
-      { r: 1.1,  y: -0.6, c: 0x4444ff, o: 0.2, s: 0.2 },
+      { r: 0.7,  y: 0.1,  c: 0x00ffff, o: 0.55, s: 0.5 },
+      { r: 0.88, y: -0.4, c: 0x0088ff, o: 0.3,  s: -0.3 },
+      { r: 1.0,  y: -0.9, c: 0x4444ff, o: 0.2,  s: 0.2 },
     ].forEach(({ r, y, c, o, s }) => {
       const mesh = new THREE.Mesh(
-        new THREE.TorusGeometry(r, 0.008, 8, 90),
+        new THREE.TorusGeometry(r, 0.007, 8, 90),
         new THREE.MeshBasicMaterial({ color: c, transparent: true, opacity: o })
       )
       mesh.position.y = y
@@ -84,7 +84,7 @@ export default function HoloBody({ score = 72 }: { score?: number }) {
       scene.add(mesh)
       rings.push({ mesh, speed: s })
       for (let i = 0; i < 6; i++) {
-        const dot = new THREE.Mesh(new THREE.SphereGeometry(0.018, 6, 6), new THREE.MeshBasicMaterial({ color: 0x00ffff }))
+        const dot = new THREE.Mesh(new THREE.SphereGeometry(0.016, 6, 6), new THREE.MeshBasicMaterial({ color: 0x00ffff }))
         const a = (i / 6) * Math.PI * 2
         dot.position.set(Math.cos(a) * r, y, Math.sin(a) * r)
         scene.add(dot)
@@ -93,7 +93,7 @@ export default function HoloBody({ score = 72 }: { score?: number }) {
 
     // SCAN LINE
     const scanMat = new THREE.MeshBasicMaterial({ color: 0x00ffff, transparent: true, opacity: 0.5, side: THREE.DoubleSide })
-    const scanLine = new THREE.Mesh(new THREE.PlaneGeometry(1.2, 0.01), scanMat)
+    const scanLine = new THREE.Mesh(new THREE.PlaneGeometry(1.1, 0.01), scanMat)
     scene.add(scanLine)
 
     // PARTICULES
@@ -101,17 +101,16 @@ export default function HoloBody({ score = 72 }: { score?: number }) {
     const pPos = new Float32Array(pCount * 3)
     for (let i = 0; i < pCount; i++) {
       const a = Math.random() * Math.PI * 2
-      const r = 0.5 + Math.random() * 0.9
-      pPos[i*3] = Math.cos(a)*r; pPos[i*3+1] = -1.1+Math.random()*2.8; pPos[i*3+2] = Math.sin(a)*r
+      const r = 0.5 + Math.random() * 0.8
+      pPos[i*3] = Math.cos(a)*r; pPos[i*3+1] = -1.4+Math.random()*3.0; pPos[i*3+2] = Math.sin(a)*r
     }
     const pGeo = new THREE.BufferGeometry()
     pGeo.setAttribute('position', new THREE.BufferAttribute(pPos, 3))
-    const particles = new THREE.Points(pGeo, new THREE.PointsMaterial({ color: 0x0088ff, size: 0.018, transparent: true, opacity: 0.5 }))
+    const particles = new THREE.Points(pGeo, new THREE.PointsMaterial({ color: 0x0088ff, size: 0.016, transparent: true, opacity: 0.5 }))
     scene.add(particles)
 
-    // LUMIÈRES
     scene.add(new THREE.AmbientLight(0x002244, 3))
-    const key = new THREE.PointLight(0x0088ff, 5, 10); key.position.set(0, 3, 3); scene.add(key)
+    const key = new THREE.PointLight(0x0088ff, 6, 10); key.position.set(0, 3, 3); scene.add(key)
     const rim = new THREE.PointLight(0x00ffff, 3, 8); rim.position.set(-2, 1.5, -1); scene.add(rim)
     const bot = new THREE.PointLight(0x00aaff, 5, 4); bot.position.set(0, -1, 0); scene.add(bot)
 
@@ -120,7 +119,7 @@ export default function HoloBody({ score = 72 }: { score?: number }) {
       frame = requestAnimationFrame(animate); t += 0.016
       pivot.rotation.y += 0.007
       rings.forEach(({ mesh, speed }) => { mesh.rotation.z += speed * 0.012 })
-      const scanY = -1.1 + ((Math.sin(t * 0.6) + 1) / 2) * 2.6
+      const scanY = -1.4 + ((Math.sin(t * 0.6) + 1) / 2) * 2.8
       scanLine.position.y = scanY; scanLine.rotation.y = pivot.rotation.y
       scanMat.opacity = 0.3 + Math.sin(t * 2.5) * 0.2
       particles.rotation.y -= 0.0015
