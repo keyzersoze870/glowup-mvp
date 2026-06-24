@@ -14,6 +14,25 @@ export default function LandingPage() {
     return () => clearInterval(t)
   }, [])
 
+  // Points où les lignes touchent le corps (en % du viewBox 390x500)
+  const CX = 195 // centre X
+  const bodyPoints = [
+    { y: 148, colorL: '#C8FF00', colorR: '#C8FF00' }, // épaules
+    { y: 235, colorL: '#00F5FF', colorR: '#FF6B35' }, // torse
+    { y: 318, colorL: '#A78BFA', colorR: '#00F5FF' }, // hanches
+  ]
+
+  const metricsL = [
+    { label: 'Training', val: '9.1', color: '#C8FF00', pct: 91 },
+    { label: 'Eau',      val: '7.4', color: '#00F5FF', pct: 74 },
+    { label: 'Sommeil',  val: '6.2', color: '#A78BFA', pct: 62 },
+  ]
+  const metricsR = [
+    { label: 'Nutrition', val: '8.5', color: '#C8FF00', pct: 85 },
+    { label: 'Skincare',  val: '5.0', color: '#FF6B35', pct: 50 },
+    { label: 'Pas/jour',  val: '9.2', color: '#00F5FF', pct: 92 },
+  ]
+
   return (
     <main style={{ height: '100dvh', background: '#06060F', fontFamily: "'JetBrains Mono',monospace", overflow: 'hidden', display: 'flex', flexDirection: 'column' }}>
 
@@ -23,76 +42,73 @@ export default function LandingPage() {
         <Link href="/onboarding" style={{ fontFamily: "'Barlow Condensed',sans-serif", fontWeight: 800, fontSize: 12, color: '#000', background: '#C8FF00', padding: '7px 14px', borderRadius: 20, textDecoration: 'none', letterSpacing: 1 }}>Commencer →</Link>
       </nav>
 
-      {/* SCANNER ZONE — prend tout l'espace restant */}
       <div style={{ flex: 1, position: 'relative', overflow: 'hidden' }}>
 
         {/* Grid */}
         <div style={{ position: 'absolute', inset: 0, opacity: 0.04, backgroundImage: 'linear-gradient(rgba(200,255,0,1) 1px,transparent 1px),linear-gradient(90deg,rgba(200,255,0,1) 1px,transparent 1px)', backgroundSize: '30px 30px' }} />
 
-        {/* Three.js canvas */}
+        {/* Three.js */}
         <HoloBody score={score} />
 
-        {/* SCAN ACTIF */}
-        <div style={{ position: 'absolute', top: 10, left: '50%', transform: 'translateX(-50%)', display: 'flex', alignItems: 'center', gap: 5, background: 'rgba(200,255,0,0.06)', border: '1px solid rgba(200,255,0,0.15)', padding: '4px 12px', borderRadius: 20, zIndex: 10, whiteSpace: 'nowrap' }}>
-          <div style={{ width: 5, height: 5, borderRadius: '50%', background: '#C8FF00', animation: 'blink 1s infinite' }} />
-          <span style={{ fontSize: 9, color: '#C8FF00', letterSpacing: 2 }}>SCAN ACTIF</span>
-        </div>
+        {/* TOUT EN SVG — métriques + lignes parfaitement alignées */}
+        <svg
+          style={{ position: 'absolute', inset: 0, width: '100%', height: '100%', zIndex: 10, pointerEvents: 'none' }}
+          viewBox="0 0 390 500"
+          preserveAspectRatio="xMidYMid slice"
+        >
+          <defs>
+            <style>{`
+              @import url('https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@800&family=JetBrains+Mono:wght@500&display=swap');
+              .val { font-family: 'Barlow Condensed', sans-serif; font-size: 22px; font-weight: 800; }
+              .lbl { font-family: 'JetBrains Mono', monospace; font-size: 8px; fill: rgba(255,255,255,0.45); letter-spacing: 1px; }
+            `}</style>
+          </defs>
 
-        {/* SVG lignes — calibrées pour pointer vers le milieu du canvas */}
-        <svg style={{ position: 'absolute', inset: 0, width: '100%', height: '100%', zIndex: 9, pointerEvents: 'none' }} viewBox="0 0 390 500" preserveAspectRatio="xMidYMid slice">
-          {/* GAUCHE → corps (centre autour de 195, 200) */}
-          <line x1="75"  y1="105" x2="170" y2="155" stroke="#C8FF00" strokeWidth="0.7" strokeOpacity="0.45" strokeDasharray="4 3"/>
-          <line x1="75"  y1="215" x2="170" y2="230" stroke="#00F5FF" strokeWidth="0.7" strokeOpacity="0.45" strokeDasharray="4 3"/>
-          <line x1="75"  y1="325" x2="170" y2="310" stroke="#A78BFA" strokeWidth="0.7" strokeOpacity="0.45" strokeDasharray="4 3"/>
-          {/* DROITE → corps */}
-          <line x1="315" y1="105" x2="220" y2="155" stroke="#C8FF00" strokeWidth="0.7" strokeOpacity="0.45" strokeDasharray="4 3"/>
-          <line x1="315" y1="215" x2="220" y2="230" stroke="#FF6B35" strokeWidth="0.7" strokeOpacity="0.45" strokeDasharray="4 3"/>
-          <line x1="315" y1="325" x2="220" y2="310" stroke="#00F5FF" strokeWidth="0.7" strokeOpacity="0.45" strokeDasharray="4 3"/>
-          {/* Points sur le corps */}
-          <circle cx="170" cy="155" r="3" fill="#C8FF00" opacity="0.9"/>
-          <circle cx="170" cy="230" r="3" fill="#00F5FF" opacity="0.9"/>
-          <circle cx="170" cy="310" r="3" fill="#A78BFA" opacity="0.9"/>
-          <circle cx="220" cy="155" r="3" fill="#C8FF00" opacity="0.9"/>
-          <circle cx="220" cy="230" r="3" fill="#FF6B35" opacity="0.9"/>
-          <circle cx="220" cy="310" r="3" fill="#00F5FF" opacity="0.9"/>
+          {/* SCAN ACTIF badge */}
+          <rect x="140" y="8" width="110" height="20" rx="10" fill="rgba(200,255,0,0.06)" stroke="rgba(200,255,0,0.2)" strokeWidth="0.8"/>
+          <circle cx="153" cy="18" r="3" fill="#C8FF00"><animate attributeName="opacity" values="1;0.1;1" dur="1s" repeatCount="indefinite"/></circle>
+          <text x="162" y="22" fill="#C8FF00" fontSize="8" fontFamily="JetBrains Mono, monospace" letterSpacing="2">SCAN ACTIF</text>
+
+          {bodyPoints.map((bp, i) => {
+            const mL = metricsL[i]
+            const mR = metricsR[i]
+            const lx = 68  // fin ligne gauche (début texte)
+            const rx = 322 // fin ligne droite (début texte)
+            const bpL = CX - 52 // point sur le corps gauche
+            const bpR = CX + 52 // point sur le corps droite
+
+            return (
+              <g key={i}>
+                {/* Ligne gauche */}
+                <line x1={lx} y1={bp.y} x2={bpL} y2={bp.y} stroke={mL.color} strokeWidth="0.8" strokeOpacity="0.5" strokeDasharray="4 3"/>
+                {/* Point corps gauche */}
+                <circle cx={bpL} cy={bp.y} r="3" fill={mL.color} opacity="0.9"/>
+
+                {/* Ligne droite */}
+                <line x1={bpR} y1={bp.y} x2={rx} y2={bp.y} stroke={mR.color} strokeWidth="0.8" strokeOpacity="0.5" strokeDasharray="4 3"/>
+                {/* Point corps droite */}
+                <circle cx={bpR} cy={bp.y} r="3" fill={mR.color} opacity="0.9"/>
+
+                {/* MÉTRIQUE GAUCHE */}
+                <text x={lx - 4} y={bp.y - 6} textAnchor="end" className="val" fill={mL.color}>{mL.val}</text>
+                <text x={lx - 4} y={bp.y + 8} textAnchor="end" className="lbl">{mL.label.toUpperCase()}</text>
+                {/* Barre gauche */}
+                <rect x={lx - 42} y={bp.y + 12} width="38" height="2" rx="1" fill="rgba(255,255,255,0.1)"/>
+                <rect x={lx - 42} y={bp.y + 12} width={38 * mL.pct / 100} height="2" rx="1" fill={mL.color}/>
+
+                {/* MÉTRIQUE DROITE */}
+                <text x={rx + 4} y={bp.y - 6} textAnchor="start" className="val" fill={mR.color}>{mR.val}</text>
+                <text x={rx + 4} y={bp.y + 8} textAnchor="start" className="lbl">{mR.label.toUpperCase()}</text>
+                {/* Barre droite */}
+                <rect x={rx + 4} y={bp.y + 12} width="38" height="2" rx="1" fill="rgba(255,255,255,0.1)"/>
+                <rect x={rx + 4} y={bp.y + 12} width={38 * mR.pct / 100} height="2" rx="1" fill={mR.color}/>
+              </g>
+            )
+          })}
         </svg>
 
-        {/* MÉTRIQUES GAUCHE */}
-        <div style={{ position: 'absolute', left: 8, top: '12%', zIndex: 10, display: 'flex', flexDirection: 'column', gap: 28 }}>
-          {[
-            { label: 'Training', val: '9.1', color: '#C8FF00', pct: 91 },
-            { label: 'Eau',      val: '7.4', color: '#00F5FF', pct: 74 },
-            { label: 'Sommeil',  val: '6.2', color: '#A78BFA', pct: 62 },
-          ].map(m => (
-            <div key={m.label}>
-              <div style={{ fontFamily: "'Barlow Condensed',sans-serif", fontSize: 22, fontWeight: 800, color: m.color, lineHeight: 1 }}>{m.val}</div>
-              <div style={{ fontSize: 9, color: 'rgba(255,255,255,0.45)', letterSpacing: 0.5, marginTop: 2, textTransform: 'uppercase' }}>{m.label}</div>
-              <div style={{ width: 38, height: 2, background: 'rgba(255,255,255,0.1)', borderRadius: 1, marginTop: 4 }}>
-                <div style={{ width: `${m.pct}%`, height: '100%', background: m.color, borderRadius: 1 }} />
-              </div>
-            </div>
-          ))}
-        </div>
-
-        {/* MÉTRIQUES DROITE */}
-        <div style={{ position: 'absolute', right: 8, top: '12%', zIndex: 10, display: 'flex', flexDirection: 'column', gap: 28, textAlign: 'right' }}>
-          {[
-            { label: 'Nutrition', val: '8.5', color: '#C8FF00', pct: 85 },
-            { label: 'Skincare',  val: '5.0', color: '#FF6B35', pct: 50 },
-            { label: 'Pas/jour',  val: '9.2', color: '#00F5FF', pct: 92 },
-          ].map(m => (
-            <div key={m.label}>
-              <div style={{ fontFamily: "'Barlow Condensed',sans-serif", fontSize: 22, fontWeight: 800, color: m.color, lineHeight: 1 }}>{m.val}</div>
-              <div style={{ fontSize: 9, color: 'rgba(255,255,255,0.45)', letterSpacing: 0.5, marginTop: 2, textTransform: 'uppercase' }}>{m.label}</div>
-              <div style={{ width: 38, height: 2, background: 'rgba(255,255,255,0.1)', borderRadius: 1, marginTop: 4, marginLeft: 'auto' }}>
-                <div style={{ width: `${m.pct}%`, height: '100%', background: m.color, borderRadius: 1 }} />
-              </div>
-            </div>
-          ))}
-        </div>
-
         {/* SCORE + CTA */}
-        <div style={{ position: 'absolute', bottom: 0, left: 0, right: 0, zIndex: 10, textAlign: 'center', padding: '0 20px 14px', background: 'linear-gradient(transparent, rgba(6,6,15,0.95) 40%)' }}>
+        <div style={{ position: 'absolute', bottom: 0, left: 0, right: 0, zIndex: 20, textAlign: 'center', padding: '0 20px 14px', background: 'linear-gradient(transparent, rgba(6,6,15,0.98) 35%)' }}>
           <div style={{ fontSize: 8, color: 'rgba(200,255,0,0.5)', letterSpacing: 3, marginBottom: 2 }}>GLOW UP SCORE</div>
           <div style={{ fontFamily: "'Barlow Condensed',sans-serif", fontSize: 60, fontWeight: 800, color: '#C8FF00', lineHeight: 1 }}>{score}</div>
           <div style={{ fontSize: 8, color: 'rgba(200,255,0,0.4)', letterSpacing: 2, marginBottom: 10 }}>/ 100</div>
@@ -105,7 +121,6 @@ export default function LandingPage() {
 
       <style>{`
         @import url('https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@700;800&family=JetBrains+Mono:wght@500&display=swap');
-        @keyframes blink { 0%,100%{opacity:1} 50%{opacity:0.1} }
         * { box-sizing:border-box; margin:0; padding:0; }
       `}</style>
     </main>
