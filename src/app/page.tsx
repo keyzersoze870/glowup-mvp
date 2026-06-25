@@ -4,7 +4,7 @@ import { useState, useEffect, useRef } from 'react'
 
 const PROFILES = [
   {
-    img: '/selfie-f.png',
+    img: '/selfiew.jpg',
     points: [
       // GAUCHE (texte à gauche, point sur visage gauche)
       { x: 32, y: 28, label: 'Hydratation', val: '92', color: '#C8FF00', side: 'left' },
@@ -18,7 +18,7 @@ const PROFILES = [
     score: 78,
   },
   {
-    img: '/selfie-m.png',
+    img: '/selfiem.jpg',
     points: [
       { x: 32, y: 25, label: 'Hydratation', val: '65', color: '#C8FF00', side: 'left' },
       { x: 28, y: 48, label: 'Sommeil',     val: '80', color: '#A78BFA', side: 'left' },
