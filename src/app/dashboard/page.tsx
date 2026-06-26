@@ -1,116 +1,209 @@
 'use client'
 import { useEffect, useState } from 'react'
 import { useRouter } from 'next/navigation'
-import { GlowUpScore, OnboardingData } from '@/lib/types'
 
 const sf = `-apple-system, BlinkMacSystemFont, 'SF Pro Display', 'Helvetica Neue', sans-serif`
 const BLUE = '#0A84FF'
 
 const CATEGORIES = [
-  { key: 'training', label: 'Sport',       icon: '🏋️', color: '#FF9F0A' },
-  { key: 'nutrition', label: 'Nutrition',  icon: '🥗',  color: '#30D158' },
-  { key: 'hydratation', label: 'Eau',      icon: '💧',  color: BLUE },
-  { key: 'sommeil', label: 'Sommeil',      icon: '🌙',  color: '#BF5AF2' },
-  { key: 'skincare', label: 'Skincare',    icon: '✨',  color: '#64D2FF' },
-  { key: 'steps', label: 'Stress',         icon: '🧘',  color: '#FF453A' },
+  { key: 'training',    label: 'Sport',      icon: '🏋️', color: '#FF9F0A' },
+  { key: 'nutrition',   label: 'Nutrition',  icon: '🥗',  color: '#30D158' },
+  { key: 'hydratation', label: 'Eau',        icon: '💧',  color: BLUE },
+  { key: 'sommeil',     label: 'Sommeil',    icon: '🌙',  color: '#BF5AF2' },
+  { key: 'skincare',    label: 'Skincare',   icon: '✨',  color: '#64D2FF' },
+  { key: 'steps',       label: 'Stress',     icon: '🧘',  color: '#FF453A' },
 ]
 
-function ScoreRing({ score }: { score: number }) {
+const CHECK_ITEMS = [
+  { key: 'sport',      icon: '🏋️', label: 'Séance de sport',   sub: '30 min minimum' },
+  { key: 'eau',        icon: '💧', label: '2L d\'eau',          sub: 'Répartis dans la journée' },
+  { key: 'nutrition',  icon: '🥗', label: 'Manger équilibré',   sub: 'Protéines + légumes' },
+  { key: 'sommeil',    icon: '🌙', label: 'Dormir 7-8h',        sub: 'Coucher avant 23h' },
+  { key: 'skincare',   icon: '✨', label: 'Routine skincare',   sub: 'Matin + soir' },
+]
+
+function ScoreRing({ score, size = 160 }: { score: number, size?: number }) {
   const [displayed, setDisplayed] = useState(0)
-  const r = 54
-  const c = 2 * Math.PI * r
+  const r = 54; const c = 2 * Math.PI * r
   const offset = c - (displayed / 100) * c
   const color = displayed >= 70 ? '#30D158' : displayed >= 45 ? '#FF9F0A' : '#FF453A'
 
   useEffect(() => {
-    let frame: number
-    let cur = 0
-    const animate = () => {
+    let frame: number; let cur = 0
+    const go = () => {
       cur += Math.ceil((score - cur) / 8)
       setDisplayed(Math.min(cur, score))
-      if (cur < score) frame = requestAnimationFrame(animate)
+      if (cur < score) frame = requestAnimationFrame(go)
     }
-    const t = setTimeout(() => { frame = requestAnimationFrame(animate) }, 400)
+    const t = setTimeout(() => { frame = requestAnimationFrame(go) }, 300)
     return () => { clearTimeout(t); cancelAnimationFrame(frame) }
   }, [score])
 
   return (
-    <svg width={160} height={160} viewBox="0 0 120 120">
+    <svg width={size} height={size} viewBox="0 0 120 120">
       <circle cx="60" cy="60" r={r} fill="none" stroke="rgba(255,255,255,0.06)" strokeWidth="7"/>
       <circle cx="60" cy="60" r={r} fill="none" stroke={color} strokeWidth="7"
         strokeLinecap="round" strokeDasharray={c} strokeDashoffset={offset}
-        transform="rotate(-90 60 60)" style={{ transition:'stroke-dashoffset 0.03s ease' }}/>
+        transform="rotate(-90 60 60)" style={{ transition:'stroke-dashoffset 0.03s' }}/>
       <text x="60" y="52" textAnchor="middle" dominantBaseline="middle"
-        style={{ fontFamily:'-apple-system, BlinkMacSystemFont', fontWeight:700, fontSize:28, fill:'#fff', letterSpacing:-1 }}>
-        {displayed}
-      </text>
+        style={{ fontFamily:sf, fontWeight:700, fontSize:28, fill:'#fff', letterSpacing:-1 }}>{displayed}</text>
       <text x="60" y="70" textAnchor="middle" dominantBaseline="middle"
-        style={{ fontFamily:'-apple-system', fontSize:8, fill:'rgba(255,255,255,0.35)', letterSpacing:0.5 }}>
-        / 100
-      </text>
+        style={{ fontFamily:sf, fontSize:8, fill:'rgba(255,255,255,0.3)', letterSpacing:0.5 }}>/ 100</text>
     </svg>
+  )
+}
+
+function CheckItem({ icon, label, sub, onCheck }: { icon: string, label: string, sub: string, onCheck: (done: boolean) => void }) {
+  const [done, setDone] = useState(false)
+  const toggle = () => { const next = !done; setDone(next); onCheck(next) }
+  return (
+    <button onClick={toggle} style={{ width:'100%', background: done ? 'rgba(48,209,88,0.08)' : 'rgba(255,255,255,0.05)', border:`0.5px solid ${done ? 'rgba(48,209,88,0.2)' : 'rgba(255,255,255,0.08)'}`, borderRadius:14, padding:'14px 16px', display:'flex', alignItems:'center', gap:12, cursor:'pointer', fontFamily:sf, transition:'all 0.15s' }}>
+      <span style={{ fontSize:20 }}>{icon}</span>
+      <div style={{ flex:1, textAlign:'left' }}>
+        <p style={{ fontSize:14, fontWeight:600, color: done ? 'rgba(255,255,255,0.35)' : '#fff', letterSpacing:-0.3, textDecoration: done ? 'line-through' : 'none' }}>{label}</p>
+        <p style={{ fontSize:11, color:'rgba(255,255,255,0.3)', marginTop:1 }}>{sub}</p>
+      </div>
+      <div style={{ width:22, height:22, borderRadius:'50%', background: done ? '#30D158' : 'rgba(255,255,255,0.08)', border:`0.5px solid ${done ? '#30D158' : 'rgba(255,255,255,0.15)'}`, display:'flex', alignItems:'center', justifyContent:'center', flexShrink:0, transition:'all 0.15s' }}>
+        {done && <span style={{ fontSize:12, color:'#000', fontWeight:700 }}>✓</span>}
+      </div>
+    </button>
   )
 }
 
 export default function Dashboard() {
   const router = useRouter()
-  const [profile, setProfile] = useState<Partial<OnboardingData> | null>(null)
-  const [score, setScore] = useState<GlowUpScore | null>(null)
-  const [activeTab, setActiveTab] = useState<'score' | 'plan' | 'today'>('score')
+  const [profile, setProfile] = useState<any>(null)
+  const [score, setScore] = useState<any>(null)
+  const [activeTab, setActiveTab] = useState<'score'|'plan'|'today'>('score')
+  const [streak, setStreak] = useState(0)
+  const [checkedCount, setCheckedCount] = useState(0)
+  const [showPaywall, setShowPaywall] = useState(false)
+  const [liveScore, setLiveScore] = useState(0)
 
   useEffect(() => {
     const p = localStorage.getItem('glowup_profile')
     const s = localStorage.getItem('glowup_score')
+    const st = localStorage.getItem('glowup_streak')
     if (!p || !s) { router.push('/onboarding'); return }
+    const parsedScore = JSON.parse(s)
     setProfile(JSON.parse(p))
-    setScore(JSON.parse(s))
+    setScore(parsedScore)
+    setLiveScore(parsedScore.total)
+    setStreak(st ? Number(st) : 0)
   }, [])
 
-  if (!score || !profile) {
-    return (
-      <div style={{ height:'100dvh', background:'#000', display:'flex', alignItems:'center', justifyContent:'center' }}>
-        <div style={{ width:24, height:24, border:`2px solid rgba(255,255,255,0.1)`, borderTopColor:BLUE, borderRadius:'50%', animation:'spin 0.8s linear infinite' }} />
-        <style>{`@keyframes spin { to { transform: rotate(360deg) } }`}</style>
-      </div>
-    )
+  const handleCheck = (done: boolean) => {
+    const next = checkedCount + (done ? 1 : -1)
+    setCheckedCount(next)
+    // Score monte en temps réel avec chaque item coché
+    setLiveScore(s => Math.min(100, s + (done ? 2 : -2)))
+    // Paywall après 3 items cochés
+    if (next === 3) setTimeout(() => setShowPaywall(true), 800)
   }
 
-  const scoreColor = score.total >= 70 ? '#30D158' : score.total >= 45 ? '#FF9F0A' : '#FF453A'
-  const scoreLabel = score.total >= 70 ? 'Excellent' : score.total >= 55 ? 'Bien' : score.total >= 40 ? 'À améliorer' : 'Faible'
+  const handleStreakUpdate = () => {
+    const newStreak = streak + 1
+    setStreak(newStreak)
+    localStorage.setItem('glowup_streak', String(newStreak))
+  }
+
+  if (!score || !profile) return (
+    <div style={{ height:'100dvh', background:'#000', display:'flex', alignItems:'center', justifyContent:'center' }}>
+      <div style={{ width:24, height:24, border:'2px solid rgba(255,255,255,0.1)', borderTopColor:BLUE, borderRadius:'50%', animation:'spin 0.8s linear infinite' }} />
+      <style>{`@keyframes spin{to{transform:rotate(360deg)}}`}</style>
+    </div>
+  )
+
+  const segment = liveScore < 45 ? 'faible' : liveScore < 70 ? 'moyen' : 'eleve'
+  const scoreColor = liveScore >= 70 ? '#30D158' : liveScore >= 45 ? '#FF9F0A' : '#FF453A'
+  const scoreLabel = liveScore >= 70 ? 'Excellent 🔥' : liveScore >= 55 ? 'Bien 👍' : liveScore >= 40 ? 'À améliorer ⚡' : 'Faible 💪'
+
+  const segmentMsg = segment === 'faible' ? score.message_faible
+    : segment === 'moyen' ? score.message_moyen
+    : score.message_eleve
+
+  const paywallMsg = segment === 'faible'
+    ? `Ton plan personnalisé peut faire monter ton score de +30 points en 4 semaines.`
+    : segment === 'moyen'
+    ? `Tu es à 2-3 semaines d'un score Elite. Les Premium progressent 3x plus vite.`
+    : `Débloque le programme avancé pour atteindre le score Elite (90+).`
 
   return (
-    <main style={{ height:'100dvh', background:'#000', fontFamily:sf, overflow:'hidden', display:'flex', flexDirection:'column' }}>
+    <main style={{ height:'100dvh', background:'#000', fontFamily:sf, overflow:'hidden', display:'flex', flexDirection:'column', position:'relative' }}>
+
+      {/* PAYWALL OVERLAY */}
+      {showPaywall && (
+        <div style={{ position:'absolute', inset:0, background:'rgba(0,0,0,0.85)', zIndex:100, display:'flex', alignItems:'flex-end', padding:20 }}
+          onClick={() => setShowPaywall(false)}>
+          <div onClick={e => e.stopPropagation()} style={{ width:'100%', background:'#111', border:'0.5px solid rgba(255,255,255,0.1)', borderRadius:24, padding:24 }}>
+            <div style={{ width:40, height:4, background:'rgba(255,255,255,0.2)', borderRadius:2, margin:'0 auto 20px' }} />
+            <div style={{ fontSize:28, textAlign:'center', marginBottom:8 }}>🔒</div>
+            <h2 style={{ fontSize:22, fontWeight:700, color:'#fff', letterSpacing:-0.8, textAlign:'center', marginBottom:8 }}>
+              Passe au niveau supérieur
+            </h2>
+            <p style={{ fontSize:14, color:'rgba(255,255,255,0.5)', textAlign:'center', lineHeight:1.5, marginBottom:20, letterSpacing:-0.2 }}>
+              {paywallMsg}
+            </p>
+            <div style={{ display:'flex', flexDirection:'column', gap:10, marginBottom:16 }}>
+              {['Programme 8 semaines personnalisé', 'Historique & évolution du score', 'Coach IA disponible 24h/24', 'Alertes & rappels intelligents'].map(f => (
+                <div key={f} style={{ display:'flex', alignItems:'center', gap:10 }}>
+                  <span style={{ color:'#30D158', fontSize:14 }}>✓</span>
+                  <span style={{ fontSize:13, color:'rgba(255,255,255,0.7)', letterSpacing:-0.2 }}>{f}</span>
+                </div>
+              ))}
+            </div>
+            <button style={{ width:'100%', padding:'16px', background:BLUE, border:'none', borderRadius:14, color:'#fff', fontSize:16, fontWeight:600, cursor:'pointer', fontFamily:sf, letterSpacing:-0.3, marginBottom:10 }}>
+              Commencer — 9,99€/mois
+            </button>
+            <button onClick={() => setShowPaywall(false)} style={{ width:'100%', padding:'12px', background:'none', border:'none', color:'rgba(255,255,255,0.3)', fontSize:14, cursor:'pointer', fontFamily:sf }}>
+              Continuer gratuitement
+            </button>
+          </div>
+        </div>
+      )}
 
       {/* NAV */}
       <nav style={{ flexShrink:0, padding:'12px 20px', display:'flex', justifyContent:'space-between', alignItems:'center' }}>
         <span style={{ fontSize:20, fontWeight:700, color:'#fff', letterSpacing:-0.5 }}>GlowApp</span>
-        <button onClick={() => { localStorage.clear(); router.push('/') }}
-          style={{ background:'none', border:'none', color:'rgba(255,255,255,0.35)', fontSize:13, cursor:'pointer', fontFamily:sf }}>
-          Recommencer
-        </button>
+        <div style={{ display:'flex', alignItems:'center', gap:12 }}>
+          {streak > 0 && (
+            <div style={{ display:'flex', alignItems:'center', gap:4, background:'rgba(255,149,10,0.12)', border:'0.5px solid rgba(255,149,10,0.25)', padding:'4px 10px', borderRadius:20 }}>
+              <span style={{ fontSize:12 }}>🔥</span>
+              <span style={{ fontSize:12, fontWeight:600, color:'#FF9F0A', letterSpacing:-0.2 }}>{streak} jours</span>
+            </div>
+          )}
+          <button onClick={() => { localStorage.clear(); router.push('/') }}
+            style={{ background:'none', border:'none', color:'rgba(255,255,255,0.3)', fontSize:13, cursor:'pointer', fontFamily:sf }}>
+            Reset
+          </button>
+        </div>
       </nav>
 
-      {/* HERO SCORE */}
-      <div style={{ flexShrink:0, display:'flex', flexDirection:'column', alignItems:'center', padding:'8px 20px 16px' }}>
-        {/* Greeting */}
-        <p style={{ fontSize:13, color:'rgba(255,255,255,0.4)', letterSpacing:-0.2, marginBottom:4 }}>
-          Bonjour {profile.prenom} 👋
-        </p>
-
-        {/* Ring */}
-        <ScoreRing score={score.total} />
-
-        {/* Score label */}
-        <div style={{ marginTop:4, display:'flex', flexDirection:'column', alignItems:'center', gap:4 }}>
-          <span style={{ fontSize:13, fontWeight:600, color:scoreColor, letterSpacing:-0.2 }}>{scoreLabel}</span>
-          <p style={{ fontSize:11, color:'rgba(255,255,255,0.3)', letterSpacing:-0.1, textAlign:'center', maxWidth:240, lineHeight:1.4 }}>
-            {score.analyse}
-          </p>
+      {/* HERO */}
+      <div style={{ flexShrink:0, display:'flex', flexDirection:'column', alignItems:'center', padding:'4px 20px 12px' }}>
+        <p style={{ fontSize:13, color:'rgba(255,255,255,0.4)', letterSpacing:-0.2, marginBottom:4 }}>Bonjour {profile.prenom} 👋</p>
+        <ScoreRing score={liveScore} />
+        <div style={{ marginTop:4, textAlign:'center' }}>
+          <span style={{ fontSize:13, fontWeight:600, color:scoreColor, letterSpacing:-0.2, display:'block', marginBottom:4 }}>{scoreLabel}</span>
+          <p style={{ fontSize:12, color:'rgba(255,255,255,0.4)', letterSpacing:-0.1, lineHeight:1.4, maxWidth:280 }}>{segmentMsg}</p>
         </div>
+
+        {/* Barre de progression checklist */}
+        {checkedCount > 0 && (
+          <div style={{ width:'100%', marginTop:12 }}>
+            <div style={{ display:'flex', justifyContent:'space-between', marginBottom:4 }}>
+              <span style={{ fontSize:11, color:'rgba(255,255,255,0.3)' }}>Aujourd'hui</span>
+              <span style={{ fontSize:11, color:scoreColor, fontWeight:600 }}>{checkedCount}/5</span>
+            </div>
+            <div style={{ height:3, background:'rgba(255,255,255,0.08)', borderRadius:2, overflow:'hidden' }}>
+              <div style={{ height:'100%', width:`${(checkedCount/5)*100}%`, background:scoreColor, borderRadius:2, transition:'width 0.4s ease' }} />
+            </div>
+          </div>
+        )}
       </div>
 
       {/* TABS */}
-      <div style={{ flexShrink:0, padding:'0 20px 12px', display:'flex', gap:6 }}>
+      <div style={{ flexShrink:0, padding:'0 20px 10px', display:'flex', gap:6 }}>
         {[['score','Mon score'],['plan','Plan S1'],['today',"Aujourd'hui"]].map(([k,l]) => (
           <button key={k} onClick={() => setActiveTab(k as any)}
             style={{ flex:1, padding:'9px 4px', borderRadius:10, border:'none', cursor:'pointer', fontFamily:sf,
@@ -125,56 +218,59 @@ export default function Dashboard() {
       {/* CONTENT */}
       <div style={{ flex:1, overflowY:'auto', padding:'0 20px 24px' }}>
 
-        {/* TAB SCORE */}
+        {/* SCORE TAB */}
         {activeTab === 'score' && (
           <div style={{ display:'flex', flexDirection:'column', gap:8 }}>
             <p style={{ fontSize:11, color:'rgba(255,255,255,0.3)', letterSpacing:0.5, textTransform:'uppercase', marginBottom:4 }}>Détail par catégorie</p>
             {CATEGORIES.map(cat => {
-              const val = score[cat.key as keyof GlowUpScore] as number
-              const pct = (val / 10) * 100
+              const val = score[cat.key] as number
+              const isWeak = score.point_faible === cat.key
               return (
-                <div key={cat.key} style={{ background:'rgba(255,255,255,0.05)', border:'0.5px solid rgba(255,255,255,0.08)', borderRadius:14, padding:'14px 16px' }}>
+                <div key={cat.key} style={{ background: isWeak ? 'rgba(255,69,58,0.06)' : 'rgba(255,255,255,0.05)', border:`0.5px solid ${isWeak ? 'rgba(255,69,58,0.2)' : 'rgba(255,255,255,0.08)'}`, borderRadius:14, padding:'14px 16px' }}>
                   <div style={{ display:'flex', alignItems:'center', justifyContent:'space-between', marginBottom:10 }}>
                     <div style={{ display:'flex', alignItems:'center', gap:10 }}>
                       <span style={{ fontSize:18 }}>{cat.icon}</span>
-                      <span style={{ fontSize:14, fontWeight:600, color:'#fff', letterSpacing:-0.3 }}>{cat.label}</span>
+                      <div>
+                        <span style={{ fontSize:14, fontWeight:600, color:'#fff', letterSpacing:-0.3 }}>{cat.label}</span>
+                        {isWeak && <span style={{ display:'block', fontSize:10, color:'#FF453A', marginTop:1 }}>⚠ Point faible</span>}
+                      </div>
                     </div>
-                    <span style={{ fontSize:18, fontWeight:700, color:cat.color, letterSpacing:-0.5 }}>{val}<span style={{ fontSize:11, fontWeight:400, color:'rgba(255,255,255,0.3)' }}>/10</span></span>
+                    <span style={{ fontSize:18, fontWeight:700, color:cat.color, letterSpacing:-0.5 }}>
+                      {val}<span style={{ fontSize:11, fontWeight:400, color:'rgba(255,255,255,0.3)' }}>/10</span>
+                    </span>
                   </div>
                   <div style={{ height:4, background:'rgba(255,255,255,0.08)', borderRadius:2, overflow:'hidden' }}>
-                    <div style={{ height:'100%', width:`${pct}%`, background:cat.color, borderRadius:2, transition:'width 0.8s ease' }} />
+                    <div style={{ height:'100%', width:`${(val/10)*100}%`, background:cat.color, borderRadius:2 }} />
                   </div>
                 </div>
               )
             })}
 
-            {/* Paywall */}
-            <div style={{ marginTop:8, padding:'16px', background:'rgba(10,132,255,0.08)', border:'0.5px solid rgba(10,132,255,0.2)', borderRadius:16 }}>
-              <p style={{ fontSize:12, color:BLUE, fontWeight:600, marginBottom:4, letterSpacing:-0.2 }}>🔒 Premium</p>
-              <p style={{ fontSize:13, color:'rgba(255,255,255,0.5)', marginBottom:12, letterSpacing:-0.2, lineHeight:1.5 }}>
-                Débloque l'historique complet, le programme personnalisé et le suivi semaine par semaine.
-              </p>
-              <button style={{ width:'100%', padding:'12px', background:BLUE, border:'none', borderRadius:12, color:'#fff', fontSize:14, fontWeight:600, cursor:'pointer', fontFamily:sf, letterSpacing:-0.3 }}>
+            {/* Paywall contextuel */}
+            <div style={{ marginTop:4, padding:'18px', background:'rgba(10,132,255,0.08)', border:'0.5px solid rgba(10,132,255,0.2)', borderRadius:16 }}>
+              <p style={{ fontSize:12, color:BLUE, fontWeight:600, marginBottom:6 }}>🔒 Premium</p>
+              <p style={{ fontSize:13, color:'rgba(255,255,255,0.5)', marginBottom:14, lineHeight:1.5, letterSpacing:-0.2 }}>{paywallMsg}</p>
+              <button onClick={() => setShowPaywall(true)} style={{ width:'100%', padding:'13px', background:BLUE, border:'none', borderRadius:12, color:'#fff', fontSize:14, fontWeight:600, cursor:'pointer', fontFamily:sf, letterSpacing:-0.3 }}>
                 Passer Premium — 9,99€/mois
               </button>
             </div>
           </div>
         )}
 
-        {/* TAB PLAN */}
+        {/* PLAN TAB */}
         {activeTab === 'plan' && (
           <div style={{ display:'flex', flexDirection:'column', gap:10 }}>
-            <p style={{ fontSize:11, color:'rgba(255,255,255,0.3)', letterSpacing:0.5, textTransform:'uppercase', marginBottom:4 }}>Ton plan — Semaine 1</p>
-            {score.plan_semaine1?.map((action, i) => (
+            <p style={{ fontSize:11, color:'rgba(255,255,255,0.3)', letterSpacing:0.5, textTransform:'uppercase', marginBottom:4 }}>Actions — Semaine 1</p>
+            {score.plan_semaine1?.map((action: string, i: number) => (
               <div key={i} style={{ background:'rgba(255,255,255,0.05)', border:'0.5px solid rgba(255,255,255,0.08)', borderRadius:14, padding:'14px 16px', display:'flex', gap:12, alignItems:'flex-start' }}>
-                <div style={{ width:24, height:24, borderRadius:'50%', background:BLUE, display:'flex', alignItems:'center', justifyContent:'center', flexShrink:0, fontSize:11, fontWeight:700, color:'#fff' }}>{i+1}</div>
+                <div style={{ width:26, height:26, borderRadius:'50%', background:BLUE, display:'flex', alignItems:'center', justifyContent:'center', flexShrink:0, fontSize:12, fontWeight:700, color:'#fff' }}>{i+1}</div>
                 <p style={{ fontSize:14, color:'rgba(255,255,255,0.8)', lineHeight:1.5, letterSpacing:-0.2 }}>{action}</p>
               </div>
             ))}
             {score.quick_wins?.length > 0 && (
               <>
                 <p style={{ fontSize:11, color:'rgba(255,255,255,0.3)', letterSpacing:0.5, textTransform:'uppercase', marginTop:8, marginBottom:4 }}>Quick wins — 7 jours</p>
-                {score.quick_wins.map((win, i) => (
+                {score.quick_wins.map((win: string, i: number) => (
                   <div key={i} style={{ background:'rgba(48,209,88,0.06)', border:'0.5px solid rgba(48,209,88,0.15)', borderRadius:14, padding:'12px 16px', display:'flex', gap:10, alignItems:'flex-start' }}>
                     <span style={{ color:'#30D158', fontSize:14 }}>✦</span>
                     <p style={{ fontSize:13, color:'rgba(255,255,255,0.65)', lineHeight:1.5, letterSpacing:-0.2 }}>{win}</p>
@@ -182,22 +278,32 @@ export default function Dashboard() {
                 ))}
               </>
             )}
+            <div style={{ padding:'16px', background:'rgba(10,132,255,0.08)', border:'0.5px solid rgba(10,132,255,0.2)', borderRadius:16, marginTop:4 }}>
+              <p style={{ fontSize:13, color:'rgba(255,255,255,0.5)', marginBottom:12, lineHeight:1.5 }}>🔒 Les semaines 2 à 8 sont disponibles en Premium.</p>
+              <button onClick={() => setShowPaywall(true)} style={{ width:'100%', padding:'12px', background:BLUE, border:'none', borderRadius:12, color:'#fff', fontSize:14, fontWeight:600, cursor:'pointer', fontFamily:sf }}>
+                Voir le plan complet
+              </button>
+            </div>
           </div>
         )}
 
-        {/* TAB TODAY */}
+        {/* TODAY TAB */}
         {activeTab === 'today' && (
           <div style={{ display:'flex', flexDirection:'column', gap:8 }}>
             <p style={{ fontSize:11, color:'rgba(255,255,255,0.3)', letterSpacing:0.5, textTransform:'uppercase', marginBottom:4 }}>Checklist du jour</p>
-            {[
-              { icon:'🏋️', label:'Séance de sport', sub:'30 min minimum' },
-              { icon:'💧', label:'2L d\'eau', sub:'Répartis dans la journée' },
-              { icon:'🥗', label:'Manger équilibré', sub:'Protéines + légumes' },
-              { icon:'🌙', label:'Dormir 7-8h', sub:'Coucher avant 23h' },
-              { icon:'✨', label:'Routine skincare', sub:'Matin + soir' },
-            ].map((item, i) => (
-              <CheckItem key={i} icon={item.icon} label={item.label} sub={item.sub} />
+            {CHECK_ITEMS.map(item => (
+              <CheckItem key={item.key} icon={item.icon} label={item.label} sub={item.sub} onCheck={handleCheck} />
             ))}
+            {checkedCount === 5 && (
+              <div style={{ marginTop:8, padding:'16px', background:'rgba(48,209,88,0.08)', border:'0.5px solid rgba(48,209,88,0.2)', borderRadius:16, textAlign:'center' }}>
+                <p style={{ fontSize:20, marginBottom:6 }}>🎉</p>
+                <p style={{ fontSize:15, fontWeight:700, color:'#30D158', letterSpacing:-0.3, marginBottom:4 }}>Journée parfaite !</p>
+                <p style={{ fontSize:13, color:'rgba(255,255,255,0.5)', marginBottom:12 }}>Ton score a progressé de +{checkedCount * 2} points aujourd'hui.</p>
+                <button onClick={handleStreakUpdate} style={{ padding:'10px 20px', background:'#30D158', border:'none', borderRadius:12, color:'#000', fontSize:13, fontWeight:600, cursor:'pointer', fontFamily:sf }}>
+                  🔥 Valider mon streak
+                </button>
+              </div>
+            )}
           </div>
         )}
       </div>
@@ -208,22 +314,5 @@ export default function Dashboard() {
         * { box-sizing:border-box; margin:0; padding:0; }
       `}</style>
     </main>
-  )
-}
-
-function CheckItem({ icon, label, sub }: { icon: string, label: string, sub: string }) {
-  const [done, setDone] = useState(false)
-  return (
-    <button onClick={() => setDone(d => !d)}
-      style={{ width:'100%', background: done ? 'rgba(48,209,88,0.08)' : 'rgba(255,255,255,0.05)', border:`0.5px solid ${done ? 'rgba(48,209,88,0.2)' : 'rgba(255,255,255,0.08)'}`, borderRadius:14, padding:'14px 16px', display:'flex', alignItems:'center', gap:12, cursor:'pointer', fontFamily:`-apple-system, BlinkMacSystemFont, 'SF Pro Display', sans-serif`, transition:'all 0.15s' }}>
-      <span style={{ fontSize:20 }}>{icon}</span>
-      <div style={{ flex:1, textAlign:'left' }}>
-        <p style={{ fontSize:14, fontWeight:600, color: done ? 'rgba(255,255,255,0.4)' : '#fff', letterSpacing:-0.3, textDecoration: done ? 'line-through' : 'none' }}>{label}</p>
-        <p style={{ fontSize:11, color:'rgba(255,255,255,0.3)', letterSpacing:-0.1, marginTop:1 }}>{sub}</p>
-      </div>
-      <div style={{ width:22, height:22, borderRadius:'50%', background: done ? '#30D158' : 'rgba(255,255,255,0.08)', border:`0.5px solid ${done ? '#30D158' : 'rgba(255,255,255,0.15)'}`, display:'flex', alignItems:'center', justifyContent:'center', flexShrink:0, transition:'all 0.15s' }}>
-        {done && <span style={{ fontSize:12, color:'#000', fontWeight:700 }}>✓</span>}
-      </div>
-    </button>
   )
 }

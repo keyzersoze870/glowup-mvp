@@ -7,36 +7,38 @@ export async function POST(req: NextRequest) {
   try {
     const data = await req.json()
 
-    const prompt = `Tu es un expert en transformation physique et bien-être holistique. Analyse ce profil et génère un Glow Up Score initial.
+    const prompt = `Tu es un expert en transformation physique et bien-être. Analyse ce profil et génère un Glow Up Score.
 
 PROFIL:
 - Prénom: ${data.prenom}
-- Objectif: ${data.objectif}
+- Âge: ${data.age} ans
 - Poids: ${data.poids}kg, Taille: ${data.taille}cm (IMC: ${(data.poids / ((data.taille/100)**2)).toFixed(1)})
-- Niveau sport: ${data.niveau}
-- Séances/semaine actuelles: ${data.sport_semaine}
-- Heures sommeil: ${data.heures_sommeil}h
-- Eau/jour: ${data.eau_litres}L
-- Skincare routine: ${data.skincare ? 'oui' : 'non'}
-- Pas/jour estimés: ${data.steps_quotidien}
+- Sport: ${data.sport} fois/semaine
+- Eau: ${data.eau} litres/jour
+- Skincare: ${data.skincare}
+- Stress: ${data.stress}
 
-Génère un JSON strict (rien d'autre, pas de markdown, pas de backticks) avec cette structure exacte:
+Génère un JSON strict (rien d'autre, pas de markdown):
 {
-  "total": <score 0-100 basé sur l'ensemble du profil>,
-  "training": <score 0-10>,
-  "nutrition": <score 0-10 estimé>,
-  "hydratation": <score 0-10 basé sur ${data.eau_litres}L>,
-  "sommeil": <score 0-10 basé sur ${data.heures_sommeil}h>,
-  "skincare": <score 0-10>,
-  "steps": <score 0-10 basé sur ${data.steps_quotidien} pas>,
-  "analyse": "<2 phrases percutantes personnalisées avec le prénom, ce qui est bien + ce qui bloque>",
-  "plan_semaine1": ["<action concrète 1>", "<action concrète 2>", "<action concrète 3>"],
-  "quick_wins": ["<quick win visible en 7 jours 1>", "<quick win 2>"]
+  "total": <score 0-100>,
+  "training": <0-10>,
+  "nutrition": <0-10 estimé>,
+  "hydratation": <0-10>,
+  "sommeil": <0-10 estimé>,
+  "skincare": <0-10>,
+  "steps": <0-10 stress inversé>,
+  "analyse": "<2 phrases percutantes avec le prénom>",
+  "message_faible": "<message motivant si score < 45 — pique l'ego, montre le potentiel non exploité, 1 phrase>",
+  "message_moyen": "<message FOMO si score 45-70 — tu es proche du niveau Elite, 1 phrase>",
+  "message_eleve": "<message challenge si score > 70 — pointe la vraie faiblesse, 1 phrase>",
+  "point_faible": "<catégorie la plus basse parmi training/nutrition/hydratation/sommeil/skincare/steps>",
+  "plan_semaine1": ["<action 1>", "<action 2>", "<action 3>"],
+  "quick_wins": ["<résultat visible en 7 jours 1>", "<résultat visible en 7 jours 2>"]
 }`
 
     const message = await client.messages.create({
       model: 'claude-sonnet-4-6',
-      max_tokens: 800,
+      max_tokens: 1000,
       messages: [{ role: 'user', content: prompt }]
     })
 
