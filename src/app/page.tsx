@@ -76,12 +76,12 @@ export default function LandingPage() {
       </nav>
 
       {/* TITRE */}
-      <div style={{ flexShrink:0, textAlign:'center', padding:'8px 16px 6px' }}>
-        <div style={{ display:'inline-flex', alignItems:'center', gap:6, background:'rgba(200,255,0,0.06)', border:'1px solid rgba(200,255,0,0.15)', padding:'3px 10px', borderRadius:20, marginBottom:5 }}>
+      <div style={{ flexShrink:0, textAlign:'center', padding:'6px 16px 4px' }}>
+        <div style={{ display:'inline-flex', alignItems:'center', gap:6, background:'rgba(200,255,0,0.06)', border:'1px solid rgba(200,255,0,0.15)', padding:'3px 10px', borderRadius:20, marginBottom:4 }}>
           <div style={{ width:5, height:5, borderRadius:'50%', background:'#C8FF00', animation:'blink 1s infinite' }} />
           <span style={{ fontSize:9, color:'#C8FF00', letterSpacing:2 }}>ANALYSE EN COURS</span>
         </div>
-        <h1 style={{ fontFamily:"'Barlow Condensed',sans-serif", fontSize:22, fontWeight:800, color:'#fff', letterSpacing:1, lineHeight:1.1, textTransform:'uppercase', marginBottom:4 }}>
+        <h1 style={{ fontFamily:"'Barlow Condensed',sans-serif", fontSize:22, fontWeight:800, color:'#fff', letterSpacing:1, lineHeight:1.1, textTransform:'uppercase', marginBottom:3 }}>
           Ton <span style={{ color:'#C8FF00' }}>Glow Up Score</span><br/>en 2 minutes
         </h1>
         <p style={{ fontSize:10, color:'rgba(255,255,255,0.4)', lineHeight:1.3 }}>
@@ -89,8 +89,8 @@ export default function LandingPage() {
         </p>
       </div>
 
-      {/* PHOTO — hauteur fixe, pas flex */}
-      <div style={{ flexShrink:0, position:'relative', height:300, margin:'8px 16px 0' }}>
+      {/* PHOTO — hauteur fixe */}
+      <div style={{ flexShrink:0, position:'relative', height:340, margin:'6px 16px 0' }}>
         {/* Coins */}
         {[{top:0,left:0,borderWidth:'2px 0 0 2px'},{top:0,right:0,borderWidth:'2px 2px 0 0'},{bottom:0,left:0,borderWidth:'0 0 2px 2px'},{bottom:0,right:0,borderWidth:'0 2px 2px 0'}].map((s,i) => (
           <div key={i} style={{ position:'absolute',...s,width:18,height:18,borderColor:'#C8FF00',borderStyle:'solid',zIndex:20 }} />
