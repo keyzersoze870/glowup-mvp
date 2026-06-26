@@ -129,29 +129,25 @@ export default function LandingPage() {
         })}
       </div>
 
-      {/* SCORE */}
-      <div style={{ flexShrink:0, textAlign:'center', padding:'10px 16px 0' }}>
+      {/* SCORE + CTA groupés, pas d'espace mort */}
+      <div style={{ flexShrink:0, padding:'8px 16px 14px', textAlign:'center' }}>
         <div style={{ fontSize:8,color:'rgba(200,255,0,0.5)',letterSpacing:3,marginBottom:1 }}>GLOW UP SCORE</div>
         <div style={{ fontFamily:"'Barlow Condensed',sans-serif",fontSize:50,fontWeight:800,color:'#C8FF00',lineHeight:1 }}>
           {displayScore}<span style={{ fontSize:16,opacity:0.5 }}>/100</span>
         </div>
-        <div style={{ height:18,marginTop:3 }}>
+        <div style={{ minHeight:20,marginTop:3,marginBottom:8 }}>
           {showRank && (
             <p style={{ fontSize:10,color:'#FF6B35',fontWeight:600,animation:'fadeIn 0.4s ease' }}>
               ⚠️ {profile.rank}
             </p>
           )}
         </div>
-      </div>
-
-      {/* CTA */}
-      <div style={{ flexShrink:0, padding:'8px 16px 14px' }}>
         <Link href="/onboarding" style={{ fontFamily:"'Barlow Condensed',sans-serif",fontWeight:800,fontSize:15,
           color:'#000',background:'#C8FF00',padding:'13px 0',borderRadius:28,
           textDecoration:'none',letterSpacing:1,display:'block',textAlign:'center' }}>
           CALCULER MON SCORE — GRATUIT
         </Link>
-        <div style={{ fontSize:8,color:'rgba(255,255,255,0.2)',marginTop:6,letterSpacing:1,textAlign:'center' }}>2 MIN · AUCUNE CB REQUISE</div>
+        <div style={{ fontSize:8,color:'rgba(255,255,255,0.2)',marginTop:6,letterSpacing:1 }}>2 MIN · AUCUNE CB REQUISE</div>
       </div>
 
       <style>{`
