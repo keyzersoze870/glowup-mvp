@@ -123,7 +123,7 @@ export default function LandingPage() {
               <div key={i} style={{ position:'absolute', left:`${pt.x}%`, top:`${pt.y}%`, zIndex:16, opacity:visible?1:0, transition:'opacity 0.3s ease', pointerEvents:'none' }}>
                 <div style={{ width:8,height:8,borderRadius:'50%',background:pt.color,boxShadow:`0 0 8px ${pt.color},0 0 16px ${pt.color}55`,transform:'translate(-50%,-50%)',position:'absolute' }} />
                 <div style={{ position:'absolute', top:'50%', [isRight?'left':'right']:6, transform:'translateY(-50%)', display:'flex', flexDirection:isRight?'row':'row-reverse', alignItems:'center' }}>
-                  <div style={{ width:24,height:1,background:pt.color,opacity:0.7,flexShrink:0 }} />
+                  <div style={{ width:29,height:1,background:pt.color,opacity:0.7,flexShrink:0 }} />
                   <div style={{ background:'rgba(6,6,15,0.9)',border:`1px solid ${pt.color}44`,borderRadius:5,padding:'3px 6px',backdropFilter:'blur(4px)' }}>
                     <div style={{ fontFamily:"'Barlow Condensed',sans-serif",fontSize:14,fontWeight:800,color:pt.color,lineHeight:1,textAlign:isRight?'left':'right' }}>
                       {pt.val}<span style={{ fontSize:8,opacity:0.5 }}>/100</span>
