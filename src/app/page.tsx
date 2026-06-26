@@ -121,7 +121,7 @@ export default function LandingPage() {
                   <div style={{ fontFamily:"'Barlow Condensed',sans-serif",fontSize:14,fontWeight:800,color:pt.color,lineHeight:1,textAlign:isRight?'left':'right' }}>
                     {pt.val}<span style={{ fontSize:8,opacity:0.5 }}>/100</span>
                   </div>
-                  <div style={{ fontSize:7,color:'rgba(255,255,255,0.5)',marginTop:1,whiteSpace:'nowrap',textAlign:isRight?'left':'right' }}>{pt.label}</div>
+                  <div style={{ fontSize:9,fontWeight:700,color:'rgba(255,255,255,0.75)',marginTop:1,whiteSpace:'nowrap',textAlign:isRight?'left':'right' }}>{pt.label}</div>
                 </div>
               </div>
             </div>
