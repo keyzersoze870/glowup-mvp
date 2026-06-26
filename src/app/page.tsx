@@ -4,7 +4,7 @@ import { useState, useEffect, useRef } from 'react'
 
 const PROFILES = [
   {
-    img: '/selfiew.jpg',
+    img: '/selfie1.png',
     points: [
       { x: 32, y: 28, label: 'Hydratation', val: '92', color: '#C8FF00', side: 'left' },
       { x: 28, y: 50, label: 'Sommeil',     val: '61', color: '#A78BFA', side: 'left' },
@@ -16,7 +16,7 @@ const PROFILES = [
     score: 78,
   },
   {
-    img: '/selfiem.jpg',
+    img: '/selfie2.png',
     points: [
       { x: 32, y: 25, label: 'Hydratation', val: '65', color: '#C8FF00', side: 'left' },
       { x: 28, y: 48, label: 'Sommeil',     val: '80', color: '#A78BFA', side: 'left' },
@@ -98,8 +98,8 @@ export default function LandingPage() {
                 objectFit: 'cover',
                 objectPosition: 'center 20%',
                 display: 'block',
-                mixBlendMode: 'multiply', // fond blanc devient transparent sur fond sombre
-                filter: 'contrast(1.15) brightness(1.05)',
+                 // fond blanc devient transparent sur fond sombre
+                filter: 'brightness(0.95)',
               }}
             />
             {/* Vignette pour fondre les bords */}
