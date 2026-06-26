@@ -216,7 +216,7 @@ export default function Dashboard() {
       </div>
 
       {/* CONTENT */}
-      <div style={{ flex:1, overflowY:'auto', padding:'0 20px 80px' }}>
+      <div style={{ flex:1, overflowY:'auto', padding:'0 20px 120px' }}>
 
         {/* SCORE TAB */}
         {activeTab === 'score' && (
