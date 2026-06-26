@@ -90,7 +90,7 @@ export default function LandingPage() {
       </div>
 
       {/* PHOTO — hauteur fixe, pas flex */}
-      <div style={{ flexShrink:0, position:'relative', height:300, margin:'8px 16px 0' }}>
+      <div style={{ flexShrink:0, position:'relative', height:380, margin:'8px 16px 0' }}>
         {/* Coins */}
         {[{top:0,left:0,borderWidth:'2px 0 0 2px'},{top:0,right:0,borderWidth:'2px 2px 0 0'},{bottom:0,left:0,borderWidth:'0 0 2px 2px'},{bottom:0,right:0,borderWidth:'0 2px 2px 0'}].map((s,i) => (
           <div key={i} style={{ position:'absolute',...s,width:18,height:18,borderColor:'#C8FF00',borderStyle:'solid',zIndex:20 }} />
