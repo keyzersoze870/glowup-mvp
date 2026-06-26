@@ -129,7 +129,7 @@ export default function Dashboard() {
     : `Débloque le programme avancé pour atteindre le score Elite (90+).`
 
   return (
-    <main style={{ height:'100svh', background:'#000', fontFamily:sf, overflow:'hidden', display:'flex', flexDirection:'column', position:'relative' }}>
+    <main style={{ height:'100svh', background:'#000', fontFamily:sf, display:'flex', flexDirection:'column', position:'relative' }}>
 
       {/* PAYWALL OVERLAY */}
       {showPaywall && (
