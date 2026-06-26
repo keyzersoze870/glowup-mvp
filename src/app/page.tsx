@@ -93,7 +93,7 @@ export default function LandingPage() {
         </div>
 
         {/* PHOTO — flex: 1 pour prendre tout l'espace restant */}
-        <div style={{ flex: 1, position: 'relative', margin: '0 16px', minHeight: 0, maxHeight: '62vh' }}>
+        <div style={{ flex: '0 1 58vh', position: 'relative', margin: '0 16px', minHeight: 0 }}>
           {/* Coins */}
           {[{top:0,left:0,borderWidth:'2px 0 0 2px'},{top:0,right:0,borderWidth:'2px 2px 0 0'},{bottom:0,left:0,borderWidth:'0 0 2px 2px'},{bottom:0,right:0,borderWidth:'0 2px 2px 0'}].map((s,i) => (
             <div key={i} style={{ position:'absolute',...s,width:20,height:20,borderColor:'#C8FF00',borderStyle:'solid',zIndex:20,opacity:0.9 }} />
