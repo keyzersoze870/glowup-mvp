@@ -145,7 +145,7 @@ export default function LandingPage() {
       </div>
 
       {/* CTA */}
-      <div style={{ flexShrink:0, padding:'8px 16px 14px', marginTop:'auto' }}>
+      <div style={{ flexShrink:0, padding:'8px 16px 14px' }}>
         <Link href="/onboarding" style={{ fontFamily:"'Barlow Condensed',sans-serif",fontWeight:800,fontSize:15,
           color:'#000',background:'#C8FF00',padding:'13px 0',borderRadius:28,
           textDecoration:'none',letterSpacing:1,display:'block',textAlign:'center' }}>
