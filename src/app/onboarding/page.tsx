@@ -87,7 +87,7 @@ export default function OnboardingPage() {
   return (
     <main style={{ height:'100dvh', background:'#000', fontFamily:sf, overflow:'hidden', display:'flex', flexDirection:'column' }}>
 
-      <nav style={{ flexShrink:0, padding:'12px 20px', display:'flex', justifyContent:'space-between', alignItems:'center' }}>
+      <nav style={{ flexShrink:0, padding:'12px 20px', display:'flex', justifyContent:'space-between', alignItems:'center', position:'sticky', top:0, zIndex:10, background:'#000' }}>
         <span style={{ fontSize:20, fontWeight:700, color:'#fff', letterSpacing:-0.5 }}>GlowApp</span>
         {step > 0 && (
           <button onClick={back} style={{ background:'none', border:'none', color:'rgba(255,255,255,0.5)', fontSize:14, cursor:'pointer', fontFamily:sf }}>
@@ -96,13 +96,13 @@ export default function OnboardingPage() {
         )}
       </nav>
 
-      <div style={{ flexShrink:0, padding:'0 20px 20px', display:'flex', gap:5 }}>
+      <div style={{ flexShrink:0, padding:'0 20px 16px', display:'flex', gap:5 }}>
         {Array.from({ length: TOTAL_STEPS }).map((_, i) => (
           <div key={i} style={{ flex:1, height:3, borderRadius:2, background: i <= step ? BLUE : 'rgba(255,255,255,0.12)', transition:'background 0.3s ease' }} />
         ))}
       </div>
 
-      <div style={{ flex:1, padding:'0 24px 24px', overflowY:'auto', display:'flex', flexDirection:'column' }}>
+      <div style={{ flex:1, padding:'0 24px', paddingBottom:'40px', overflowY:'auto', display:'flex', flexDirection:'column' }}>
 
         {/* STEP 0 — Selfie EN PREMIER */}
         {step === 0 && (
