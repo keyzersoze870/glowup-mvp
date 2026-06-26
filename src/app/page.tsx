@@ -2,75 +2,67 @@
 import Link from 'next/link'
 import { useState, useEffect, useRef } from 'react'
 
-// Mesh calibré manuellement pour chaque photo
-// Coordonnées en % (x, y) de la zone photo 260x300
-// Photo 1 : femme blonde, visage centré légèrement en haut
+// Mesh calibré sur les vraies photos
+// Photo femme : visage légèrement penché à droite, cheveux blonds
+// Dans le cadre 260x300 avec objectPosition center 20%
+// Le visage occupe environ x:25%-75%, y:8%-75%
 const MESH_F = {
-  // Contour visage
-  jaw: [[28,42],[27,50],[28,58],[30,65],[33,72],[38,78],[43,83],[50,86],[57,83],[62,78],[67,72],[70,65],[72,58],[73,50],[72,42]],
-  // Sourcil gauche
-  browL: [[30,34],[34,32],[39,31],[44,32],[48,33]],
-  // Sourcil droit  
-  browR: [[52,33],[56,32],[61,31],[66,32],[70,34]],
-  // Oeil gauche
-  eyeL: [[32,39],[36,37],[40,37],[44,39],[40,41],[36,41]],
-  // Oeil droit
-  eyeR: [[56,39],[60,37],[64,37],[68,39],[64,41],[60,41]],
-  // Nez
-  nose: [[50,40],[50,44],[50,48],[50,52],[46,55],[48,56],[50,57],[52,56],[54,55]],
-  // Bouche
-  mouth: [[42,62],[46,60],[50,59],[54,60],[58,62],[54,65],[50,66],[46,65]],
+  jaw:   [[30,62],[29,68],[29,75],[31,81],[34,87],[38,91],[43,94],[50,96],[57,94],[62,91],[66,87],[69,81],[71,75],[71,68],[70,62]],
+  browL: [[30,34],[34,31],[39,29],[44,30],[48,32]],
+  browR: [[53,31],[58,29],[63,30],[67,32],[70,34]],
+  eyeL:  [[31,38],[36,35],[41,35],[45,38],[41,41],[36,41]],
+  eyeR:  [[55,37],[59,34],[64,34],[68,37],[64,40],[59,40]],
+  nose:  [[50,37],[49,43],[49,49],[49,54],[45,57],[47,58],[50,59],[53,58],[55,57]],
+  mouth: [[39,64],[44,61],[48,60],[52,60],[57,61],[62,64],[57,68],[52,69],[48,69],[44,68]],
 }
 
-// Photo 2 : homme, visage centré
+// Photo homme : visage légèrement penché à gauche, cheveux noirs
+// Visage occupe environ x:22%-75%, y:18%-80%
 const MESH_M = {
-  jaw: [[27,40],[26,48],[27,56],[29,63],[32,70],[37,76],[42,81],[50,84],[58,81],[63,76],[68,70],[71,63],[73,56],[74,48],[73,40]],
-  browL: [[29,32],[33,30],[38,29],[43,30],[47,31]],
-  browR: [[53,31],[57,30],[62,29],[67,30],[71,32]],
-  eyeL: [[31,37],[35,35],[39,35],[43,37],[39,39],[35,39]],
-  eyeR: [[57,37],[61,35],[65,35],[69,37],[65,39],[61,39]],
-  nose: [[50,38],[50,42],[50,46],[50,50],[46,53],[48,54],[50,55],[52,54],[54,53]],
-  mouth: [[41,60],[45,58],[50,57],[55,58],[59,60],[55,63],[50,64],[45,63]],
+  jaw:   [[28,68],[27,74],[27,80],[29,86],[32,91],[37,95],[43,98],[50,99],[57,98],[63,95],[68,91],[71,86],[73,80],[73,74],[72,68]],
+  browL: [[28,42],[32,38],[37,36],[42,37],[46,39]],
+  browR: [[54,38],[58,36],[63,37],[68,39],[71,42]],
+  eyeL:  [[29,47],[34,44],[39,44],[44,47],[39,50],[34,50]],
+  eyeR:  [[56,46],[61,43],[66,43],[71,46],[66,49],[61,49]],
+  nose:  [[50,46],[50,52],[50,57],[50,62],[46,65],[48,66],[50,67],[52,66],[54,65]],
+  mouth: [[38,73],[43,70],[47,69],[53,69],[57,70],[62,73],[57,77],[52,78],[48,78],[43,77]],
 }
 
 function MeshSVG({ mesh, visible, W, H }: { mesh: typeof MESH_F, visible: boolean, W: number, H: number }) {
-  const toXY = (p: number[]) => ({ x: p[0]/100*W, y: p[1]/100*H })
-
-  const drawLine = (points: number[][], closed = false) => {
-    const pts = points.map(toXY)
-    let d = `M ${pts[0].x} ${pts[0].y}`
-    for (let i = 1; i < pts.length; i++) d += ` L ${pts[i].x} ${pts[i].y}`
-    if (closed) d += ' Z'
-    return d
+  const p = (pt: number[]) => ({ x: pt[0]/100*W, y: pt[1]/100*H })
+  const path = (pts: number[][], closed = false) => {
+    const c = pts.map(p)
+    return c.map((pt, i) => `${i===0?'M':'L'} ${pt.x.toFixed(1)} ${pt.y.toFixed(1)}`).join(' ') + (closed?' Z':'')
   }
+  const allPts = [...mesh.jaw,...mesh.browL,...mesh.browR,...mesh.eyeL,...mesh.eyeR,...mesh.nose,...mesh.mouth]
 
   return (
     <svg style={{ position:'absolute',inset:0,width:'100%',height:'100%',zIndex:12,pointerEvents:'none',
-      opacity:visible?1:0, transition:'opacity 0.6s ease' }}
-      viewBox={`0 0 ${W} ${H}`}>
+      opacity:visible?1:0, transition:'opacity 0.6s ease' }} viewBox={`0 0 ${W} ${H}`}>
       <defs>
-        <filter id="glow">
-          <feGaussianBlur stdDeviation="1" result="blur"/>
+        <filter id="cglow" x="-20%" y="-20%" width="140%" height="140%">
+          <feGaussianBlur stdDeviation="1.2" result="blur"/>
           <feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge>
         </filter>
       </defs>
-      <g filter="url(#glow)" stroke="#00F5FF" strokeWidth="0.7" strokeOpacity="0.6" fill="none">
-        <path d={drawLine(mesh.jaw)}/>
-        <path d={drawLine(mesh.browL)}/>
-        <path d={drawLine(mesh.browR)}/>
-        <path d={drawLine(mesh.eyeL, true)}/>
-        <path d={drawLine(mesh.eyeR, true)}/>
-        <path d={drawLine(mesh.nose)}/>
-        <path d={drawLine(mesh.mouth, true)}/>
-        {/* Lignes verticales nez-sourcil */}
-        <line x1={toXY(mesh.browL[2]).x} y1={toXY(mesh.browL[2]).y} x2={toXY(mesh.eyeL[0]).x} y2={toXY(mesh.eyeL[0]).y}/>
-        <line x1={toXY(mesh.browR[2]).x} y1={toXY(mesh.browR[2]).y} x2={toXY(mesh.eyeR[2]).x} y2={toXY(mesh.eyeR[2]).y}/>
+      <g filter="url(#cglow)" stroke="#00F5FF" strokeWidth="0.8" strokeOpacity="0.65" fill="none">
+        <path d={path(mesh.jaw)}/>
+        <path d={path(mesh.browL)}/>
+        <path d={path(mesh.browR)}/>
+        <path d={path(mesh.eyeL, true)}/>
+        <path d={path(mesh.eyeR, true)}/>
+        <path d={path(mesh.nose)}/>
+        <path d={path(mesh.mouth, true)}/>
+        {/* Pont nez-sourcils */}
+        <line x1={p(mesh.browL[2]).x} y1={p(mesh.browL[2]).y} x2={p(mesh.eyeL[0]).x} y2={p(mesh.eyeL[0]).y}/>
+        <line x1={p(mesh.browR[2]).x} y1={p(mesh.browR[2]).y} x2={p(mesh.eyeR[2]).x} y2={p(mesh.eyeR[2]).y}/>
+        {/* Nez vers bouche */}
+        <line x1={p(mesh.nose[8]).x} y1={p(mesh.nose[8]).y} x2={p(mesh.mouth[0]).x} y2={p(mesh.mouth[0]).y} strokeOpacity="0.3"/>
+        <line x1={p(mesh.nose[6]).x} y1={p(mesh.nose[6]).y} x2={p(mesh.mouth[4]).x} y2={p(mesh.mouth[4]).y} strokeOpacity="0.3"/>
       </g>
-      {/* Points */}
-      <g fill="#00F5FF" opacity="0.9">
-        {[...mesh.jaw, ...mesh.browL, ...mesh.browR, ...mesh.eyeL, ...mesh.eyeR, ...mesh.nose, ...mesh.mouth].map((p,i) => (
-          <circle key={i} cx={toXY(p).x} cy={toXY(p).y} r="1.8"/>
-        ))}
+      {/* Points lumineux */}
+      <g fill="#00F5FF" filter="url(#cglow)">
+        {allPts.map((pt,i) => <circle key={i} cx={p(pt).x} cy={p(pt).y} r="2" opacity="0.95"/>)}
       </g>
     </svg>
   )
@@ -81,12 +73,12 @@ const PROFILES = [
     img: '/selfie1.png',
     mesh: MESH_F,
     metrics: [
-      { x: 24, y: 30, label: 'Hydratation', val: '92', color: '#C8FF00', side: 'left' },
-      { x: 22, y: 50, label: 'Sommeil',     val: '61', color: '#A78BFA', side: 'left' },
-      { x: 24, y: 70, label: 'Training',    val: '85', color: '#FF6B35', side: 'left' },
-      { x: 76, y: 30, label: 'Énergie',     val: '88', color: '#FF6B35', side: 'right' },
-      { x: 78, y: 50, label: 'Skincare',    val: '74', color: '#00F5FF', side: 'right' },
-      { x: 76, y: 70, label: 'Nutrition',   val: '79', color: '#C8FF00', side: 'right' },
+      { x: 22, y: 32, label: 'Hydratation', val: '92', color: '#C8FF00', side: 'left' },
+      { x: 20, y: 52, label: 'Sommeil',     val: '61', color: '#A78BFA', side: 'left' },
+      { x: 22, y: 72, label: 'Training',    val: '85', color: '#FF6B35', side: 'left' },
+      { x: 78, y: 32, label: 'Énergie',     val: '88', color: '#FF6B35', side: 'right' },
+      { x: 80, y: 52, label: 'Skincare',    val: '74', color: '#00F5FF', side: 'right' },
+      { x: 78, y: 72, label: 'Nutrition',   val: '79', color: '#C8FF00', side: 'right' },
     ],
     score: 78,
     rank: '47% des utilisateurs ont un meilleur score que toi.',
@@ -95,12 +87,12 @@ const PROFILES = [
     img: '/selfie2.png',
     mesh: MESH_M,
     metrics: [
-      { x: 24, y: 28, label: 'Hydratation', val: '65', color: '#C8FF00', side: 'left' },
-      { x: 22, y: 48, label: 'Sommeil',     val: '80', color: '#A78BFA', side: 'left' },
-      { x: 24, y: 68, label: 'Training',    val: '91', color: '#FF6B35', side: 'left' },
-      { x: 76, y: 28, label: 'Énergie',     val: '77', color: '#FF6B35', side: 'right' },
-      { x: 78, y: 48, label: 'Skincare',    val: '42', color: '#00F5FF', side: 'right' },
-      { x: 76, y: 68, label: 'Nutrition',   val: '55', color: '#C8FF00', side: 'right' },
+      { x: 20, y: 38, label: 'Hydratation', val: '65', color: '#C8FF00', side: 'left' },
+      { x: 18, y: 56, label: 'Sommeil',     val: '80', color: '#A78BFA', side: 'left' },
+      { x: 20, y: 74, label: 'Training',    val: '91', color: '#FF6B35', side: 'left' },
+      { x: 80, y: 38, label: 'Énergie',     val: '77', color: '#FF6B35', side: 'right' },
+      { x: 82, y: 56, label: 'Skincare',    val: '42', color: '#00F5FF', side: 'right' },
+      { x: 80, y: 74, label: 'Nutrition',   val: '55', color: '#C8FF00', side: 'right' },
     ],
     score: 69,
     rank: '32% des utilisateurs ont un meilleur score que toi.',
@@ -154,7 +146,6 @@ export default function LandingPage() {
       </nav>
 
       <div style={{ flex: 1, display: 'flex', flexDirection: 'column', alignItems: 'center', padding: '10px 12px 12px', overflow: 'hidden' }}>
-
         <div style={{ textAlign: 'center', flexShrink: 0, marginBottom: 10 }}>
           <div style={{ display: 'inline-flex', alignItems: 'center', gap: 6, background: 'rgba(200,255,0,0.06)', border: '1px solid rgba(200,255,0,0.15)', padding: '4px 12px', borderRadius: 20, marginBottom: 6 }}>
             <div style={{ width: 5, height: 5, borderRadius: '50%', background: '#C8FF00', animation: 'blink 1s infinite' }} />
@@ -169,10 +160,9 @@ export default function LandingPage() {
         </div>
 
         <div style={{ position: 'relative', width: W, height: H, flexShrink: 0 }}>
-          {[{ top:-3,left:-3,borderWidth:'2px 0 0 2px' },{ top:-3,right:-3,borderWidth:'2px 2px 0 0' },{ bottom:-3,left:-3,borderWidth:'0 0 2px 2px' },{ bottom:-3,right:-3,borderWidth:'0 2px 2px 0' }].map((s,i) => (
+          {[{top:-3,left:-3,borderWidth:'2px 0 0 2px'},{top:-3,right:-3,borderWidth:'2px 2px 0 0'},{bottom:-3,left:-3,borderWidth:'0 0 2px 2px'},{bottom:-3,right:-3,borderWidth:'0 2px 2px 0'}].map((s,i) => (
             <div key={i} style={{ position:'absolute',...s,width:20,height:20,borderColor:'#C8FF00',borderStyle:'solid',zIndex:20,opacity:0.9 }} />
           ))}
-
           <div style={{ position:'absolute',inset:0,borderRadius:10,overflow:'hidden',background:'#06060F' }}>
             <img key={profile.img} src={profile.img} alt="scan"
               style={{ width:'100%',height:'100%',objectFit:'cover',objectPosition:'center 20%',display:'block',filter:'brightness(0.95)' }}
