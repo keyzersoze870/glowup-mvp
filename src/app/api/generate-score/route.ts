@@ -43,7 +43,8 @@ Génère un JSON strict (rien d'autre, pas de markdown):
     })
 
     const text = message.content[0].type === 'text' ? message.content[0].text : ''
-    const score = JSON.parse(text)
+    const clean = text.replace(/```json\n?/g, '').replace(/```\n?/g, '').trim()
+    const score = JSON.parse(clean)
 
     return NextResponse.json({ success: true, score })
   } catch (err) {
