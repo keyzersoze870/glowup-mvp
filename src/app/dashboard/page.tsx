@@ -108,7 +108,7 @@ export default function Dashboard() {
   }
 
   if (!score || !profile) return (
-    <div style={{ height:'100dvh', background:'#000', display:'flex', alignItems:'center', justifyContent:'center' }}>
+    <div style={{ height:'100svh', background:'#000', display:'flex', alignItems:'center', justifyContent:'center' }}>
       <div style={{ width:24, height:24, border:'2px solid rgba(255,255,255,0.1)', borderTopColor:BLUE, borderRadius:'50%', animation:'spin 0.8s linear infinite' }} />
       <style>{`@keyframes spin{to{transform:rotate(360deg)}}`}</style>
     </div>
@@ -129,7 +129,7 @@ export default function Dashboard() {
     : `Débloque le programme avancé pour atteindre le score Elite (90+).`
 
   return (
-    <main style={{ height:'100dvh', background:'#000', fontFamily:sf, overflow:'hidden', display:'flex', flexDirection:'column', position:'relative' }}>
+    <main style={{ height:'100svh', background:'#000', fontFamily:sf, overflow:'hidden', display:'flex', flexDirection:'column', position:'relative' }}>
 
       {/* PAYWALL OVERLAY */}
       {showPaywall && (
