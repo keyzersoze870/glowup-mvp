@@ -6,11 +6,9 @@ const PROFILES = [
   {
     img: '/selfiew.jpg',
     points: [
-      // GAUCHE (texte à gauche, point sur visage gauche)
       { x: 32, y: 28, label: 'Hydratation', val: '92', color: '#C8FF00', side: 'left' },
       { x: 28, y: 50, label: 'Sommeil',     val: '61', color: '#A78BFA', side: 'left' },
       { x: 30, y: 70, label: 'Training',    val: '85', color: '#FF6B35', side: 'left' },
-      // DROITE (texte à droite, point sur visage droit)
       { x: 68, y: 28, label: 'Énergie',     val: '88', color: '#FF6B35', side: 'right' },
       { x: 72, y: 50, label: 'Skincare',    val: '74', color: '#00F5FF', side: 'right' },
       { x: 70, y: 70, label: 'Nutrition',   val: '79', color: '#C8FF00', side: 'right' },
@@ -46,16 +44,17 @@ export default function LandingPage() {
     let start: number
     const animateScan = (ts: number) => {
       if (!start) start = ts
-      const p = Math.min((ts - start) / 1600, 1)
+      const p = Math.min((ts - start) / 800, 1) // 800ms scan rapide
       setScanY(p * 100)
       if (p < 1) { rafRef.current = requestAnimationFrame(animateScan) }
       else {
         setPhase('reveal')
-        profile.points.forEach((_, i) => setTimeout(() => setVisiblePoints(prev => [...prev, i]), i * 280))
+        profile.points.forEach((_, i) => setTimeout(() => setVisiblePoints(prev => [...prev, i]), i * 120))
         setTimeout(() => {
-          let s = 0; const iv = setInterval(() => { s += 2; setDisplayScore(Math.min(s, profile.score)); if (s >= profile.score) clearInterval(iv) }, 25)
-        }, profile.points.length * 280 + 100)
-        setTimeout(() => setProfileIdx(idx => (idx + 1) % PROFILES.length), profile.points.length * 280 + 3200)
+          let s = 0
+          const iv = setInterval(() => { s += 4; setDisplayScore(Math.min(s, profile.score)); if (s >= profile.score) clearInterval(iv) }, 20)
+        }, profile.points.length * 120 + 80)
+        setTimeout(() => setProfileIdx(idx => (idx + 1) % PROFILES.length), profile.points.length * 120 + 2500)
       }
     }
     rafRef.current = requestAnimationFrame(animateScan)
@@ -71,7 +70,6 @@ export default function LandingPage() {
 
       <div style={{ flex: 1, display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'space-between', padding: '10px 12px', overflow: 'hidden' }}>
 
-        {/* TITRE */}
         <div style={{ textAlign: 'center', flexShrink: 0 }}>
           <div style={{ display: 'inline-flex', alignItems: 'center', gap: 6, background: 'rgba(200,255,0,0.06)', border: '1px solid rgba(200,255,0,0.15)', padding: '4px 12px', borderRadius: 20, marginBottom: 6 }}>
             <div style={{ width: 5, height: 5, borderRadius: '50%', background: '#C8FF00', animation: 'blink 1s infinite' }} />
@@ -82,17 +80,31 @@ export default function LandingPage() {
           </h1>
         </div>
 
-        {/* PHOTO SCANNER — taille fixe pour laisser place au score */}
+        {/* PHOTO SCANNER */}
         <div style={{ position: 'relative', width: 260, height: 320, flexShrink: 0 }}>
           {/* Coins */}
           {[{ top:-3,left:-3,borderWidth:'2px 0 0 2px' },{ top:-3,right:-3,borderWidth:'2px 2px 0 0' },{ bottom:-3,left:-3,borderWidth:'0 0 2px 2px' },{ bottom:-3,right:-3,borderWidth:'0 2px 2px 0' }].map((s,i) => (
             <div key={i} style={{ position:'absolute',...s,width:20,height:20,borderColor:'#C8FF00',borderStyle:'solid',zIndex:20,opacity:0.9 }} />
           ))}
 
-          {/* Photo centrée sur le visage */}
-          <img key={profile.img} src={profile.img} alt="scan"
-            style={{ width:'100%', height:'100%', objectFit:'cover', objectPosition:'center 20%', borderRadius:10, display:'block', filter:'brightness(0.88) contrast(1.08)' }}
-          />
+          {/* Photo avec fond blanc supprimé via mix-blend-mode */}
+          <div style={{ position: 'absolute', inset: 0, borderRadius: 10, overflow: 'hidden', background: '#06060F' }}>
+            <img
+              key={profile.img}
+              src={profile.img}
+              alt="scan"
+              style={{
+                width: '100%', height: '100%',
+                objectFit: 'cover',
+                objectPosition: 'center 20%',
+                display: 'block',
+                mixBlendMode: 'multiply', // fond blanc devient transparent sur fond sombre
+                filter: 'contrast(1.15) brightness(1.05)',
+              }}
+            />
+            {/* Vignette pour fondre les bords */}
+            <div style={{ position: 'absolute', inset: 0, background: 'radial-gradient(ellipse at center, transparent 50%, #06060F 100%)', pointerEvents: 'none' }} />
+          </div>
 
           {/* Scan line */}
           {phase === 'scan' && (
@@ -108,13 +120,11 @@ export default function LandingPage() {
             const visible = visiblePoints.includes(i)
             const isRight = pt.side === 'right'
             return (
-              <div key={i} style={{ position:'absolute', left:`${pt.x}%`, top:`${pt.y}%`, zIndex:16, opacity:visible?1:0, transition:'opacity 0.35s ease', pointerEvents:'none' }}>
-                {/* Point lumineux */}
+              <div key={i} style={{ position:'absolute', left:`${pt.x}%`, top:`${pt.y}%`, zIndex:16, opacity:visible?1:0, transition:'opacity 0.3s ease', pointerEvents:'none' }}>
                 <div style={{ width:8,height:8,borderRadius:'50%',background:pt.color,boxShadow:`0 0 8px ${pt.color},0 0 16px ${pt.color}55`,transform:'translate(-50%,-50%)',position:'absolute' }} />
-                {/* Ligne + label */}
                 <div style={{ position:'absolute', top:'50%', [isRight?'left':'right']:6, transform:'translateY(-50%)', display:'flex', flexDirection:isRight?'row':'row-reverse', alignItems:'center' }}>
                   <div style={{ width:24,height:1,background:pt.color,opacity:0.7,flexShrink:0 }} />
-                  <div style={{ background:'rgba(6,6,15,0.88)',border:`1px solid ${pt.color}33`,borderRadius:5,padding:'3px 6px',backdropFilter:'blur(4px)' }}>
+                  <div style={{ background:'rgba(6,6,15,0.9)',border:`1px solid ${pt.color}44`,borderRadius:5,padding:'3px 6px',backdropFilter:'blur(4px)' }}>
                     <div style={{ fontFamily:"'Barlow Condensed',sans-serif",fontSize:14,fontWeight:800,color:pt.color,lineHeight:1,textAlign:isRight?'left':'right' }}>
                       {pt.val}<span style={{ fontSize:8,opacity:0.5 }}>/100</span>
                     </div>
@@ -126,7 +136,7 @@ export default function LandingPage() {
           })}
 
           {/* Grid overlay */}
-          <div style={{ position:'absolute',inset:0,borderRadius:10,opacity:0.05,backgroundImage:'linear-gradient(rgba(200,255,0,1) 1px,transparent 1px),linear-gradient(90deg,rgba(200,255,0,1) 1px,transparent 1px)',backgroundSize:'18px 18px',pointerEvents:'none' }} />
+          <div style={{ position:'absolute',inset:0,borderRadius:10,opacity:0.05,backgroundImage:'linear-gradient(rgba(200,255,0,1) 1px,transparent 1px),linear-gradient(90deg,rgba(200,255,0,1) 1px,transparent 1px)',backgroundSize:'18px 18px',pointerEvents:'none',zIndex:1 }} />
         </div>
 
         {/* SCORE + CTA */}
