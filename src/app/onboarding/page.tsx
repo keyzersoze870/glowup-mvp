@@ -85,7 +85,7 @@ export default function OnboardingPage() {
   )
 
   return (
-    <main style={{ height:'100dvh', background:'#000', fontFamily:sf, overflow:'hidden', display:'flex', flexDirection:'column' }}>
+    <main style={{ height:'100dvh', background:'#000', fontFamily:sf, overflow:'hidden', display:'flex', flexDirection:'column' }} onFocus={() => window.scrollTo(0,0)}>
 
       <nav style={{ flexShrink:0, padding:'12px 20px', display:'flex', justifyContent:'space-between', alignItems:'center', position:'sticky', top:0, zIndex:10, background:'#000' }}>
         <span style={{ fontSize:20, fontWeight:700, color:'#fff', letterSpacing:-0.5 }}>GlowApp</span>
@@ -262,6 +262,7 @@ export default function OnboardingPage() {
         * { box-sizing:border-box; margin:0; padding:0; }
         input::placeholder { color: rgba(255,255,255,0.2); }
         ::-webkit-scrollbar { display: none; }
+        html, body { height: 100%; overflow: hidden; position: fixed; width: 100%; }
       `}</style>
     </main>
   )
