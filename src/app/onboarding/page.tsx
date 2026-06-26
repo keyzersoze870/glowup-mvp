@@ -27,7 +27,7 @@ export default function OnboardingPage() {
   const [loading, setLoading] = useState(false)
   const fileRef = useRef<HTMLInputElement>(null)
 
-  // Data
+  const [photo, setPhoto] = useState<string | null>(null)
   const [prenom, setPrenom] = useState('')
   const [poids, setPoids] = useState('')
   const [taille, setTaille] = useState('')
@@ -36,7 +36,6 @@ export default function OnboardingPage() {
   const [eau, setEau] = useState('')
   const [skincare, setSkincare] = useState('')
   const [stress, setStress] = useState('')
-  const [photo, setPhoto] = useState<string | null>(null)
 
   const imc = poids && taille ? (Number(poids) / ((Number(taille) / 100) ** 2)).toFixed(1) : null
 
@@ -47,7 +46,7 @@ export default function OnboardingPage() {
     const file = e.target.files?.[0]
     if (!file) return
     const reader = new FileReader()
-    reader.onload = () => setPhoto(reader.result as string)
+    reader.onload = () => { setPhoto(reader.result as string); setTimeout(() => next(), 400) }
     reader.readAsDataURL(file)
   }
 
@@ -78,9 +77,9 @@ export default function OnboardingPage() {
   )
 
   const StepHeader = ({ num, title, sub }: { num: number, title: string, sub?: string }) => (
-    <div style={{ marginBottom:28 }}>
+    <div style={{ marginBottom:24 }}>
       <div style={{ fontSize:13, color:BLUE, fontWeight:500, marginBottom:8, letterSpacing:-0.2 }}>Étape {num} / {TOTAL_STEPS}</div>
-      <h1 style={{ fontSize:30, fontWeight:700, color:'#fff', letterSpacing:-0.8, lineHeight:1.15, marginBottom: sub ? 8 : 0 }}>{title}</h1>
+      <h1 style={{ fontSize:28, fontWeight:700, color:'#fff', letterSpacing:-0.8, lineHeight:1.15, marginBottom: sub ? 8 : 0 }}>{title}</h1>
       {sub && <p style={{ fontSize:13, color:'rgba(255,255,255,0.4)', letterSpacing:-0.2, lineHeight:1.5 }}>{sub}</p>}
     </div>
   )
@@ -88,7 +87,6 @@ export default function OnboardingPage() {
   return (
     <main style={{ height:'100dvh', background:'#000', fontFamily:sf, overflow:'hidden', display:'flex', flexDirection:'column' }}>
 
-      {/* NAV */}
       <nav style={{ flexShrink:0, padding:'12px 20px', display:'flex', justifyContent:'space-between', alignItems:'center' }}>
         <span style={{ fontSize:20, fontWeight:700, color:'#fff', letterSpacing:-0.5 }}>GlowApp</span>
         {step > 0 && (
@@ -98,20 +96,61 @@ export default function OnboardingPage() {
         )}
       </nav>
 
-      {/* PROGRESS BAR */}
       <div style={{ flexShrink:0, padding:'0 20px 20px', display:'flex', gap:5 }}>
         {Array.from({ length: TOTAL_STEPS }).map((_, i) => (
           <div key={i} style={{ flex:1, height:3, borderRadius:2, background: i <= step ? BLUE : 'rgba(255,255,255,0.12)', transition:'background 0.3s ease' }} />
         ))}
       </div>
 
-      {/* STEPS */}
       <div style={{ flex:1, padding:'0 24px 24px', overflowY:'auto', display:'flex', flexDirection:'column' }}>
 
-        {/* STEP 0 — Prénom */}
+        {/* STEP 0 — Selfie EN PREMIER */}
         {step === 0 && (
+          <div style={{ flex:1, display:'flex', flexDirection:'column', justifyContent:'center', gap:20 }}>
+            <StepHeader num={1} title="Commence par ton selfie" sub="L'IA scanne ton visage pour analyser ta peau, ton stress et ton hydratation." />
+
+            <input ref={fileRef} type="file" accept="image/*" capture="user" onChange={handlePhoto} style={{ display:'none' }} />
+
+            <button onClick={() => fileRef.current?.click()} style={{
+              width:'100%', height:220, background: photo ? 'transparent' : 'rgba(255,255,255,0.04)',
+              border:`0.5px dashed ${photo ? BLUE : 'rgba(255,255,255,0.15)'}`,
+              borderRadius:20, cursor:'pointer', overflow:'hidden', padding:0, position:'relative',
+            }}>
+              {photo ? (
+                <>
+                  <img src={photo} alt="selfie" style={{ width:'100%', height:'100%', objectFit:'cover', objectPosition:'center top' }} />
+                  <div style={{ position:'absolute', inset:0, background:'rgba(10,132,255,0.2)', display:'flex', alignItems:'center', justifyContent:'center' }}>
+                    <div style={{ background:'rgba(0,0,0,0.7)', borderRadius:12, padding:'8px 16px', fontSize:13, color:'#fff', fontWeight:500 }}>✓ Photo sélectionnée</div>
+                  </div>
+                </>
+              ) : (
+                <div style={{ display:'flex', flexDirection:'column', alignItems:'center', justifyContent:'center', height:'100%', gap:12 }}>
+                  <div style={{ width:64, height:64, borderRadius:'50%', background:'rgba(10,132,255,0.12)', display:'flex', alignItems:'center', justifyContent:'center' }}>
+                    <span style={{ fontSize:28 }}>📷</span>
+                  </div>
+                  <div style={{ textAlign:'center' }}>
+                    <p style={{ fontSize:15, fontWeight:600, color:'#fff', letterSpacing:-0.3, marginBottom:4 }}>Prendre un selfie</p>
+                    <p style={{ fontSize:12, color:'rgba(255,255,255,0.3)' }}>ou importer depuis la galerie</p>
+                  </div>
+                </div>
+              )}
+            </button>
+
+            {photo && (
+              <button onClick={() => fileRef.current?.click()} style={{ background:'none', border:'none', color:BLUE, fontSize:13, fontWeight:500, cursor:'pointer', fontFamily:sf }}>
+                Changer la photo
+              </button>
+            )}
+
+            <Btn label="Continuer" onClick={next} disabled={!photo} />
+            <p style={{ fontSize:11, color:'rgba(255,255,255,0.2)', textAlign:'center' }}>Photo non stockée · Analyse locale uniquement</p>
+          </div>
+        )}
+
+        {/* STEP 1 — Prénom */}
+        {step === 1 && (
           <div style={{ flex:1, display:'flex', flexDirection:'column', justifyContent:'center', gap:24 }}>
-            <StepHeader num={1} title={`Comment\ntu t'appelles ?`} sub="Pour personnaliser ton expérience." />
+            <StepHeader num={2} title="Comment tu t'appelles ?" sub="Pour personnaliser ton score." />
             <input type="text" placeholder="Ton prénom" value={prenom} onChange={e => setPrenom(e.target.value)} autoFocus
               style={{ width:'100%', padding:'16px', background:'rgba(255,255,255,0.06)', border:`0.5px solid ${prenom ? BLUE : 'rgba(255,255,255,0.12)'}`, borderRadius:14, color:'#fff', fontSize:18, fontWeight:500, fontFamily:sf, outline:'none', letterSpacing:-0.3 }}
             />
@@ -119,10 +158,10 @@ export default function OnboardingPage() {
           </div>
         )}
 
-        {/* STEP 1 — Mensurations */}
-        {step === 1 && (
-          <div style={{ flex:1, display:'flex', flexDirection:'column', justifyContent:'center', gap:20 }}>
-            <StepHeader num={2} title="Tes mensurations" sub="Pour calculer ton IMC et personnaliser ton plan." />
+        {/* STEP 2 — Mensurations */}
+        {step === 2 && (
+          <div style={{ flex:1, display:'flex', flexDirection:'column', justifyContent:'center', gap:16 }}>
+            <StepHeader num={3} title="Tes mensurations" sub="Pour calculer ton IMC." />
             <div style={{ display:'flex', flexDirection:'column', gap:10 }}>
               {[
                 { label:'Âge', placeholder:'25', value:age, set:setAge, unit:'ans' },
@@ -150,10 +189,10 @@ export default function OnboardingPage() {
           </div>
         )}
 
-        {/* STEP 2 — Sport */}
-        {step === 2 && (
-          <div style={{ flex:1, display:'flex', flexDirection:'column', justifyContent:'center', gap:16 }}>
-            <StepHeader num={3} title="Ton activité sportive" sub="Combien de fois par semaine tu fais du sport ?" />
+        {/* STEP 3 — Sport */}
+        {step === 3 && (
+          <div style={{ flex:1, display:'flex', flexDirection:'column', justifyContent:'center', gap:12 }}>
+            <StepHeader num={4} title="Ton activité sportive" sub="Combien de fois par semaine ?" />
             <div style={{ display:'flex', flexDirection:'column', gap:8 }}>
               {[
                 { val:'0', label:'Jamais', icon:'🛋️' },
@@ -166,89 +205,53 @@ export default function OnboardingPage() {
           </div>
         )}
 
-        {/* STEP 3 — Eau */}
-        {step === 3 && (
-          <div style={{ flex:1, display:'flex', flexDirection:'column', justifyContent:'center', gap:16 }}>
-            <StepHeader num={4} title="Ton hydratation" sub="Combien de litres d'eau tu bois par jour ?" />
-            <div style={{ display:'flex', flexDirection:'column', gap:8 }}>
-              {[
-                { val:'<1', label:'Moins d\'1 litre', icon:'🏜️' },
-                { val:'1-1.5', label:'1 à 1,5 litre', icon:'💧' },
-                { val:'1.5-2', label:'1,5 à 2 litres', icon:'💧💧' },
-                { val:'2+', label:'Plus de 2 litres', icon:'🌊' },
-              ].map(o => <OptionCard key={o.val} label={o.label} icon={o.icon} selected={eau === o.val} onClick={() => setEau(o.val)} />)}
-            </div>
-            <Btn label="Continuer" onClick={next} disabled={!eau} />
-          </div>
-        )}
-
-        {/* STEP 4 — Skincare */}
+        {/* STEP 4 — Eau + Skincare */}
         {step === 4 && (
           <div style={{ flex:1, display:'flex', flexDirection:'column', justifyContent:'center', gap:16 }}>
-            <StepHeader num={5} title="Ta routine skincare" sub="Tu as une routine soin du visage ?" />
-            <div style={{ display:'flex', flexDirection:'column', gap:8 }}>
-              {[
-                { val:'aucune', label:'Aucune routine', icon:'🤷' },
-                { val:'basique', label:'Basique (nettoyant + hydratant)', icon:'🧴' },
-                { val:'complete', label:'Complète (sérum, SPF, etc.)', icon:'✨' },
-                { val:'avancee', label:'Avancée + produits pro', icon:'💆' },
-              ].map(o => <OptionCard key={o.val} label={o.label} icon={o.icon} selected={skincare === o.val} onClick={() => setSkincare(o.val)} />)}
+            <StepHeader num={5} title="Eau & Skincare" />
+            <div>
+              <label style={{ fontSize:11, color:'rgba(255,255,255,0.4)', fontWeight:500, letterSpacing:0.5, textTransform:'uppercase', display:'block', marginBottom:8 }}>Eau par jour</label>
+              <div style={{ display:'flex', flexDirection:'column', gap:6 }}>
+                {[
+                  { val:'<1', label:'Moins d\'1 litre', icon:'🏜️' },
+                  { val:'1-1.5', label:'1 à 1,5 litre', icon:'💧' },
+                  { val:'1.5-2', label:'1,5 à 2 litres', icon:'💧💧' },
+                  { val:'2+', label:'Plus de 2 litres', icon:'🌊' },
+                ].map(o => <OptionCard key={o.val} label={o.label} icon={o.icon} selected={eau === o.val} onClick={() => setEau(o.val)} />)}
+              </div>
             </div>
-            <Btn label="Continuer" onClick={next} disabled={!skincare} />
+            <div>
+              <label style={{ fontSize:11, color:'rgba(255,255,255,0.4)', fontWeight:500, letterSpacing:0.5, textTransform:'uppercase', display:'block', marginBottom:8 }}>Routine skincare</label>
+              <div style={{ display:'flex', flexDirection:'column', gap:6 }}>
+                {[
+                  { val:'aucune', label:'Aucune', icon:'🤷' },
+                  { val:'basique', label:'Basique', icon:'🧴' },
+                  { val:'complete', label:'Complète', icon:'✨' },
+                ].map(o => <OptionCard key={o.val} label={o.label} icon={o.icon} selected={skincare === o.val} onClick={() => setSkincare(o.val)} />)}
+              </div>
+            </div>
+            <Btn label="Continuer" onClick={next} disabled={!eau || !skincare} />
           </div>
         )}
 
-        {/* STEP 5 — Stress + Photo */}
+        {/* STEP 5 — Stress */}
         {step === 5 && (
-          <div style={{ flex:1, display:'flex', flexDirection:'column', gap:20 }}>
-            <StepHeader num={6} title="Stress & selfie" sub="Dernière étape — ton niveau de stress et une photo." />
-
-            {/* Stress */}
-            <div>
-              <label style={{ fontSize:11, color:'rgba(255,255,255,0.4)', fontWeight:500, letterSpacing:0.5, textTransform:'uppercase', display:'block', marginBottom:10 }}>Niveau de stress quotidien</label>
-              <div style={{ display:'flex', flexDirection:'column', gap:8 }}>
-                {[
-                  { val:'faible', label:'Faible — je suis zen', icon:'😌' },
-                  { val:'modere', label:'Modéré — quelques tensions', icon:'😐' },
-                  { val:'eleve', label:'Élevé — souvent stressé(e)', icon:'😰' },
-                  { val:'extreme', label:'Extrême — épuisé(e)', icon:'🔥' },
-                ].map(o => <OptionCard key={o.val} label={o.label} icon={o.icon} selected={stress === o.val} onClick={() => setStress(o.val)} />)}
-              </div>
+          <div style={{ flex:1, display:'flex', flexDirection:'column', justifyContent:'center', gap:12 }}>
+            <StepHeader num={6} title="Ton niveau de stress" sub="Comment tu te sens au quotidien ?" />
+            <div style={{ display:'flex', flexDirection:'column', gap:8 }}>
+              {[
+                { val:'faible', label:'Faible — je suis zen', icon:'😌' },
+                { val:'modere', label:'Modéré — quelques tensions', icon:'😐' },
+                { val:'eleve', label:'Élevé — souvent stressé(e)', icon:'😰' },
+                { val:'extreme', label:'Extrême — épuisé(e)', icon:'🔥' },
+              ].map(o => <OptionCard key={o.val} label={o.label} icon={o.icon} selected={stress === o.val} onClick={() => setStress(o.val)} />)}
             </div>
-
-            {/* Photo */}
-            <div>
-              <label style={{ fontSize:11, color:'rgba(255,255,255,0.4)', fontWeight:500, letterSpacing:0.5, textTransform:'uppercase', display:'block', marginBottom:10 }}>Ton selfie</label>
-              <input ref={fileRef} type="file" accept="image/*" capture="user" onChange={handlePhoto} style={{ display:'none' }} />
-              <button onClick={() => fileRef.current?.click()} style={{
-                width:'100%', height:160, background: photo ? 'transparent' : 'rgba(255,255,255,0.04)',
-                border:`0.5px dashed ${photo ? BLUE : 'rgba(255,255,255,0.2)'}`, borderRadius:16,
-                cursor:'pointer', overflow:'hidden', padding:0,
-              }}>
-                {photo ? (
-                  <img src={photo} alt="selfie" style={{ width:'100%', height:'100%', objectFit:'cover', objectPosition:'center top' }} />
-                ) : (
-                  <div style={{ display:'flex', flexDirection:'column', alignItems:'center', justifyContent:'center', height:'100%', gap:8 }}>
-                    <span style={{ fontSize:28 }}>📷</span>
-                    <p style={{ fontSize:14, fontWeight:500, color:'rgba(255,255,255,0.5)', letterSpacing:-0.2 }}>Prendre un selfie</p>
-                    <p style={{ fontSize:11, color:'rgba(255,255,255,0.25)' }}>ou importer depuis la galerie</p>
-                  </div>
-                )}
-              </button>
-              {photo && (
-                <button onClick={() => fileRef.current?.click()} style={{ background:'none', border:'none', color:BLUE, fontSize:13, fontWeight:500, cursor:'pointer', fontFamily:sf, marginTop:8, display:'block' }}>
-                  Changer la photo
-                </button>
-              )}
-            </div>
-
             <button onClick={submit} disabled={loading || !stress}
-              style={{ width:'100%', padding:'16px', background:(!stress || loading) ? 'rgba(255,255,255,0.08)' : BLUE, border:'none', borderRadius:14, color:(!stress || loading) ? 'rgba(255,255,255,0.3)' : '#fff', fontSize:16, fontWeight:600, cursor:(!stress || loading) ? 'default' : 'pointer', fontFamily:sf, letterSpacing:-0.3, display:'flex', alignItems:'center', justifyContent:'center', gap:8 }}>
+              style={{ width:'100%', padding:'16px', background:(!stress || loading) ? 'rgba(255,255,255,0.08)' : BLUE, border:'none', borderRadius:14, color:(!stress || loading) ? 'rgba(255,255,255,0.3)' : '#fff', fontSize:16, fontWeight:600, cursor:(!stress || loading) ? 'default' : 'pointer', fontFamily:sf, letterSpacing:-0.3, display:'flex', alignItems:'center', justifyContent:'center', gap:8, marginTop:4 }}>
               {loading
                 ? <><span style={{ width:16,height:16,border:'2px solid rgba(255,255,255,0.3)',borderTopColor:'#fff',borderRadius:'50%',display:'inline-block',animation:'spin 0.8s linear infinite' }} />Analyse en cours...</>
                 : '⚡ Calculer mon Glow Up Score'}
             </button>
-            <p style={{ fontSize:11, color:'rgba(255,255,255,0.2)', textAlign:'center' }}>La photo n'est pas stockée · Analyse locale</p>
           </div>
         )}
       </div>
