@@ -65,7 +65,7 @@ export default function LandingPage() {
           const iv = setInterval(() => { s += 4; setDisplayScore(Math.min(s, profile.score)); if (s >= profile.score) clearInterval(iv) }, 20)
         }, profile.metrics.length * 150 + 80)
         setTimeout(() => setShowRank(true), profile.metrics.length * 150 + 500)
-        setTimeout(() => setProfileIdx(idx => (idx + 1) % PROFILES.length), profile.metrics.length * 150 + 700)
+        setTimeout(() => setProfileIdx(idx => (idx + 1) % PROFILES.length), profile.metrics.length * 150 + 2500)
       }
     }
     rafRef.current = requestAnimationFrame(animateScan)
