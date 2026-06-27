@@ -165,16 +165,16 @@ export default function Dashboard() {
       {/* NAV */}
       <nav style={{ flexShrink:0, padding:'12px 20px', display:'flex', justifyContent:'space-between', alignItems:'center' }}>
         <span style={{ fontSize:20, fontWeight:700, color:'#fff', letterSpacing:-0.5 }}>GlowApp</span>
-        <div style={{ display:'flex', alignItems:'center', gap:12 }}>
+        <div style={{ display:'flex', alignItems:'center', gap:8 }}>
           {streak > 0 && (
             <div style={{ display:'flex', alignItems:'center', gap:4, background:'rgba(255,149,10,0.12)', border:'0.5px solid rgba(255,149,10,0.25)', padding:'4px 10px', borderRadius:20 }}>
               <span style={{ fontSize:12 }}>🔥</span>
               <span style={{ fontSize:12, fontWeight:600, color:'#FF9F0A', letterSpacing:-0.2 }}>{streak} jours</span>
             </div>
           )}
-          <button onClick={() => { localStorage.clear(); router.push('/') }}
-            style={{ background:'none', border:'none', color:'rgba(255,255,255,0.3)', fontSize:13, cursor:'pointer', fontFamily:sf }}>
-            Reset
+          <button onClick={() => router.push('/share')}
+            style={{ background:'rgba(10,132,255,0.12)', border:'0.5px solid rgba(10,132,255,0.25)', borderRadius:20, padding:'6px 12px', color:'#0A84FF', fontSize:12, fontWeight:600, cursor:'pointer', fontFamily:sf, letterSpacing:-0.2 }}>
+            ⬆ Partager
           </button>
         </div>
       </nav>
