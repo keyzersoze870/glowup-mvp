@@ -92,7 +92,7 @@ export default function LandingPage() {
           <span style={{ fontSize:10, color:BLUE, letterSpacing:0.2 }}>Analyse en cours</span>
         </div>
         <h1 style={{ fontSize:24, fontWeight:700, color:'#fff', lineHeight:1.15, letterSpacing:-0.5, marginBottom:8 }}>
-          Ton <span style={{ color:BLUE }}>Glow Up Score</span><br/>en 2 minutes
+          Calcule ton <span style={{ color:BLUE }}>Glow Up Score</span><br/>en 2 minutes
         </h1>
         <p style={{ fontSize:12, color:'rgba(255,255,255,0.4)', lineHeight:1.5, letterSpacing:-0.1 }}>
           Rejoins les 7 000 personnes qui ont déjà amélioré leur physique grâce à l'IA.
