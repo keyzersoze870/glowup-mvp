@@ -95,7 +95,7 @@ export default function LandingPage() {
           Ton <span style={{ color:BLUE }}>Glow Up Score</span><br/>en 2 minutes
         </h1>
         <p style={{ fontSize:12, color:'rgba(255,255,255,0.4)', lineHeight:1.5, letterSpacing:-0.1 }}>
-          Rejoins les 7 000 personnes qui ont déjà<br/>amélioré leur score grâce à l'IA.
+          Rejoins les 7 000 personnes qui ont déjà amélioré leur physique grâce à l'IA.
         </p>
       </div>
 
