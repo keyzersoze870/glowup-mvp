@@ -46,9 +46,9 @@ function ScoreRing({ score, size = 160 }: { score: number, size?: number }) {
       <circle cx="60" cy="60" r={r} fill="none" stroke={color} strokeWidth="7"
         strokeLinecap="round" strokeDasharray={c} strokeDashoffset={offset}
         transform="rotate(-90 60 60)" style={{ transition:'stroke-dashoffset 0.03s' }}/>
-      <text x="60" y="52" textAnchor="middle" dominantBaseline="middle"
+      <text x="60" y="57" textAnchor="middle" dominantBaseline="middle"
         style={{ fontFamily:sf, fontWeight:700, fontSize:28, fill:'#fff', letterSpacing:-1 }}>{displayed}</text>
-      <text x="60" y="70" textAnchor="middle" dominantBaseline="middle"
+      <text x="60" y="72" textAnchor="middle" dominantBaseline="middle"
         style={{ fontFamily:sf, fontSize:8, fill:'rgba(255,255,255,0.3)', letterSpacing:0.5 }}>/ 100</text>
     </svg>
   )
@@ -210,7 +210,7 @@ export default function Dashboard() {
         <p style={{ fontSize:13, color:'rgba(255,255,255,0.4)', letterSpacing:-0.2, marginBottom:4 }}>Bonjour {profile.prenom} 👋</p>
         <ScoreRing score={liveScore} />
         <div style={{ marginTop:4, textAlign:'center' }}>
-          <span style={{ fontSize:13, fontWeight:600, color:scoreColor, letterSpacing:-0.2, display:'block', marginBottom:4 }}>{scoreLabel}</span>
+          <span style={{ fontSize:16, fontWeight:700, color:scoreColor, letterSpacing:-0.3, display:'block', marginBottom:4 }}>{scoreLabel}</span>
           <p style={{ fontSize:12, color:'rgba(255,255,255,0.4)', letterSpacing:-0.1, lineHeight:1.4, maxWidth:280 }}>{segmentMsg}</p>
         </div>
 
