@@ -179,7 +179,7 @@ export default function Dashboard() {
               ))}
             </div>
             <button style={{ width:'100%', padding:'16px', background:BLUE, border:'none', borderRadius:14, color:'#fff', fontSize:16, fontWeight:600, cursor:'pointer', fontFamily:sf, letterSpacing:-0.3, marginBottom:10 }} onClick={handlePremium}>
-              Commencer — 9,99€/mois
+              Commencer — 9€/mois
             </button>
             <button onClick={() => setShowPaywall(false)} style={{ width:'100%', padding:'12px', background:'none', border:'none', color:'rgba(255,255,255,0.3)', fontSize:14, cursor:'pointer', fontFamily:sf }}>
               Continuer gratuitement
@@ -277,7 +277,7 @@ export default function Dashboard() {
               <p style={{ fontSize:12, color:BLUE, fontWeight:600, marginBottom:6 }}>🔒 Premium</p>
               <p style={{ fontSize:13, color:'rgba(255,255,255,0.5)', marginBottom:14, lineHeight:1.5, letterSpacing:-0.2 }}>{paywallMsg}</p>
               <button onClick={handlePremium} style={{ width:'100%', padding:'13px', background:BLUE, border:'none', borderRadius:12, color:'#fff', fontSize:14, fontWeight:600, cursor:'pointer', fontFamily:sf, letterSpacing:-0.3 }}>
-                Passer Premium — 9,99€/mois
+                Passer Premium — 9€/mois
               </button>
             </div>
           </div>
