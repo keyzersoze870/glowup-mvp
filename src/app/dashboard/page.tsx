@@ -102,6 +102,18 @@ export default function Dashboard() {
     if (next === 3) setTimeout(() => setShowPaywall(true), 800)
   }
 
+  const handlePremium = async () => {
+    try {
+      const res = await fetch('/api/create-checkout', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ prenom: profile?.prenom }),
+      })
+      const json = await res.json()
+      if (json.url) window.location.href = json.url
+    } catch (e) { console.error(e) }
+  }
+
   const handleStreakUpdate = async () => {
     const newStreak = streak + 1
     setStreak(newStreak)
@@ -166,7 +178,7 @@ export default function Dashboard() {
                 </div>
               ))}
             </div>
-            <button style={{ width:'100%', padding:'16px', background:BLUE, border:'none', borderRadius:14, color:'#fff', fontSize:16, fontWeight:600, cursor:'pointer', fontFamily:sf, letterSpacing:-0.3, marginBottom:10 }}>
+            <button style={{ width:'100%', padding:'16px', background:BLUE, border:'none', borderRadius:14, color:'#fff', fontSize:16, fontWeight:600, cursor:'pointer', fontFamily:sf, letterSpacing:-0.3, marginBottom:10 }} onClick={handlePremium}>
               Commencer — 9,99€/mois
             </button>
             <button onClick={() => setShowPaywall(false)} style={{ width:'100%', padding:'12px', background:'none', border:'none', color:'rgba(255,255,255,0.3)', fontSize:14, cursor:'pointer', fontFamily:sf }}>
@@ -264,7 +276,7 @@ export default function Dashboard() {
             <div style={{ marginTop:4, padding:'18px', background:'rgba(10,132,255,0.08)', border:'0.5px solid rgba(10,132,255,0.2)', borderRadius:16 }}>
               <p style={{ fontSize:12, color:BLUE, fontWeight:600, marginBottom:6 }}>🔒 Premium</p>
               <p style={{ fontSize:13, color:'rgba(255,255,255,0.5)', marginBottom:14, lineHeight:1.5, letterSpacing:-0.2 }}>{paywallMsg}</p>
-              <button onClick={() => setShowPaywall(true)} style={{ width:'100%', padding:'13px', background:BLUE, border:'none', borderRadius:12, color:'#fff', fontSize:14, fontWeight:600, cursor:'pointer', fontFamily:sf, letterSpacing:-0.3 }}>
+              <button onClick={handlePremium} style={{ width:'100%', padding:'13px', background:BLUE, border:'none', borderRadius:12, color:'#fff', fontSize:14, fontWeight:600, cursor:'pointer', fontFamily:sf, letterSpacing:-0.3 }}>
                 Passer Premium — 9,99€/mois
               </button>
             </div>
@@ -294,7 +306,7 @@ export default function Dashboard() {
             )}
             <div style={{ padding:'16px', background:'rgba(10,132,255,0.08)', border:'0.5px solid rgba(10,132,255,0.2)', borderRadius:16, marginTop:4 }}>
               <p style={{ fontSize:13, color:'rgba(255,255,255,0.5)', marginBottom:12, lineHeight:1.5 }}>🔒 Les semaines 2 à 8 sont disponibles en Premium.</p>
-              <button onClick={() => setShowPaywall(true)} style={{ width:'100%', padding:'12px', background:BLUE, border:'none', borderRadius:12, color:'#fff', fontSize:14, fontWeight:600, cursor:'pointer', fontFamily:sf }}>
+              <button onClick={handlePremium} style={{ width:'100%', padding:'12px', background:BLUE, border:'none', borderRadius:12, color:'#fff', fontSize:14, fontWeight:600, cursor:'pointer', fontFamily:sf }}>
                 Voir le plan complet
               </button>
             </div>
