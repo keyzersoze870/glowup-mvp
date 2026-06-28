@@ -209,23 +209,15 @@ export default function Dashboard() {
       <div style={{ flexShrink:0, display:'flex', flexDirection:'column', alignItems:'center', padding:'4px 20px 12px' }}>
         <p style={{ fontSize:13, color:'rgba(255,255,255,0.4)', letterSpacing:-0.2, marginBottom:4 }}>Bonjour {profile.prenom} 👋</p>
         <ScoreRing score={liveScore} />
-        <div style={{ marginTop:4, textAlign:'center' }}>
+        <div style={{ marginTop:4, textAlign:'center', width:'100%' }}>
           <span style={{ fontSize:22, fontWeight:800, color:scoreColor, letterSpacing:-0.5, display:'block', marginBottom:6 }}>{scoreLabel}</span>
-          <p style={{ fontSize:13, fontWeight:600, color:'rgba(255,255,255,0.75)', letterSpacing:-0.1, lineHeight:1.5, maxWidth:280, textAlign:'center' }}>{segmentMsg}</p>
+          <p style={{ fontSize:13, fontWeight:600, color:'rgba(255,255,255,0.75)', letterSpacing:-0.1, lineHeight:1.5, maxWidth:280, textAlign:'center', margin:'0 auto 12px' }}>{segmentMsg}</p>
+          {/* CTA après le texte explicatif */}
+          <button onClick={() => setActiveTab('plan')}
+            style={{ padding:'11px 24px', background:BLUE, border:'none', borderRadius:12, color:'#fff', fontSize:13, fontWeight:600, cursor:'pointer', fontFamily:sf, letterSpacing:-0.2 }}>
+            Voir mon plan →
+          </button>
         </div>
-
-        {/* Barre de progression checklist */}
-        {checkedCount > 0 && (
-          <div style={{ width:'100%', marginTop:12 }}>
-            <div style={{ display:'flex', justifyContent:'space-between', marginBottom:4 }}>
-              <span style={{ fontSize:11, color:'rgba(255,255,255,0.3)' }}>Aujourd'hui</span>
-              <span style={{ fontSize:11, color:scoreColor, fontWeight:600 }}>{checkedCount}/5</span>
-            </div>
-            <div style={{ height:3, background:'rgba(255,255,255,0.08)', borderRadius:2, overflow:'hidden' }}>
-              <div style={{ height:'100%', width:`${(checkedCount/5)*100}%`, background:scoreColor, borderRadius:2, transition:'width 0.4s ease' }} />
-            </div>
-          </div>
-        )}
       </div>
 
       {/* TABS */}
@@ -272,17 +264,11 @@ export default function Dashboard() {
               )
             })}
 
-            {/* Paywall contextuel */}
-            <div style={{ marginTop:4, padding:'18px', background:'rgba(10,132,255,0.08)', border:'0.5px solid rgba(10,132,255,0.2)', borderRadius:16 }}>
-              <p style={{ fontSize:12, color:BLUE, fontWeight:600, marginBottom:6 }}>🔒 Premium</p>
-              <p style={{ fontSize:13, color:'rgba(255,255,255,0.5)', marginBottom:14, lineHeight:1.5, letterSpacing:-0.2 }}>{paywallMsg}</p>
-              <button onClick={handlePremium} style={{ width:'100%', padding:'13px', background:BLUE, border:'none', borderRadius:12, color:'#fff', fontSize:14, fontWeight:600, cursor:'pointer', fontFamily:sf, letterSpacing:-0.3, marginBottom:8 }}>
-                Passer Premium — 9€/mois
-              </button>
-              <button onClick={() => router.push('/share')} style={{ width:'100%', padding:'12px', background:'rgba(255,255,255,0.06)', border:'0.5px solid rgba(255,255,255,0.1)', borderRadius:12, color:'rgba(255,255,255,0.6)', fontSize:13, fontWeight:500, cursor:'pointer', fontFamily:sf }}>
-                ⬆ Partager mon score TikTok
-              </button>
-            </div>
+            {/* CTA bas de page score */}
+            <button onClick={() => setActiveTab('plan')}
+              style={{ width:'100%', padding:'14px', background:BLUE, border:'none', borderRadius:14, color:'#fff', fontSize:15, fontWeight:600, cursor:'pointer', fontFamily:sf, letterSpacing:-0.3, marginTop:4 }}>
+              Voir mon plan semaine 1 →
+            </button>
           </div>
         )}
 
@@ -309,11 +295,8 @@ export default function Dashboard() {
             )}
             <div style={{ padding:'16px', background:'rgba(10,132,255,0.08)', border:'0.5px solid rgba(10,132,255,0.2)', borderRadius:16, marginTop:4 }}>
               <p style={{ fontSize:13, color:'rgba(255,255,255,0.5)', marginBottom:12, lineHeight:1.5 }}>🔒 Les semaines 2 à 8 sont disponibles en Premium.</p>
-              <button onClick={handlePremium} style={{ width:'100%', padding:'13px', background:BLUE, border:'none', borderRadius:12, color:'#fff', fontSize:14, fontWeight:600, cursor:'pointer', fontFamily:sf, marginBottom:8 }}>
+              <button onClick={handlePremium} style={{ width:'100%', padding:'13px', background:BLUE, border:'none', borderRadius:12, color:'#fff', fontSize:14, fontWeight:600, cursor:'pointer', fontFamily:sf, letterSpacing:-0.3 }}>
                 Débloquer mon plan complet — 9€/mois
-              </button>
-              <button onClick={() => router.push('/share')} style={{ width:'100%', padding:'12px', background:'rgba(255,255,255,0.06)', border:'0.5px solid rgba(255,255,255,0.1)', borderRadius:12, color:'rgba(255,255,255,0.6)', fontSize:13, fontWeight:500, cursor:'pointer', fontFamily:sf }}>
-                ⬆ Partager mon score
               </button>
             </div>
           </div>
