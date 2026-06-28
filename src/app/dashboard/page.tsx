@@ -1,6 +1,7 @@
 'use client'
 import { useEffect, useState } from 'react'
 import { useRouter } from 'next/navigation'
+import { supabase } from '@/lib/supabase'
 
 const sf = `-apple-system, BlinkMacSystemFont, 'SF Pro Display', 'Helvetica Neue', sans-serif`
 const BLUE = '#0A84FF'
@@ -101,10 +102,23 @@ export default function Dashboard() {
     if (next === 3) setTimeout(() => setShowPaywall(true), 800)
   }
 
-  const handleStreakUpdate = () => {
+  const handleStreakUpdate = async () => {
     const newStreak = streak + 1
     setStreak(newStreak)
     localStorage.setItem('glowup_streak', String(newStreak))
+
+    // Sauvegarder dans Supabase
+    try {
+      const userId = localStorage.getItem('glowup_user_id')
+      if (userId) {
+        await supabase.from('daily_checklist').upsert({
+          user_id: userId,
+          date: new Date().toISOString().split('T')[0],
+          sport: true, eau: true, nutrition: true, sommeil: true, skincare: true,
+          streak: newStreak,
+        }, { onConflict: 'user_id,date' })
+      }
+    } catch (e) { console.log('Streak save error:', e) }
   }
 
   if (!score || !profile) return (

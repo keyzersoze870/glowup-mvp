@@ -1,6 +1,7 @@
 'use client'
 import { useState, useRef } from 'react'
 import { useRouter } from 'next/navigation'
+import { supabase } from '@/lib/supabase'
 
 const sf = `-apple-system, BlinkMacSystemFont, 'SF Pro Display', 'Helvetica Neue', sans-serif`
 const BLUE = '#0A84FF'
@@ -60,8 +61,47 @@ export default function OnboardingPage() {
       })
       const json = await res.json()
       if (json.success) {
+        // Sauvegarder en local
         localStorage.setItem('glowup_profile', JSON.stringify(data))
         localStorage.setItem('glowup_score', JSON.stringify(json.score))
+
+        // Sauvegarder dans Supabase
+        try {
+          // Créer ou récupérer l'user via email anonyme basé sur un ID local
+          let userId = localStorage.getItem('glowup_user_id')
+          if (!userId) {
+            // Créer un user anonyme avec un email généré
+            const anonEmail = `user_${Date.now()}_${Math.random().toString(36).slice(2)}@glowapp.local`
+            const { data: userData, error: userError } = await supabase
+              .from('users')
+              .insert({ email: anonEmail, prenom })
+              .select('id')
+              .single()
+            if (!userError && userData) {
+              userId = userData.id
+              localStorage.setItem('glowup_user_id', userId!)
+            }
+          }
+
+          if (userId) {
+            await supabase.from('scores').insert({
+              user_id: userId,
+              total: json.score.total,
+              training: json.score.training,
+              nutrition: json.score.nutrition,
+              hydratation: json.score.hydratation,
+              sommeil: json.score.sommeil,
+              skincare: json.score.skincare,
+              stress: json.score.steps,
+              score_analyse: json.score.analyse,
+              plan_semaine1: json.score.plan_semaine1,
+              quick_wins: json.score.quick_wins,
+            })
+          }
+        } catch (dbErr) {
+          console.log('DB save error (non-blocking):', dbErr)
+        }
+
         router.push('/dashboard')
       }
     } finally { setLoading(false) }
