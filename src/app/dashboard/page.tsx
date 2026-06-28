@@ -213,11 +213,11 @@ export default function Dashboard() {
           <span style={{ fontSize:22, fontWeight:800, color:scoreColor, letterSpacing:-0.5, display:'block', marginBottom:4 }}>{scoreLabel}</span>
           <p style={{ fontSize:12, fontStyle:'italic', fontWeight:300, color:'rgba(255,255,255,0.4)', letterSpacing:-0.1, marginBottom:10 }}>
             {liveScore < 45 ? (
-              <><span style={{ color:'#FF453A' }}>87% des utilisateurs ont un meilleur score que toi</span>, <span style={{ fontWeight:700, color:'rgba(255,255,255,0.6)' }}>ne laisse pas ton corps se dégrader davantage.</span></>
+              <><span style={{ color:'#FF453A' }}>87%</span>{' '}des utilisateurs ont un meilleur score que toi, <span style={{ fontWeight:700, color:'#fff' }}>ne laisse pas ton corps se dégrader davantage.</span></>
             ) : liveScore < 70 ? (
-              <><span style={{ color:'#FF453A' }}>52% des utilisateurs ont un meilleur score que toi</span>, <span style={{ fontWeight:700, color:'rgba(255,255,255,0.6)' }}>ne gâche pas ton potentiel avant qu'il soit trop tard.</span></>
+              <><span style={{ color:'#FF453A' }}>52%</span>{' '}des utilisateurs ont un meilleur score que toi, <span style={{ fontWeight:700, color:'#fff' }}>ne gâche pas ton potentiel avant qu'il soit trop tard.</span></>
             ) : (
-              <><span style={{ color:'#FF453A' }}>18% des utilisateurs ont un meilleur score que toi</span>, <span style={{ fontWeight:700, color:'rgba(255,255,255,0.6)' }}>ne t'arrête pas si près du sommet.</span></>
+              <><span style={{ color:'#FF453A' }}>18%</span>{' '}des utilisateurs ont un meilleur score que toi, <span style={{ fontWeight:700, color:'#fff' }}>ne t'arrête pas si près du sommet.</span></>
             )}
           </p>
           <p style={{ fontSize:13, fontWeight:600, color:'rgba(255,255,255,0.75)', letterSpacing:-0.1, lineHeight:1.5, maxWidth:280, textAlign:'center', margin:'0 auto 12px' }}>
