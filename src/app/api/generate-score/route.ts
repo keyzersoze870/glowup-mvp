@@ -28,9 +28,9 @@ Génère un JSON strict (rien d'autre, pas de markdown):
   "skincare": <0-10>,
   "steps": <0-10 stress inversé>,
   "analyse": "<2 phrases percutantes avec le prénom>",
-  "message_faible": "<message motivant si score < 45 — pique l'ego, montre le potentiel non exploité, 1 phrase>",
-  "message_moyen": "<message FOMO si score 45-70 — tu es proche du niveau Elite, 1 phrase>",
-  "message_eleve": "<message challenge si score > 70 — pointe la vraie faiblesse, 1 phrase>",
+  "message_faible": "<score < 45 — urgent et alarmant, 1 phrase percutante avec le prénom, montre que le corps envoie des signaux d'alarme ignorés>",
+  "message_moyen": "<score 45-70 — frustration + FOMO, 1 phrase, insiste sur le potentiel gâché et la proximité du top 10%, jamais de compliment>",
+  "message_eleve": "<score > 70 — challenge le perfectionnisme, 1 phrase, dit clairement que les vrais résultats commencent à 85+ et qu'il n'y est pas encore>",
   "point_faible": "<catégorie la plus basse parmi training/nutrition/hydratation/sommeil/skincare/steps>",
   "plan_semaine1": ["<action 1>", "<action 2>", "<action 3>"],
   "quick_wins": ["<résultat visible en 7 jours 1>", "<résultat visible en 7 jours 2>"]

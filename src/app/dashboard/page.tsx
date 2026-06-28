@@ -142,7 +142,7 @@ export default function Dashboard() {
 
   const segment = liveScore < 45 ? 'faible' : liveScore < 70 ? 'moyen' : 'eleve'
   const scoreColor = liveScore >= 70 ? '#30D158' : liveScore >= 45 ? '#FF9F0A' : '#FF453A'
-  const scoreLabel = liveScore >= 70 ? 'Excellent 🔥' : liveScore >= 55 ? 'Bien 👍' : liveScore >= 40 ? 'À améliorer ⚡' : 'Faible ⚠️'
+  const scoreLabel = liveScore >= 70 ? 'Pas encore Elite 👀' : liveScore >= 55 ? 'Potentiel gâché 😤' : liveScore >= 40 ? 'À améliorer ⚡' : 'Faible ⚠️'
 
   const segmentMsg = segment === 'faible' ? score.message_faible
     : segment === 'moyen' ? score.message_moyen
