@@ -211,9 +211,9 @@ export default function Dashboard() {
         <ScoreRing score={liveScore} />
         <div style={{ marginTop:4, textAlign:'center', width:'100%' }}>
           <span style={{ fontSize:22, fontWeight:800, color:scoreColor, letterSpacing:-0.5, display:'block', marginBottom:6 }}>{scoreLabel}</span>
-          <p style={{ fontSize:13, fontWeight:600, color:'rgba(255,255,255,0.75)', letterSpacing:-0.1, lineHeight:1.5, maxWidth:280, textAlign:'center', margin:'0 auto 12px' }}>{segmentMsg}</p>
-          {/* CTA après le texte explicatif */}
-          <button onClick={() => setActiveTab('plan')}
+          <p style={{ fontSize:13, fontWeight:600, color:'rgba(255,255,255,0.75)', letterSpacing:-0.1, lineHeight:1.5, maxWidth:280, textAlign:'center', margin:'0 auto 6px' }}>{segmentMsg}</p>
+          <p style={{ fontSize:12, color:'rgba(255,255,255,0.35)', letterSpacing:-0.1, lineHeight:1.4, maxWidth:280, textAlign:'center', margin:'0 auto 12px' }}>À remplir</p>
+          <button onClick={() => {}}
             style={{ padding:'11px 24px', background:BLUE, border:'none', borderRadius:12, color:'#fff', fontSize:13, fontWeight:600, cursor:'pointer', fontFamily:sf, letterSpacing:-0.2 }}>
             Voir mon plan →
           </button>
@@ -222,7 +222,7 @@ export default function Dashboard() {
 
       {/* TABS */}
       <div style={{ flexShrink:0, padding:'0 20px 10px', display:'flex', gap:6 }}>
-        {[['score','Mon score'],['plan','Plan S1']].map(([k,l]) => (
+        {[['score','Mon score']].map(([k,l]) => (
           <button key={k} onClick={() => setActiveTab(k as any)}
             style={{ flex:1, padding:'9px 4px', borderRadius:10, border:'none', cursor:'pointer', fontFamily:sf,
               background: activeTab === k ? BLUE : 'rgba(255,255,255,0.07)',
@@ -264,41 +264,11 @@ export default function Dashboard() {
               )
             })}
 
-            {/* CTA bas de page score */}
-            <button onClick={() => setActiveTab('plan')}
+            {/* CTA bas */}
+            <button onClick={() => {}}
               style={{ width:'100%', padding:'14px', background:BLUE, border:'none', borderRadius:14, color:'#fff', fontSize:15, fontWeight:600, cursor:'pointer', fontFamily:sf, letterSpacing:-0.3, marginTop:4 }}>
-              Voir mon plan semaine 1 →
+              Voir mon plan →
             </button>
-          </div>
-        )}
-
-        {/* PLAN TAB */}
-        {activeTab === 'plan' && (
-          <div style={{ display:'flex', flexDirection:'column', gap:10 }}>
-            <p style={{ fontSize:11, color:'rgba(255,255,255,0.3)', letterSpacing:0.5, textTransform:'uppercase', marginBottom:4 }}>Actions — Semaine 1</p>
-            {score.plan_semaine1?.map((action: string, i: number) => (
-              <div key={i} style={{ background:'rgba(255,255,255,0.05)', border:'0.5px solid rgba(255,255,255,0.08)', borderRadius:14, padding:'14px 16px', display:'flex', gap:12, alignItems:'flex-start' }}>
-                <div style={{ width:26, height:26, borderRadius:'50%', background:BLUE, display:'flex', alignItems:'center', justifyContent:'center', flexShrink:0, fontSize:12, fontWeight:700, color:'#fff' }}>{i+1}</div>
-                <p style={{ fontSize:14, color:'rgba(255,255,255,0.8)', lineHeight:1.5, letterSpacing:-0.2 }}>{action}</p>
-              </div>
-            ))}
-            {score.quick_wins?.length > 0 && (
-              <>
-                <p style={{ fontSize:11, color:'rgba(255,255,255,0.3)', letterSpacing:0.5, textTransform:'uppercase', marginTop:8, marginBottom:4 }}>Quick wins — 7 jours</p>
-                {score.quick_wins.map((win: string, i: number) => (
-                  <div key={i} style={{ background:'rgba(48,209,88,0.06)', border:'0.5px solid rgba(48,209,88,0.15)', borderRadius:14, padding:'12px 16px', display:'flex', gap:10, alignItems:'flex-start' }}>
-                    <span style={{ color:'#30D158', fontSize:14 }}>✦</span>
-                    <p style={{ fontSize:13, color:'rgba(255,255,255,0.65)', lineHeight:1.5, letterSpacing:-0.2 }}>{win}</p>
-                  </div>
-                ))}
-              </>
-            )}
-            <div style={{ padding:'16px', background:'rgba(10,132,255,0.08)', border:'0.5px solid rgba(10,132,255,0.2)', borderRadius:16, marginTop:4 }}>
-              <p style={{ fontSize:13, color:'rgba(255,255,255,0.5)', marginBottom:12, lineHeight:1.5 }}>🔒 Les semaines 2 à 8 sont disponibles en Premium.</p>
-              <button onClick={handlePremium} style={{ width:'100%', padding:'13px', background:BLUE, border:'none', borderRadius:12, color:'#fff', fontSize:14, fontWeight:600, cursor:'pointer', fontFamily:sf, letterSpacing:-0.3 }}>
-                Débloquer mon plan complet — 9€/mois
-              </button>
-            </div>
           </div>
         )}
       </div>
