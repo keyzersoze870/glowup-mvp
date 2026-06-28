@@ -60,9 +60,9 @@ Génère un JSON strict (rien d'autre, pas de markdown, pas de backticks):
   "skincare": <0-10 selon règles ci-dessus>,
   "steps": <0-10 stress inversé selon règles ci-dessus>,
   "analyse": "<2 phrases percutantes personnalisées avec le prénom, basées sur les vrais points faibles>",
-  "message_faible": "<si total < 45 — urgent et alarmant, 1 phrase avec le prénom>",
-  "message_moyen": "<si total 45-70 — frustration + FOMO, 1 phrase, potentiel gâché>",
-  "message_eleve": "<si total > 70 — challenge, 1 phrase, les vrais résultats commencent à 85+>",
+  "message_faible": "<si total < 45 — urgent et alarmant, 1 phrase SANS prénom, commence directement par le constat, corps envoie des signaux d'alarme ignorés>",
+  "message_moyen": "<si total 45-70 — frustration + FOMO, 1 phrase SANS prénom, potentiel gâché, proximité top 10%, jamais de compliment>",
+  "message_eleve": "<si total > 70 — challenge, 1 phrase SANS prénom, vrais résultats commencent à 85+ et pas encore atteint>",
   "point_faible": "<clé exacte parmi: training, nutrition, hydratation, sommeil, skincare, steps>",
   "plan_semaine1": ["<action concrète 1>", "<action concrète 2>", "<action concrète 3>"],
   "quick_wins": ["<résultat visible en 7 jours 1>", "<résultat visible en 7 jours 2>"]
