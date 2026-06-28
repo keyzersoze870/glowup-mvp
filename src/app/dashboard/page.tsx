@@ -211,26 +211,8 @@ export default function Dashboard() {
         <ScoreRing score={liveScore} />
         <div style={{ marginTop:4, textAlign:'center', width:'100%' }}>
           <span style={{ fontSize:22, fontWeight:800, color:scoreColor, letterSpacing:-0.5, display:'block', marginBottom:6 }}>{scoreLabel}</span>
-          <p style={{ fontSize:13, fontWeight:600, color:'rgba(255,255,255,0.75)', letterSpacing:-0.1, lineHeight:1.5, maxWidth:280, textAlign:'center', margin:'0 auto 6px' }}>{segmentMsg}</p>
-          <p style={{ fontSize:12, color:'rgba(255,255,255,0.35)', letterSpacing:-0.1, lineHeight:1.4, maxWidth:280, textAlign:'center', margin:'0 auto 12px' }}>À remplir</p>
-          <button onClick={() => {}}
-            style={{ padding:'11px 24px', background:BLUE, border:'none', borderRadius:12, color:'#fff', fontSize:13, fontWeight:600, cursor:'pointer', fontFamily:sf, letterSpacing:-0.2 }}>
-            Voir mon plan →
-          </button>
+          <p style={{ fontSize:13, fontWeight:600, color:'rgba(255,255,255,0.75)', letterSpacing:-0.1, lineHeight:1.5, maxWidth:280, textAlign:'center', margin:'0 auto' }}>{segmentMsg}</p>
         </div>
-      </div>
-
-      {/* TABS */}
-      <div style={{ flexShrink:0, padding:'0 20px 10px', display:'flex', gap:6 }}>
-        {[['score','Mon score']].map(([k,l]) => (
-          <button key={k} onClick={() => setActiveTab(k as any)}
-            style={{ flex:1, padding:'9px 4px', borderRadius:10, border:'none', cursor:'pointer', fontFamily:sf,
-              background: activeTab === k ? BLUE : 'rgba(255,255,255,0.07)',
-              color: activeTab === k ? '#fff' : 'rgba(255,255,255,0.45)',
-              fontSize:12, fontWeight:600, letterSpacing:-0.2, transition:'all 0.15s' }}>
-            {l}
-          </button>
-        ))}
       </div>
 
       {/* CONTENT */}
@@ -264,9 +246,10 @@ export default function Dashboard() {
               )
             })}
 
-            {/* CTA bas */}
+            {/* À remplir + CTA bas */}
+            <p style={{ fontSize:12, color:'rgba(255,255,255,0.35)', letterSpacing:-0.1, lineHeight:1.5, textAlign:'center', margin:'8px 0' }}>À remplir</p>
             <button onClick={() => {}}
-              style={{ width:'100%', padding:'14px', background:BLUE, border:'none', borderRadius:14, color:'#fff', fontSize:15, fontWeight:600, cursor:'pointer', fontFamily:sf, letterSpacing:-0.3, marginTop:4 }}>
+              style={{ width:'100%', padding:'14px', background:BLUE, border:'none', borderRadius:14, color:'#fff', fontSize:15, fontWeight:600, cursor:'pointer', fontFamily:sf, letterSpacing:-0.3 }}>
               Voir mon plan →
             </button>
           </div>
