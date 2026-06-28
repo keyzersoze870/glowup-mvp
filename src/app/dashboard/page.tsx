@@ -210,7 +210,15 @@ export default function Dashboard() {
         <p style={{ fontSize:13, color:'rgba(255,255,255,0.4)', letterSpacing:-0.2, marginBottom:4 }}>Bonjour {profile.prenom} 👋</p>
         <ScoreRing score={liveScore} />
         <div style={{ marginTop:4, textAlign:'center', width:'100%' }}>
-          <span style={{ fontSize:22, fontWeight:800, color:scoreColor, letterSpacing:-0.5, display:'block', marginBottom:6 }}>{scoreLabel}</span>
+          <span style={{ fontSize:22, fontWeight:800, color:scoreColor, letterSpacing:-0.5, display:'block', marginBottom:4 }}>{scoreLabel}</span>
+          <p style={{ fontSize:12, fontStyle:'italic', fontWeight:300, color:'rgba(255,255,255,0.4)', letterSpacing:-0.1, marginBottom:10 }}>
+            {liveScore < 45
+              ? '87% des utilisateurs ont un meilleur score que toi, ne laisse pas ton corps se dégrader davantage.'
+              : liveScore < 70
+              ? '52% des utilisateurs ont un meilleur score que toi, ne gâche pas ton potentiel avant qu\'il soit trop tard.'
+              : '18% des utilisateurs ont un meilleur score que toi, ne t\'arrête pas si près du sommet.'
+            }
+          </p>
           <p style={{ fontSize:13, fontWeight:600, color:'rgba(255,255,255,0.75)', letterSpacing:-0.1, lineHeight:1.5, maxWidth:280, textAlign:'center', margin:'0 auto 12px' }}>
             <span style={{ color:'#fff', fontWeight:700 }}>{profile.prenom}</span>, <span style={{ color:'#0A84FF' }}>après analyse complète des 68 points de données de ton visage et tes réponses</span>, {segmentMsg?.replace(new RegExp(`^${profile.prenom}[,.]?\\s*`, 'i'), '')}
           </p>
