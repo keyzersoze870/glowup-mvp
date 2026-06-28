@@ -212,7 +212,7 @@ export default function Dashboard() {
         <div style={{ marginTop:4, textAlign:'center', width:'100%' }}>
           <span style={{ fontSize:22, fontWeight:800, color:scoreColor, letterSpacing:-0.5, display:'block', marginBottom:6 }}>{scoreLabel}</span>
           <p style={{ fontSize:13, fontWeight:600, color:'rgba(255,255,255,0.75)', letterSpacing:-0.1, lineHeight:1.5, maxWidth:280, textAlign:'center', margin:'0 auto 12px' }}>
-            <span style={{ color:'#fff', fontWeight:700 }}>{profile.prenom}</span>, après analyse complète des 68 points de données de ton visage et tes réponses, {segmentMsg?.charAt(0).toLowerCase()}{segmentMsg?.slice(1)}
+            <span style={{ color:'#fff', fontWeight:700 }}>{profile.prenom}</span>, <span style={{ color:'#0A84FF' }}>après analyse complète des 68 points de données de ton visage et tes réponses</span>, {segmentMsg}
           </p>
           <button onClick={() => {}}
             style={{ padding:'11px 24px', background:BLUE, border:'none', borderRadius:12, color:'#fff', fontSize:13, fontWeight:600, cursor:'pointer', fontFamily:sf, letterSpacing:-0.2 }}>
