@@ -230,7 +230,7 @@ export default function Dashboard() {
 
       {/* TABS */}
       <div style={{ flexShrink:0, padding:'0 20px 10px', display:'flex', gap:6 }}>
-        {[['score','Mon score'],['plan','Plan S1'],['today',"Aujourd'hui"]].map(([k,l]) => (
+        {[['score','Mon score'],['plan','Plan S1']].map(([k,l]) => (
           <button key={k} onClick={() => setActiveTab(k as any)}
             style={{ flex:1, padding:'9px 4px', borderRadius:10, border:'none', cursor:'pointer', fontFamily:sf,
               background: activeTab === k ? BLUE : 'rgba(255,255,255,0.07)',
@@ -276,8 +276,11 @@ export default function Dashboard() {
             <div style={{ marginTop:4, padding:'18px', background:'rgba(10,132,255,0.08)', border:'0.5px solid rgba(10,132,255,0.2)', borderRadius:16 }}>
               <p style={{ fontSize:12, color:BLUE, fontWeight:600, marginBottom:6 }}>🔒 Premium</p>
               <p style={{ fontSize:13, color:'rgba(255,255,255,0.5)', marginBottom:14, lineHeight:1.5, letterSpacing:-0.2 }}>{paywallMsg}</p>
-              <button onClick={handlePremium} style={{ width:'100%', padding:'13px', background:BLUE, border:'none', borderRadius:12, color:'#fff', fontSize:14, fontWeight:600, cursor:'pointer', fontFamily:sf, letterSpacing:-0.3 }}>
+              <button onClick={handlePremium} style={{ width:'100%', padding:'13px', background:BLUE, border:'none', borderRadius:12, color:'#fff', fontSize:14, fontWeight:600, cursor:'pointer', fontFamily:sf, letterSpacing:-0.3, marginBottom:8 }}>
                 Passer Premium — 9€/mois
+              </button>
+              <button onClick={() => router.push('/share')} style={{ width:'100%', padding:'12px', background:'rgba(255,255,255,0.06)', border:'0.5px solid rgba(255,255,255,0.1)', borderRadius:12, color:'rgba(255,255,255,0.6)', fontSize:13, fontWeight:500, cursor:'pointer', fontFamily:sf }}>
+                ⬆ Partager mon score TikTok
               </button>
             </div>
           </div>
@@ -306,30 +309,13 @@ export default function Dashboard() {
             )}
             <div style={{ padding:'16px', background:'rgba(10,132,255,0.08)', border:'0.5px solid rgba(10,132,255,0.2)', borderRadius:16, marginTop:4 }}>
               <p style={{ fontSize:13, color:'rgba(255,255,255,0.5)', marginBottom:12, lineHeight:1.5 }}>🔒 Les semaines 2 à 8 sont disponibles en Premium.</p>
-              <button onClick={handlePremium} style={{ width:'100%', padding:'12px', background:BLUE, border:'none', borderRadius:12, color:'#fff', fontSize:14, fontWeight:600, cursor:'pointer', fontFamily:sf }}>
-                Voir le plan complet
+              <button onClick={handlePremium} style={{ width:'100%', padding:'13px', background:BLUE, border:'none', borderRadius:12, color:'#fff', fontSize:14, fontWeight:600, cursor:'pointer', fontFamily:sf, marginBottom:8 }}>
+                Débloquer mon plan complet — 9€/mois
+              </button>
+              <button onClick={() => router.push('/share')} style={{ width:'100%', padding:'12px', background:'rgba(255,255,255,0.06)', border:'0.5px solid rgba(255,255,255,0.1)', borderRadius:12, color:'rgba(255,255,255,0.6)', fontSize:13, fontWeight:500, cursor:'pointer', fontFamily:sf }}>
+                ⬆ Partager mon score
               </button>
             </div>
-          </div>
-        )}
-
-        {/* TODAY TAB */}
-        {activeTab === 'today' && (
-          <div style={{ display:'flex', flexDirection:'column', gap:8 }}>
-            <p style={{ fontSize:11, color:'rgba(255,255,255,0.3)', letterSpacing:0.5, textTransform:'uppercase', marginBottom:4 }}>Checklist du jour</p>
-            {CHECK_ITEMS.map(item => (
-              <CheckItem key={item.key} icon={item.icon} label={item.label} sub={item.sub} onCheck={handleCheck} />
-            ))}
-            {checkedCount === 5 && (
-              <div style={{ marginTop:8, padding:'16px', background:'rgba(48,209,88,0.08)', border:'0.5px solid rgba(48,209,88,0.2)', borderRadius:16, textAlign:'center' }}>
-                <p style={{ fontSize:20, marginBottom:6 }}>🎉</p>
-                <p style={{ fontSize:15, fontWeight:700, color:'#30D158', letterSpacing:-0.3, marginBottom:4 }}>Journée parfaite !</p>
-                <p style={{ fontSize:13, color:'rgba(255,255,255,0.5)', marginBottom:12 }}>Ton score a progressé de +{checkedCount * 2} points aujourd'hui.</p>
-                <button onClick={handleStreakUpdate} style={{ padding:'10px 20px', background:'#30D158', border:'none', borderRadius:12, color:'#000', fontSize:13, fontWeight:600, cursor:'pointer', fontFamily:sf }}>
-                  🔥 Valider mon streak
-                </button>
-              </div>
-            )}
           </div>
         )}
       </div>
