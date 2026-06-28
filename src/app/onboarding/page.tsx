@@ -29,6 +29,7 @@ export default function OnboardingPage() {
   const fileRef = useRef<HTMLInputElement>(null)
 
   const [photo, setPhoto] = useState<string | null>(null)
+  const [email, setEmail] = useState('')
   const [prenom, setPrenom] = useState('')
   const [poids, setPoids] = useState('')
   const [taille, setTaille] = useState('')
@@ -55,55 +56,31 @@ export default function OnboardingPage() {
     setLoading(true)
     try {
       const data = { prenom, poids: Number(poids), taille: Number(taille), age: Number(age), sport, eau, skincare, stress }
+
+      // Envoyer magic link + sauvegarder profil en attente
+      localStorage.setItem('glowup_profile_pending', JSON.stringify(data))
+
+      const { error: authError } = await supabase.auth.signInWithOtp({
+        email,
+        options: { emailRedirectTo: `${window.location.origin}/auth/callback` }
+      })
+
+      if (authError) throw authError
+
+      // Générer le score en attendant
       const res = await fetch('/api/generate-score', {
         method: 'POST', headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(data),
       })
       const json = await res.json()
       if (json.success) {
-        // Sauvegarder en local
         localStorage.setItem('glowup_profile', JSON.stringify(data))
         localStorage.setItem('glowup_score', JSON.stringify(json.score))
-
-        // Sauvegarder dans Supabase
-        try {
-          // Créer ou récupérer l'user via email anonyme basé sur un ID local
-          let userId = localStorage.getItem('glowup_user_id')
-          if (!userId) {
-            // Créer un user anonyme avec un email généré
-            const anonEmail = `user_${Date.now()}_${Math.random().toString(36).slice(2)}@glowapp.local`
-            const { data: userData, error: userError } = await supabase
-              .from('users')
-              .insert({ email: anonEmail, prenom })
-              .select('id')
-              .single()
-            if (!userError && userData) {
-              userId = userData.id
-              localStorage.setItem('glowup_user_id', userId!)
-            }
-          }
-
-          if (userId) {
-            await supabase.from('scores').insert({
-              user_id: userId,
-              total: json.score.total,
-              training: json.score.training,
-              nutrition: json.score.nutrition,
-              hydratation: json.score.hydratation,
-              sommeil: json.score.sommeil,
-              skincare: json.score.skincare,
-              stress: json.score.steps,
-              score_analyse: json.score.analyse,
-              plan_semaine1: json.score.plan_semaine1,
-              quick_wins: json.score.quick_wins,
-            })
-          }
-        } catch (dbErr) {
-          console.log('DB save error (non-blocking):', dbErr)
-        }
-
-        router.push('/dashboard')
       }
+
+      router.push('/dashboard')
+    } catch(e: any) {
+      console.error(e)
     } finally { setLoading(false) }
   }
 
@@ -274,24 +251,77 @@ export default function OnboardingPage() {
           </div>
         )}
 
-        {/* STEP 5 — Stress */}
+        {/* STEP 5 — Stress + Auth gate */}
         {step === 5 && (
           <div style={{ flex:1, display:'flex', flexDirection:'column', justifyContent:'center', gap:12 }}>
-            <StepHeader num={6} title="Ton niveau de stress" sub="Comment tu te sens au quotidien ?" />
-            <div style={{ display:'flex', flexDirection:'column', gap:8 }}>
-              {[
-                { val:'faible', label:'Faible — je suis zen', icon:'😌' },
-                { val:'modere', label:'Modéré — quelques tensions', icon:'😐' },
-                { val:'eleve', label:'Élevé — souvent stressé(e)', icon:'😰' },
-                { val:'extreme', label:'Extrême — épuisé(e)', icon:'🔥' },
-              ].map(o => <OptionCard key={o.val} label={o.label} icon={o.icon} selected={stress === o.val} onClick={() => setStress(o.val)} />)}
-            </div>
-            <button onClick={submit} disabled={loading || !stress}
-              style={{ width:'100%', padding:'16px', background:(!stress || loading) ? 'rgba(255,255,255,0.08)' : BLUE, border:'none', borderRadius:14, color:(!stress || loading) ? 'rgba(255,255,255,0.3)' : '#fff', fontSize:16, fontWeight:600, cursor:(!stress || loading) ? 'default' : 'pointer', fontFamily:sf, letterSpacing:-0.3, display:'flex', alignItems:'center', justifyContent:'center', gap:8, marginTop:4 }}>
-              {loading
-                ? <><span style={{ width:16,height:16,border:'2px solid rgba(255,255,255,0.3)',borderTopColor:'#fff',borderRadius:'50%',display:'inline-block',animation:'spin 0.8s linear infinite' }} />Analyse en cours...</>
-                : '⚡ Calculer mon Glow Up Score'}
-            </button>
+            {!stress ? (
+              <>
+                <StepHeader num={6} title="Ton niveau de stress" sub="Comment tu te sens au quotidien ?" />
+                <div style={{ display:'flex', flexDirection:'column', gap:8 }}>
+                  {[
+                    { val:'faible', label:'Faible — je suis zen', icon:'😌' },
+                    { val:'modere', label:'Modéré — quelques tensions', icon:'😐' },
+                    { val:'eleve', label:'Élevé — souvent stressé(e)', icon:'😰' },
+                    { val:'extreme', label:'Extrême — épuisé(e)', icon:'🔥' },
+                  ].map(o => <OptionCard key={o.val} label={o.label} icon={o.icon} selected={stress === o.val} onClick={() => setStress(o.val)} />)}
+                </div>
+              </>
+            ) : (
+              <>
+                {/* AUTH GATE — connecte-toi pour découvrir ton score */}
+                <div style={{ textAlign:'center', marginBottom:8 }}>
+                  <div style={{ fontSize:40, marginBottom:12 }}>🔮</div>
+                  <h1 style={{ fontSize:26, fontWeight:700, color:'#fff', letterSpacing:-0.8, lineHeight:1.2, marginBottom:8 }}>
+                    Ton score est prêt
+                  </h1>
+                  <p style={{ fontSize:14, color:'rgba(255,255,255,0.45)', lineHeight:1.5, letterSpacing:-0.2 }}>
+                    Connecte-toi pour découvrir ton Glow Up Score et sauvegarder ta progression.
+                  </p>
+                </div>
+
+                <div style={{ display:'flex', flexDirection:'column', gap:10 }}>
+                  {/* Google */}
+                  <button onClick={async () => {
+                    // Sauvegarder le profil avant redirect
+                    const data = { prenom, poids: Number(poids), taille: Number(taille), age: Number(age), sport, eau, skincare, stress }
+                    localStorage.setItem('glowup_profile_pending', JSON.stringify(data))
+                    await supabase.auth.signInWithOAuth({
+                      provider: 'google',
+                      options: { redirectTo: `${window.location.origin}/auth/callback` }
+                    })
+                  }} style={{ width:'100%', padding:'14px', background:'#fff', border:'none', borderRadius:14, color:'#000', fontSize:15, fontWeight:600, cursor:'pointer', fontFamily:sf, display:'flex', alignItems:'center', justifyContent:'center', gap:10 }}>
+                    <svg width="18" height="18" viewBox="0 0 18 18">
+                      <path fill="#4285F4" d="M16.51 8H8.98v3h4.3c-.18 1-.74 1.48-1.6 2.04v2.01h2.6a7.8 7.8 0 0 0 2.38-5.88c0-.57-.05-.66-.15-1.18z"/>
+                      <path fill="#34A853" d="M8.98 17c2.16 0 3.97-.72 5.3-1.94l-2.6-2a4.8 4.8 0 0 1-7.18-2.54H1.83v2.07A8 8 0 0 0 8.98 17z"/>
+                      <path fill="#FBBC05" d="M4.5 10.52a4.8 4.8 0 0 1 0-3.04V5.41H1.83a8 8 0 0 0 0 7.18l2.67-2.07z"/>
+                      <path fill="#EA4335" d="M8.98 4.18c1.17 0 2.23.4 3.06 1.2l2.3-2.3A8 8 0 0 0 1.83 5.4L4.5 7.49a4.77 4.77 0 0 1 4.48-3.31z"/>
+                    </svg>
+                    Continuer avec Google
+                  </button>
+
+                  <div style={{ display:'flex', alignItems:'center', gap:12 }}>
+                    <div style={{ flex:1, height:'0.5px', background:'rgba(255,255,255,0.1)' }} />
+                    <span style={{ fontSize:12, color:'rgba(255,255,255,0.3)' }}>ou</span>
+                    <div style={{ flex:1, height:'0.5px', background:'rgba(255,255,255,0.1)' }} />
+                  </div>
+
+                  <input type="email" placeholder="ton@email.com" value={email} onChange={e => setEmail(e.target.value)}
+                    style={{ width:'100%', padding:'14px 16px', background:'rgba(255,255,255,0.06)', border:`0.5px solid ${email ? BLUE : 'rgba(255,255,255,0.12)'}`, borderRadius:14, color:'#fff', fontSize:16, fontFamily:sf, outline:'none', letterSpacing:-0.2 }}
+                  />
+
+                  <button onClick={submit} disabled={loading || !email.trim()}
+                    style={{ width:'100%', padding:'16px', background:(!email.trim() || loading) ? 'rgba(255,255,255,0.08)' : BLUE, border:'none', borderRadius:14, color:(!email.trim() || loading) ? 'rgba(255,255,255,0.3)' : '#fff', fontSize:16, fontWeight:600, cursor:(!email.trim() || loading) ? 'default' : 'pointer', fontFamily:sf, letterSpacing:-0.3, display:'flex', alignItems:'center', justifyContent:'center', gap:8 }}>
+                    {loading
+                      ? <><span style={{ width:16,height:16,border:'2px solid rgba(255,255,255,0.3)',borderTopColor:'#fff',borderRadius:'50%',display:'inline-block',animation:'spin 0.8s linear infinite' }} />Génération du score...</>
+                      : '⚡ Découvrir mon Glow Up Score'}
+                  </button>
+
+                  <p style={{ fontSize:11, color:'rgba(255,255,255,0.2)', textAlign:'center' }}>
+                    En continuant, tu acceptes nos conditions d'utilisation
+                  </p>
+                </div>
+              </>
+            )}
           </div>
         )}
       </div>
