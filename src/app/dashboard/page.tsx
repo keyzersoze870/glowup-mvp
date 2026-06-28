@@ -142,7 +142,7 @@ export default function Dashboard() {
 
   const segment = liveScore < 45 ? 'faible' : liveScore < 70 ? 'moyen' : 'eleve'
   const scoreColor = liveScore >= 70 ? '#30D158' : liveScore >= 45 ? '#FF9F0A' : '#FF453A'
-  const scoreLabel = liveScore >= 70 ? 'Excellent 🔥' : liveScore >= 55 ? 'Bien 👍' : liveScore >= 40 ? 'À améliorer ⚡' : 'Faible 💪'
+  const scoreLabel = liveScore >= 70 ? 'Excellent 🔥' : liveScore >= 55 ? 'Bien 👍' : liveScore >= 40 ? 'À améliorer ⚡' : 'Faible ⚠️'
 
   const segmentMsg = segment === 'faible' ? score.message_faible
     : segment === 'moyen' ? score.message_moyen
@@ -210,8 +210,8 @@ export default function Dashboard() {
         <p style={{ fontSize:13, color:'rgba(255,255,255,0.4)', letterSpacing:-0.2, marginBottom:4 }}>Bonjour {profile.prenom} 👋</p>
         <ScoreRing score={liveScore} />
         <div style={{ marginTop:4, textAlign:'center' }}>
-          <span style={{ fontSize:16, fontWeight:700, color:scoreColor, letterSpacing:-0.3, display:'block', marginBottom:4 }}>{scoreLabel}</span>
-          <p style={{ fontSize:12, color:'rgba(255,255,255,0.4)', letterSpacing:-0.1, lineHeight:1.4, maxWidth:280 }}>{segmentMsg}</p>
+          <span style={{ fontSize:22, fontWeight:800, color:scoreColor, letterSpacing:-0.5, display:'block', marginBottom:6 }}>{scoreLabel}</span>
+          <p style={{ fontSize:13, fontWeight:600, color:'rgba(255,255,255,0.75)', letterSpacing:-0.1, lineHeight:1.5, maxWidth:280, textAlign:'center' }}>{segmentMsg}</p>
         </div>
 
         {/* Barre de progression checklist */}
