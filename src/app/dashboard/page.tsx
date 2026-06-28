@@ -214,6 +214,9 @@ export default function Dashboard() {
           <p style={{ fontSize:13, fontWeight:600, color:'rgba(255,255,255,0.75)', letterSpacing:-0.1, lineHeight:1.5, maxWidth:280, textAlign:'center', margin:'0 auto 12px' }}>
             <span style={{ color:'#fff', fontWeight:700 }}>{profile.prenom}</span>, <span style={{ color:'#0A84FF' }}>après analyse complète des 68 points de données de ton visage et tes réponses</span>, {segmentMsg?.replace(new RegExp(`^${profile.prenom}[,.]?\\s*`, 'i'), '')}
           </p>
+          <p style={{ fontSize:13, color:'rgba(255,255,255,0.5)', letterSpacing:-0.2, lineHeight:1.5, maxWidth:280, textAlign:'center', margin:'0 auto 14px' }}>
+            Tu peux dès aujourd'hui commencer à faire monter ce score en suivant le plan personnalisé que j'ai créé pour toi ⬇️
+          </p>
           <button onClick={() => {}}
             style={{ padding:'11px 24px', background:BLUE, border:'none', borderRadius:12, color:'#fff', fontSize:13, fontWeight:600, cursor:'pointer', fontFamily:sf, letterSpacing:-0.2 }}>
             Voir mon plan →
