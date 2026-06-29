@@ -263,9 +263,10 @@ export default function TodayPage() {
                 skincare: { label:'Skincare', icon:'✨', color:'#64D2FF' },
                 steps: { label:'Stress', icon:'🧘', color:'#FF453A' },
               }).map(([key, cat]) => {
-                // Calculer le bonus de la mission cochée pour cette catégorie
+                // stress dans les missions = steps dans le score
+                const missionKey = key === 'steps' ? 'stress' : key
                 const missionBonus = missions
-                  .filter((m: any) => m.categorie === key && checked[m.id])
+                  .filter((m: any) => m.categorie === missionKey && checked[m.id])
                   .reduce((acc: number, m: any) => acc + Math.floor(m.points / 10), 0)
                 const baseVal = score[key] as number || 0
                 const liveVal = Math.min(10, baseVal + missionBonus)
