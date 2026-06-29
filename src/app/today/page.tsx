@@ -169,7 +169,7 @@ export default function TodayPage() {
           {/* Message matin */}
           {messageMatin && (
             <p style={{ fontSize:13, color:'rgba(255,255,255,0.5)', lineHeight:1.5, letterSpacing:-0.2, marginTop:10, maxWidth:280, margin:'10px auto 0' }}>
-              {messageMatin}
+              <span style={{ color:'#fff', fontWeight:700 }}>{profile.prenom}</span>, {messageMatin?.charAt(0).toLowerCase()}{messageMatin?.slice(1)}
             </p>
           )}
         </div>
