@@ -250,6 +250,49 @@ export default function TodayPage() {
           </div>
         )}
 
+        {/* SCORES PAR CATÉGORIE — mis à jour en temps réel */}
+        {score && (
+          <div style={{ marginTop:20 }}>
+            <p style={{ fontSize:11, color:'rgba(255,255,255,0.3)', letterSpacing:0.5, textTransform:'uppercase', marginBottom:10 }}>Détail par catégorie</p>
+            <div style={{ display:'flex', flexDirection:'column', gap:8 }}>
+              {Object.entries({
+                training: { label:'Sport', icon:'🏋️', color:'#FF9F0A' },
+                nutrition: { label:'Nutrition', icon:'🥗', color:'#30D158' },
+                hydratation: { label:'Eau', icon:'💧', color:BLUE },
+                sommeil: { label:'Sommeil', icon:'🌙', color:'#BF5AF2' },
+                skincare: { label:'Skincare', icon:'✨', color:'#64D2FF' },
+                steps: { label:'Stress', icon:'🧘', color:'#FF453A' },
+              }).map(([key, cat]) => {
+                // Calculer le bonus de la mission cochée pour cette catégorie
+                const missionBonus = missions
+                  .filter((m: any) => m.categorie === key && checked[m.id])
+                  .reduce((acc: number, m: any) => acc + Math.floor(m.points / 10), 0)
+                const baseVal = score[key] as number || 0
+                const liveVal = Math.min(10, baseVal + missionBonus)
+                return (
+                  <div key={key} style={{ background:'rgba(255,255,255,0.04)', border:'0.5px solid rgba(255,255,255,0.07)', borderRadius:12, padding:'12px 14px' }}>
+                    <div style={{ display:'flex', alignItems:'center', justifyContent:'space-between', marginBottom:7 }}>
+                      <div style={{ display:'flex', alignItems:'center', gap:8 }}>
+                        <span style={{ fontSize:16 }}>{cat.icon}</span>
+                        <span style={{ fontSize:13, fontWeight:600, color:'#fff', letterSpacing:-0.3 }}>{cat.label}</span>
+                        {missionBonus > 0 && (
+                          <span style={{ fontSize:10, color:'#30D158', fontWeight:600 }}>+{missionBonus}</span>
+                        )}
+                      </div>
+                      <span style={{ fontSize:16, fontWeight:700, color:cat.color, letterSpacing:-0.5 }}>
+                        {liveVal}<span style={{ fontSize:10, opacity:0.4, fontWeight:400 }}>/10</span>
+                      </span>
+                    </div>
+                    <div style={{ height:3, background:'rgba(255,255,255,0.07)', borderRadius:2, overflow:'hidden' }}>
+                      <div style={{ height:'100%', width:`${liveVal*10}%`, background:cat.color, borderRadius:2, transition:'width 0.4s ease' }} />
+                    </div>
+                  </div>
+                )
+              })}
+            </div>
+          </div>
+        )}
+
         {/* GRAPHE 7 JOURS */}
         <div style={{ marginTop:20 }}>
           <p style={{ fontSize:11, color:'rgba(255,255,255,0.3)', letterSpacing:0.5, textTransform:'uppercase', marginBottom:10 }}>Progression</p>
