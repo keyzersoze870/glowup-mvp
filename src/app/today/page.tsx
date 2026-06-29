@@ -1,6 +1,7 @@
 'use client'
 import { useEffect, useState } from 'react'
 import { useRouter } from 'next/navigation'
+import BottomNav from '@/components/BottomNav'
 
 const sf = `-apple-system, BlinkMacSystemFont, 'SF Pro Display', 'Helvetica Neue', sans-serif`
 const BLUE = '#0A84FF'
@@ -107,6 +108,7 @@ export default function TodayPage() {
   if (!profile || !score) return (
     <div style={{ height:'100svh', background:'#000', display:'flex', alignItems:'center', justifyContent:'center' }}>
       <div style={{ width:24, height:24, border:`2px solid rgba(255,255,255,0.1)`, borderTopColor:BLUE, borderRadius:'50%', animation:'spin 0.8s linear infinite' }} />
+      <BottomNav />
       <style>{`@keyframes spin{to{transform:rotate(360deg)}}`}</style>
     </div>
   )
@@ -130,7 +132,7 @@ export default function TodayPage() {
         </div>
       </nav>
 
-      <div style={{ flex:1, overflowY:'auto', padding:'0 20px 40px' }}>
+      <div style={{ flex:1, overflowY:'auto', padding:'0 20px 100px' }}>
 
         {/* DATE */}
         <p style={{ fontSize:12, color:'rgba(255,255,255,0.35)', textAlign:'center', letterSpacing:0.3, marginBottom:8, textTransform:'capitalize' }}>
@@ -237,6 +239,7 @@ export default function TodayPage() {
         </div>
       </div>
 
+      <BottomNav />
       <style>{`
         @keyframes spin { to { transform: rotate(360deg) } }
         @keyframes pulse { 0%,100%{opacity:0.4} 50%{opacity:0.8} }
