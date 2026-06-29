@@ -47,7 +47,9 @@ export default function TodayPage() {
     const parsedScore = JSON.parse(s)
     setProfile(parsedProfile)
     setScore(parsedScore)
-    setLiveScore(parsedScore.total)
+    // Charger le score live synchronisé
+    const liveS = localStorage.getItem('glowup_live_score')
+    setLiveScore(liveS ? Number(liveS) : parsedScore.total)
     setStreak(st ? Number(st) : 0)
 
     // Charger missions du jour ou en générer de nouvelles
@@ -87,8 +89,11 @@ export default function TodayPage() {
 
     // Score monte/descend en temps réel
     const delta = newChecked[id] ? points : -points
-    setLiveScore(s => Math.max(0, Math.min(100, s + delta)))
+    const newScore = Math.max(0, Math.min(100, liveScore + delta))
+    setLiveScore(newScore)
     setScoreVariation(v => v + delta)
+    // Sauvegarder le score live — synchronisé avec le dashboard
+    localStorage.setItem('glowup_live_score', String(newScore))
 
     // Message du soir après avoir tout coché
     const doneCount = Object.values(newChecked).filter(Boolean).length

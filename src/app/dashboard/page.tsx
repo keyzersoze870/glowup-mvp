@@ -86,11 +86,13 @@ export default function Dashboard() {
     const p = localStorage.getItem('glowup_profile')
     const s = localStorage.getItem('glowup_score')
     const st = localStorage.getItem('glowup_streak')
+    const liveS = localStorage.getItem('glowup_live_score')
     if (!p || !s) { router.push('/onboarding'); return }
     const parsedScore = JSON.parse(s)
     setProfile(JSON.parse(p))
     setScore(parsedScore)
-    setLiveScore(parsedScore.total)
+    // Utiliser le score live s'il existe (mis à jour par la page Aujourd'hui)
+    setLiveScore(liveS ? Number(liveS) : parsedScore.total)
     setStreak(st ? Number(st) : 0)
   }, [])
 
