@@ -66,9 +66,15 @@ export default function TodayPage() {
         body: JSON.stringify({ profile: parsedProfile, score: parsedScore, completedYesterday: yesterdayCompleted })
       }).then(r => r.json()).then(data => {
         if (data.success) {
-          setMissions(data.missions)
+          // Ajouter missions fixes skincare + sommeil
+          const fixedMissions = [
+            ...data.missions,
+            { id: 'fixed_skincare', texte: 'Faire ta routine skincare', categorie: 'skincare', points: 10 },
+            { id: 'fixed_sommeil', texte: 'Dormir minimum 7h cette nuit', categorie: 'sommeil', points: 10 },
+          ]
+          setMissions(fixedMissions)
           setMessageMatin(data.message_matin)
-          localStorage.setItem('glowup_missions_today', JSON.stringify(data.missions))
+          localStorage.setItem('glowup_missions_today', JSON.stringify(fixedMissions))
           localStorage.setItem('glowup_missions_date', today)
           localStorage.setItem('glowup_message_matin', data.message_matin)
         }
