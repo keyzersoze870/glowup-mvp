@@ -226,7 +226,7 @@ export default function Dashboard() {
           <p style={{ fontSize:13, color:'rgba(255,255,255,0.5)', letterSpacing:-0.2, lineHeight:1.5, maxWidth:280, textAlign:'center', margin:'0 auto 14px' }}>
             Tu peux dès aujourd'hui commencer à faire monter ce score en suivant le plan personnalisé que j'ai créé pour toi ⬇️
           </p>
-          <button onClick={() => {}}
+          <button onClick={() => router.push('/today')}
             style={{ padding:'11px 24px', background:BLUE, border:'none', borderRadius:12, color:'#fff', fontSize:13, fontWeight:600, cursor:'pointer', fontFamily:sf, letterSpacing:-0.2 }}>
             Voir mon plan →
           </button>
@@ -266,7 +266,7 @@ export default function Dashboard() {
 
             {/* À remplir + CTA bas */}
             <p style={{ fontSize:12, color:'rgba(255,255,255,0.35)', letterSpacing:-0.1, lineHeight:1.5, textAlign:'center', margin:'8px 0' }}>À remplir</p>
-            <button onClick={() => {}}
+            <button onClick={() => router.push('/today')}
               style={{ width:'100%', padding:'14px', background:BLUE, border:'none', borderRadius:14, color:'#fff', fontSize:15, fontWeight:600, cursor:'pointer', fontFamily:sf, letterSpacing:-0.3 }}>
               Voir mon plan →
             </button>
