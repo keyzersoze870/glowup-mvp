@@ -2,6 +2,7 @@
 import { useEffect, useState } from 'react'
 import { useRouter } from 'next/navigation'
 import BottomNav from '@/components/BottomNav'
+import { supabase } from '@/lib/supabase'
 
 const sf = `-apple-system, BlinkMacSystemFont, 'SF Pro Display', 'Helvetica Neue', sans-serif`
 const BLUE = '#0A84FF'
@@ -82,7 +83,7 @@ export default function TodayPage() {
     }
   }, [])
 
-  const toggleMission = (id: string, points: number) => {
+  const toggleMission = async (id: string, points: number) => {
     const newChecked = { ...checked, [id]: !checked[id] }
     setChecked(newChecked)
     localStorage.setItem('glowup_checked_today', JSON.stringify(newChecked))
@@ -95,6 +96,21 @@ export default function TodayPage() {
     // Sauvegarder le score live — synchronisé avec le dashboard
     localStorage.setItem('glowup_live_score', String(newScore))
 
+    // Sauvegarder dans Supabase
+    try {
+      const userId = localStorage.getItem('glowup_user_id')
+      if (userId) {
+        const today = new Date().toISOString().split('T')[0]
+        await supabase.from('daily_checklist').upsert({
+          user_id: userId,
+          date: today,
+          live_score: newScore,
+          missions_data: newChecked,
+          streak,
+        }, { onConflict: 'user_id,date' })
+      }
+    } catch(e) { console.log('Save error:', e) }
+
     // Message du soir après avoir tout coché
     const doneCount = Object.values(newChecked).filter(Boolean).length
     if (doneCount === missions.length) {
@@ -104,6 +120,17 @@ export default function TodayPage() {
       setStreak(newStreak)
       localStorage.setItem('glowup_streak', String(newStreak))
       localStorage.setItem('glowup_completed_yesterday', String(doneCount))
+
+      // Sauvegarder streak dans Supabase
+      try {
+        const userId = localStorage.getItem('glowup_user_id')
+        if (userId) {
+          const today = new Date().toISOString().split('T')[0]
+          await supabase.from('daily_checklist').upsert({
+            user_id: userId, date: today, streak: newStreak,
+          }, { onConflict: 'user_id,date' })
+        }
+      } catch(e) { console.log('Streak save error:', e) }
     }
   }
 
