@@ -93,7 +93,7 @@ export default function LandingPage() {
           <div key={i} style={{ position:'absolute',...s,width:16,height:16,borderColor:'rgba(10,132,255,0.5)',borderStyle:'solid',zIndex:20 }} />
         ))}
 
-        <img key={profile.img} src={profile.img} alt="scan"
+        <img src={profile.img} alt="scan"
           style={{ width:'100%',height:'100%',objectFit:'cover',objectPosition:'center 15%',display:'block',filter:'brightness(0.9)' }}
         />
         <div style={{ position:'absolute',inset:0,background:'radial-gradient(ellipse at center, transparent 50%, #000 95%)',pointerEvents:'none' }} />
