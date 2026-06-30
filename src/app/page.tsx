@@ -32,8 +32,14 @@ export default function LandingPage() {
   const [displayScore, setDisplayScore] = useState(0)
   const [showRank, setShowRank] = useState(false)
   const [imageLoaded, setImageLoaded] = useState(false)
+  const imgRef = useRef<HTMLImageElement>(null)
   const rafRef = useRef<number | null>(null)
   const profile = PROFILES[profileIdx]
+
+  // Vérifie si l'image est déjà chargée (cache) au montage
+  useEffect(() => {
+    if (imgRef.current?.complete) setImageLoaded(true)
+  }, [])
 
   useEffect(() => {
     if (!imageLoaded) return
@@ -95,7 +101,7 @@ export default function LandingPage() {
           <div key={i} style={{ position:'absolute',...s,width:16,height:16,borderColor:'rgba(10,132,255,0.5)',borderStyle:'solid',zIndex:20 }} />
         ))}
 
-        <img src={profile.img} alt="scan" onLoad={() => setImageLoaded(true)}
+        <img ref={imgRef} src={profile.img} alt="scan" onLoad={() => setImageLoaded(true)}
           style={{ width:'100%',height:'100%',objectFit:'cover',objectPosition:'center 15%',display:'block',filter:'brightness(0.9)' }}
         />
         <div style={{ position:'absolute',inset:0,background:'radial-gradient(ellipse at center, transparent 50%, #000 95%)',pointerEvents:'none' }} />
