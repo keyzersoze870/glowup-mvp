@@ -22,19 +22,6 @@ const PROFILES = [
     score: 78,
     rank: '47% des utilisateurs ont un meilleur score que toi.',
   },
-  {
-    img: '/selfie2.png',
-    metrics: [
-      { x: 30, y: 28, label: 'Hydratation', val: '65', color: BLUE,   side: 'left' },
-      { x: 28, y: 50, label: 'Sommeil',     val: '80', color: PURPLE, side: 'left' },
-      { x: 30, y: 72, label: 'Sport',       val: '91', color: ORANGE, side: 'left' },
-      { x: 70, y: 28, label: 'Stress',      val: '77', color: ORANGE, side: 'right' },
-      { x: 72, y: 50, label: 'Skincare',    val: '42', color: CYAN,   side: 'right' },
-      { x: 70, y: 72, label: 'Nutrition',   val: '55', color: GREEN,  side: 'right' },
-    ],
-    score: 69,
-    rank: '32% des utilisateurs ont un meilleur score que toi.',
-  },
 ]
 
 export default function LandingPage() {
