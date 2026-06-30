@@ -38,6 +38,7 @@ export default function OnboardingPage() {
   const [eau, setEau] = useState('')
   const [skincare, setSkincare] = useState('')
   const [stress, setStress] = useState('')
+  const [authError, setAuthError] = useState('')
 
   const imc = poids && taille ? (Number(poids) / ((Number(taille) / 100) ** 2)).toFixed(1) : null
 
@@ -54,20 +55,12 @@ export default function OnboardingPage() {
 
   const submit = async () => {
     setLoading(true)
+    setAuthError('')
     try {
       const data = { prenom, poids: Number(poids), taille: Number(taille), age: Number(age), sport, eau, skincare, stress }
-
-      // Envoyer magic link + sauvegarder profil en attente
       localStorage.setItem('glowup_profile_pending', JSON.stringify(data))
 
-      const { error: authError } = await supabase.auth.signInWithOtp({
-        email,
-        options: { emailRedirectTo: `${window.location.origin}/auth/callback` }
-      })
-
-      if (authError) throw authError
-
-      // Générer le score en attendant
+      // Génère le score en premier — c'est ça qui doit s'afficher quoi qu'il arrive
       const res = await fetch('/api/generate-score', {
         method: 'POST', headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(data),
@@ -78,9 +71,27 @@ export default function OnboardingPage() {
         localStorage.setItem('glowup_score', JSON.stringify(json.score))
       }
 
+      // Envoie le magic link en parallèle, sans bloquer l'accès au score si ça échoue
+      try {
+        const { error: emailError } = await supabase.auth.signInWithOtp({
+          email,
+          options: { emailRedirectTo: `${window.location.origin}/auth/callback` }
+        })
+        if (emailError) {
+          console.error('Erreur envoi email:', emailError)
+          if (emailError.message?.includes('rate limit') || emailError.status === 429) {
+            localStorage.setItem('glowup_auth_pending_error', 'rate_limit')
+          }
+        }
+      } catch (emailErr) {
+        console.error('Erreur envoi email:', emailErr)
+      }
+
+      // Le score a été généré, on continue vers le dashboard quoi qu'il arrive
       router.push('/dashboard')
     } catch(e: any) {
       console.error(e)
+      setAuthError("Une erreur est survenue. Réessaie dans quelques instants.")
     } finally { setLoading(false) }
   }
 
@@ -304,6 +315,12 @@ export default function OnboardingPage() {
                     <span style={{ fontSize:12, color:'rgba(255,255,255,0.3)' }}>ou</span>
                     <div style={{ flex:1, height:'0.5px', background:'rgba(255,255,255,0.1)' }} />
                   </div>
+
+                  {authError && (
+                    <p style={{ fontSize:12, color:'#FF453A', textAlign:'center', background:'rgba(255,69,58,0.1)', padding:'10px 14px', borderRadius:10, letterSpacing:-0.1 }}>
+                      {authError}
+                    </p>
+                  )}
 
                   <input type="email" placeholder="ton@email.com" value={email} onChange={e => setEmail(e.target.value)}
                     style={{ width:'100%', padding:'14px 16px', background:'rgba(255,255,255,0.06)', border:`0.5px solid ${email ? BLUE : 'rgba(255,255,255,0.12)'}`, borderRadius:14, color:'#fff', fontSize:16, fontFamily:sf, outline:'none', letterSpacing:-0.2 }}
