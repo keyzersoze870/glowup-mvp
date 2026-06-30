@@ -83,17 +83,34 @@ export default function Dashboard() {
   const [liveScore, setLiveScore] = useState(0)
 
   useEffect(() => {
-    const p = localStorage.getItem('glowup_profile')
-    const s = localStorage.getItem('glowup_score')
-    const st = localStorage.getItem('glowup_streak')
-    const liveS = localStorage.getItem('glowup_live_score')
-    if (!p || !s) { router.push('/onboarding'); return }
-    const parsedScore = JSON.parse(s)
-    setProfile(JSON.parse(p))
-    setScore(parsedScore)
-    // Utiliser le score live s'il existe (mis à jour par la page Aujourd'hui)
-    setLiveScore(liveS ? Number(liveS) : parsedScore.total)
-    setStreak(st ? Number(st) : 0)
+    const init = async () => {
+      const p = localStorage.getItem('glowup_profile')
+      const s = localStorage.getItem('glowup_score')
+      const userId = localStorage.getItem('glowup_user_id')
+      if (!p || !s) { router.push('/onboarding'); return }
+      const parsedScore = JSON.parse(s)
+      setProfile(JSON.parse(p))
+      setScore(parsedScore)
+
+      if (!userId) {
+        setLiveScore(parsedScore.total)
+        return
+      }
+
+      try {
+        const res = await fetch(`/api/daily-score?userId=${userId}&initialScore=${parsedScore.total}`)
+        const data = await res.json()
+        if (data.success) {
+          setLiveScore(data.scoreDepart)
+          setStreak(data.streak || 0)
+        } else {
+          setLiveScore(parsedScore.total)
+        }
+      } catch (e) {
+        setLiveScore(parsedScore.total)
+      }
+    }
+    init()
   }, [])
 
   const handleCheck = (done: boolean) => {
