@@ -3,6 +3,7 @@ import { useEffect, useState } from 'react'
 import { useRouter } from 'next/navigation'
 import { supabase } from '@/lib/supabase'
 import BottomNav from '@/components/BottomNav'
+import InstallPrompt, { isStandalone } from '@/components/InstallPrompt'
 
 const sf = `-apple-system, BlinkMacSystemFont, 'SF Pro Display', 'Helvetica Neue', sans-serif`
 const BLUE = '#0A84FF'
@@ -81,6 +82,7 @@ export default function Dashboard() {
   const [checkedCount, setCheckedCount] = useState(0)
   const [showPaywall, setShowPaywall] = useState(false)
   const [liveScore, setLiveScore] = useState(0)
+  const [showInstallPrompt, setShowInstallPrompt] = useState(false)
 
   useEffect(() => {
     const init = async () => {
@@ -111,6 +113,13 @@ export default function Dashboard() {
       }
     }
     init()
+
+    // Affiche l'invitation à installer une seule fois, après que le score a été vu
+    const alreadySeen = localStorage.getItem('glowup_install_prompt_seen')
+    if (!alreadySeen && !isStandalone()) {
+      const t = setTimeout(() => setShowInstallPrompt(true), 1800)
+      return () => clearTimeout(t)
+    }
   }, [])
 
   const handleCheck = (done: boolean) => {
@@ -294,6 +303,8 @@ export default function Dashboard() {
           </div>
         )}
       </div>
+
+      {showInstallPrompt && <InstallPrompt onDismiss={() => setShowInstallPrompt(false)} />}
 
       <BottomNav />
       <style>{`
