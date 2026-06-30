@@ -31,10 +31,12 @@ export default function LandingPage() {
   const [visiblePoints, setVisiblePoints] = useState<number[]>([])
   const [displayScore, setDisplayScore] = useState(0)
   const [showRank, setShowRank] = useState(false)
+  const [imageLoaded, setImageLoaded] = useState(false)
   const rafRef = useRef<number | null>(null)
   const profile = PROFILES[profileIdx]
 
   useEffect(() => {
+    if (!imageLoaded) return
     setPhase('scan'); setVisiblePoints([]); setDisplayScore(0); setScanY(0); setShowRank(false)
     if (rafRef.current) cancelAnimationFrame(rafRef.current)
     let start: number
@@ -57,7 +59,7 @@ export default function LandingPage() {
     }
     rafRef.current = requestAnimationFrame(animateScan)
     return () => { if (rafRef.current) cancelAnimationFrame(rafRef.current) }
-  }, [profileIdx])
+  }, [profileIdx, imageLoaded])
 
   const sf = `-apple-system, BlinkMacSystemFont, 'SF Pro Display', 'Helvetica Neue', sans-serif`
 
@@ -93,13 +95,13 @@ export default function LandingPage() {
           <div key={i} style={{ position:'absolute',...s,width:16,height:16,borderColor:'rgba(10,132,255,0.5)',borderStyle:'solid',zIndex:20 }} />
         ))}
 
-        <img src={profile.img} alt="scan"
+        <img src={profile.img} alt="scan" onLoad={() => setImageLoaded(true)}
           style={{ width:'100%',height:'100%',objectFit:'cover',objectPosition:'center 15%',display:'block',filter:'brightness(0.9)' }}
         />
         <div style={{ position:'absolute',inset:0,background:'radial-gradient(ellipse at center, transparent 50%, #000 95%)',pointerEvents:'none' }} />
 
         {/* Scan line */}
-        {phase === 'scan' && (
+        {phase === 'scan' && imageLoaded && (
           <div style={{ position:'absolute',left:0,right:0,top:`${scanY}%`,height:1.5,zIndex:15,
             background:`linear-gradient(to right, transparent, ${BLUE}, ${BLUE}, transparent)`,
             pointerEvents:'none' }} />
