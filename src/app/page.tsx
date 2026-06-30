@@ -12,12 +12,12 @@ const PROFILES = [
   {
     img: '/selfie1.png',
     metrics: [
-      { x: 50, y: 18, label: 'Hydratation', val: '92', color: BLUE,   side: 'left' },
-      { x: 28, y: 42, label: 'Sommeil',     val: '61', color: PURPLE, side: 'left' },
+      { x: 42, y: 14, label: 'Hydratation', val: '92', color: BLUE,   side: 'left' },
+      { x: 30, y: 38, label: 'Sommeil',     val: '61', color: PURPLE, side: 'left' },
       { x: 22, y: 72, label: 'Sport',       val: '85', color: ORANGE, side: 'left' },
       { x: 78, y: 28, label: 'Stress',      val: '88', color: ORANGE, side: 'right' },
-      { x: 72, y: 42, label: 'Skincare',    val: '74', color: CYAN,   side: 'right' },
-      { x: 50, y: 62, label: 'Nutrition',   val: '79', color: GREEN,  side: 'right' },
+      { x: 60, y: 38, label: 'Skincare',    val: '74', color: CYAN,   side: 'right' },
+      { x: 44, y: 56, label: 'Nutrition',   val: '79', color: GREEN,  side: 'right' },
     ],
     score: 78,
     rank: '47% des utilisateurs ont un meilleur score que toi.',
