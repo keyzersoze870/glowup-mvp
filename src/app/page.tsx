@@ -12,12 +12,12 @@ const PROFILES = [
   {
     img: '/selfie1.png',
     metrics: [
-      { x: 47, y: 8,  label: 'Hydratation', val: '92', color: BLUE,   side: 'left' },
-      { x: 66, y: 36, label: 'Sommeil',     val: '61', color: PURPLE, side: 'right' },
+      { x: 46, y: 9,  label: 'Hydratation', val: '92', color: BLUE,   side: 'left' },
+      { x: 68, y: 33, label: 'Sommeil',     val: '61', color: PURPLE, side: 'right' },
       { x: 22, y: 72, label: 'Sport',       val: '85', color: ORANGE, side: 'left' },
       { x: 78, y: 28, label: 'Stress',      val: '88', color: ORANGE, side: 'right' },
-      { x: 30, y: 36, label: 'Skincare',    val: '74', color: CYAN,   side: 'left' },
-      { x: 47, y: 65, label: 'Nutrition',   val: '79', color: GREEN,  side: 'right' },
+      { x: 24, y: 33, label: 'Skincare',    val: '74', color: CYAN,   side: 'left' },
+      { x: 46, y: 53, label: 'Nutrition',   val: '79', color: GREEN,  side: 'right' },
     ],
     score: 78,
     rank: '47% des utilisateurs ont un meilleur score que toi.',
@@ -121,15 +121,15 @@ export default function LandingPage() {
             <div key={i} style={{ position:'absolute',left:`${pt.x}%`,top:`${pt.y}%`,zIndex:16,
               opacity:visible?1:0,transition:'opacity 0.3s ease',pointerEvents:'none' }}>
               <div style={{ width:6,height:6,borderRadius:'50%',background:pt.color,
-                transform:'translate(-50%,-50%)',position:'absolute' }} />
-              <div style={{ position:'absolute',top:'50%',[isRight?'left':'right']:6,
+                transform:'translate(-50%,-50%)',position:'absolute',boxShadow:`0 0 6px ${pt.color}` }} />
+              <div style={{ position:'absolute',top:'50%',[isRight?'left':'right']:8,
                 transform:'translateY(-50%)',display:'flex',flexDirection:isRight?'row':'row-reverse',alignItems:'center' }}>
-                <div style={{ width:22,height:0.5,background:pt.color,opacity:0.6,flexShrink:0 }} />
-                <div style={{ background:'rgba(0,0,0,0.8)',border:`0.5px solid rgba(255,255,255,0.1)`,borderRadius:8,padding:'3px 7px' }}>
-                  <div style={{ fontSize:13,fontWeight:700,color:pt.color,lineHeight:1,textAlign:isRight?'left':'right',letterSpacing:-0.3 }}>
-                    {pt.val}<span style={{ fontSize:9,opacity:0.4,fontWeight:400 }}>/100</span>
+                <div style={{ width:18,height:0.5,background:pt.color,opacity:0.55,flexShrink:0 }} />
+                <div style={{ background:'rgba(0,0,0,0.85)',border:`0.5px solid rgba(255,255,255,0.08)`,borderRadius:7,padding:'2px 6px' }}>
+                  <div style={{ fontSize:12,fontWeight:700,color:pt.color,lineHeight:1,textAlign:isRight?'left':'right',letterSpacing:-0.3 }}>
+                    {pt.val}<span style={{ fontSize:8,opacity:0.4,fontWeight:400 }}>/100</span>
                   </div>
-                  <div style={{ fontSize:9,fontWeight:500,color:'rgba(255,255,255,0.45)',marginTop:1,whiteSpace:'nowrap',textAlign:isRight?'left':'right' }}>{pt.label}</div>
+                  <div style={{ fontSize:8,fontWeight:500,color:'rgba(255,255,255,0.4)',marginTop:0,whiteSpace:'nowrap',textAlign:isRight?'left':'right' }}>{pt.label}</div>
                 </div>
               </div>
             </div>
