@@ -8,16 +8,29 @@ export async function POST(req: NextRequest) {
     const data = await req.json()
     const imc = data.poids && data.taille ? (data.poids / ((data.taille/100)**2)).toFixed(1) : '?'
 
+    const OBJECTIF_LABELS: Record<string, string> = {
+      perte_poids: 'Perdre du poids',
+      muscle: 'Prendre du muscle',
+      energie: "Avoir plus d'énergie au quotidien",
+      peau: 'Améliorer sa peau',
+      sommeil: 'Mieux dormir',
+      stress: 'Réduire son stress',
+    }
+    const objectifsTexte = (data.objectifs || []).map((o: string) => OBJECTIF_LABELS[o] || o).join(', ') || 'non précisé'
+
     const prompt = `Tu es un expert en transformation physique. Génère un Glow Up Score basé sur ce profil.
 
 PROFIL:
 - Prénom: ${data.prenom}
+- Objectifs prioritaires: ${objectifsTexte}
 - Âge: ${data.age} ans
 - IMC: ${imc} (poids ${data.poids}kg, taille ${data.taille}cm)
 - Sport: ${data.sport} fois/semaine
 - Eau: ${data.eau} litres/jour
 - Skincare: ${data.skincare}
 - Stress: ${data.stress}
+
+IMPORTANT: tout le texte généré (analyse, messages, plan, quick wins) doit être orienté en priorité autour des objectifs prioritaires listés ci-dessus. Si la personne veut "perdre du poids", parle de poids/nutrition/sport. Si elle veut "mieux dormir", parle de sommeil. Ne génère jamais un texte générique déconnecté de ses vrais objectifs.
 
 RÈGLES DE SCORING STRICTES:
 

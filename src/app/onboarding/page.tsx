@@ -5,7 +5,16 @@ import { supabase } from '@/lib/supabase'
 
 const sf = `-apple-system, BlinkMacSystemFont, 'SF Pro Display', 'Helvetica Neue', sans-serif`
 const BLUE = '#0A84FF'
-const TOTAL_STEPS = 6
+const TOTAL_STEPS = 7
+
+const OBJECTIFS = [
+  { val:'perte_poids', label:'Perdre du poids', icon:'⚖️' },
+  { val:'muscle',      label:'Prendre du muscle', icon:'💪' },
+  { val:'energie',     label:"Avoir plus d'énergie", icon:'⚡' },
+  { val:'peau',        label:'Améliorer ma peau', icon:'✨' },
+  { val:'sommeil',     label:'Mieux dormir', icon:'🌙' },
+  { val:'stress',      label:'Réduire mon stress', icon:'🧘' },
+]
 
 function OptionCard({ label, icon, selected, onClick }: { label: string, icon: string, selected: boolean, onClick: () => void }) {
   return (
@@ -31,6 +40,7 @@ export default function OnboardingPage() {
   const [photo, setPhoto] = useState<string | null>(null)
   const [email, setEmail] = useState('')
   const [prenom, setPrenom] = useState('')
+  const [objectifs, setObjectifs] = useState<string[]>([])
   const [poids, setPoids] = useState('')
   const [taille, setTaille] = useState('')
   const [age, setAge] = useState('')
@@ -45,6 +55,10 @@ export default function OnboardingPage() {
   const next = () => setStep(s => s + 1)
   const back = () => setStep(s => s - 1)
 
+  const toggleObjectif = (val: string) => {
+    setObjectifs(prev => prev.includes(val) ? prev.filter(o => o !== val) : [...prev, val])
+  }
+
   const handlePhoto = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0]
     if (!file) return
@@ -57,7 +71,7 @@ export default function OnboardingPage() {
     setLoading(true)
     setAuthError('')
     try {
-      const data = { prenom, poids: Number(poids), taille: Number(taille), age: Number(age), sport, eau, skincare, stress }
+      const data = { prenom, objectifs, poids: Number(poids), taille: Number(taille), age: Number(age), sport, eau, skincare, stress }
       localStorage.setItem('glowup_profile_pending', JSON.stringify(data))
 
       // Génère le score en premier — c'est ça qui doit s'afficher quoi qu'il arrive
@@ -186,10 +200,23 @@ export default function OnboardingPage() {
           </div>
         )}
 
-        {/* STEP 2 — Mensurations */}
+        {/* STEP 2 — Objectifs */}
         {step === 2 && (
+          <div style={{ flex:1, display:'flex', flexDirection:'column', justifyContent:'center', gap:12 }}>
+            <StepHeader num={3} title="Quels sont tes objectifs ?" sub="Sélectionne tout ce qui te correspond." />
+            <div style={{ display:'flex', flexDirection:'column', gap:8 }}>
+              {OBJECTIFS.map(o => (
+                <OptionCard key={o.val} label={o.label} icon={o.icon} selected={objectifs.includes(o.val)} onClick={() => toggleObjectif(o.val)} />
+              ))}
+            </div>
+            <Btn label="Continuer" onClick={next} disabled={objectifs.length === 0} />
+          </div>
+        )}
+
+        {/* STEP 3 — Mensurations */}
+        {step === 3 && (
           <div style={{ flex:1, display:'flex', flexDirection:'column', justifyContent:'center', gap:16 }}>
-            <StepHeader num={3} title="Tes mensurations" sub="Pour calculer ton IMC." />
+            <StepHeader num={4} title="Tes mensurations" sub="Pour calculer ton IMC." />
             <div style={{ display:'flex', flexDirection:'column', gap:10 }}>
               {[
                 { label:'Âge', placeholder:'25', value:age, set:setAge, unit:'ans' },
@@ -217,10 +244,10 @@ export default function OnboardingPage() {
           </div>
         )}
 
-        {/* STEP 3 — Sport */}
-        {step === 3 && (
+        {/* STEP 4 — Sport */}
+        {step === 4 && (
           <div style={{ flex:1, display:'flex', flexDirection:'column', justifyContent:'center', gap:12 }}>
-            <StepHeader num={4} title="Ton activité sportive" sub="Combien de fois par semaine ?" />
+            <StepHeader num={5} title="Ton activité sportive" sub="Combien de fois par semaine ?" />
             <div style={{ display:'flex', flexDirection:'column', gap:8 }}>
               {[
                 { val:'0', label:'Jamais', icon:'🛋️' },
@@ -233,10 +260,10 @@ export default function OnboardingPage() {
           </div>
         )}
 
-        {/* STEP 4 — Eau + Skincare */}
-        {step === 4 && (
+        {/* STEP 5 — Eau + Skincare */}
+        {step === 5 && (
           <div style={{ flex:1, display:'flex', flexDirection:'column', justifyContent:'center', gap:16 }}>
-            <StepHeader num={5} title="Eau & Skincare" />
+            <StepHeader num={6} title="Eau & Skincare" />
             <div>
               <label style={{ fontSize:11, color:'rgba(255,255,255,0.4)', fontWeight:500, letterSpacing:0.5, textTransform:'uppercase', display:'block', marginBottom:8 }}>Eau par jour</label>
               <div style={{ display:'flex', flexDirection:'column', gap:6 }}>
@@ -262,12 +289,12 @@ export default function OnboardingPage() {
           </div>
         )}
 
-        {/* STEP 5 — Stress + Auth gate */}
-        {step === 5 && (
+        {/* STEP 6 — Stress + Auth gate */}
+        {step === 6 && (
           <div style={{ flex:1, display:'flex', flexDirection:'column', justifyContent:'center', gap:12 }}>
             {!stress ? (
               <>
-                <StepHeader num={6} title="Ton niveau de stress" sub="Comment tu te sens au quotidien ?" />
+                <StepHeader num={7} title="Ton niveau de stress" sub="Comment tu te sens au quotidien ?" />
                 <div style={{ display:'flex', flexDirection:'column', gap:8 }}>
                   {[
                     { val:'faible', label:'Faible — je suis zen', icon:'😌' },
@@ -294,7 +321,7 @@ export default function OnboardingPage() {
                   {/* Google */}
                   <button onClick={async () => {
                     // Sauvegarder le profil avant redirect
-                    const data = { prenom, poids: Number(poids), taille: Number(taille), age: Number(age), sport, eau, skincare, stress }
+                    const data = { prenom, objectifs, poids: Number(poids), taille: Number(taille), age: Number(age), sport, eau, skincare, stress }
                     localStorage.setItem('glowup_profile_pending', JSON.stringify(data))
                     await supabase.auth.signInWithOAuth({
                       provider: 'google',
