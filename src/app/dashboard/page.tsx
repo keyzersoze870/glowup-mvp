@@ -25,6 +25,41 @@ const CHECK_ITEMS = [
   { key: 'skincare',   icon: '✨', label: 'Routine skincare',   sub: 'Morning + evening' },
 ]
 
+function BellCurve({ score, color }: { score: number, color: string }) {
+  const markerPos = Math.min(Math.max(score, 5), 95)
+  const w = 300, h = 100
+  const points: string[] = []
+  for (let i = 0; i <= w; i++) {
+    const x = (i / w) * 6 - 3
+    const y = Math.exp(-0.5 * x * x) / Math.sqrt(2 * Math.PI)
+    points.push(`${i},${h - y * h * 2.2}`)
+  }
+  const linePoints = points.join(' ')
+  const fillPoints = `0,${h} ${linePoints} ${w},${h}`
+  const markerX = (markerPos / 100) * w
+  const mx = (markerPos / 100) * 6 - 3
+  const markerY = h - (Math.exp(-0.5 * mx * mx) / Math.sqrt(2 * Math.PI)) * h * 2.2
+  const sf2 = `-apple-system, BlinkMacSystemFont, 'SF Pro Display', 'Helvetica Neue', sans-serif`
+
+  return (
+    <div style={{ width:'100%', maxWidth:300, margin:'16px auto 8px', position:'relative' }}>
+      <svg viewBox={`0 0 ${w} ${h + 30}`} style={{ width:'100%', height:'auto' }}>
+        <defs>
+          <linearGradient id="bellGrad" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0%" stopColor={color} stopOpacity="0.3" />
+            <stop offset="100%" stopColor={color} stopOpacity="0.03" />
+          </linearGradient>
+        </defs>
+        <polygon points={fillPoints} fill="url(#bellGrad)" />
+        <polyline points={linePoints} fill="none" stroke={color} strokeWidth="2" strokeLinecap="round" />
+        <line x1={markerX} y1={markerY} x2={markerX} y2={h} stroke="#1A1A1A" strokeWidth="1.5" strokeDasharray="3,3" />
+        <polygon points={`${markerX-6},${h+4} ${markerX+6},${h+4} ${markerX},${h-2}`} fill="#1A1A1A" />
+        <text x={markerX} y={h+20} textAnchor="middle" style={{ fontSize:10, fontWeight:600, fill:'#1A1A1A', fontFamily:sf2 }}>{`You're here`}</text>
+      </svg>
+    </div>
+  )
+}
+
 function ScoreRing({ score, size = 160 }: { score: number, size?: number }) {
   const [displayed, setDisplayed] = useState(0)
   const r = 54; const c = 2 * Math.PI * r
@@ -241,6 +276,7 @@ export default function Dashboard() {
         <ScoreRing score={liveScore} />
         <div style={{ marginTop:4, textAlign:'center', width:'100%' }}>
           <span style={{ fontSize:22, fontWeight:800, color:scoreColor, letterSpacing:-0.5, display:'block', marginBottom:4 }}>{scoreLabel}</span>
+          <BellCurve score={liveScore} color={scoreColor} />
           <p style={{ fontSize:12, fontStyle:'italic', fontWeight:300, color:'rgba(0,0,0,0.45)', letterSpacing:-0.1, marginBottom:10 }}>
             {liveScore < 45 ? (
               <><span style={{ color:'#FF453A' }}>87%</span>{' '}of users have a higher score than you. <span style={{ fontWeight:700, color:'#1A1A1A' }}>Don't let your body decline further.</span></>
