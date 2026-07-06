@@ -165,7 +165,7 @@ export default function Dashboard() {
   if (!score || !profile) return (
     <div style={{ minHeight:'100svh', background:'#FFFFFF', display:'flex', alignItems:'center', justifyContent:'center' }}>
       <div style={{ width:24, height:24, border:'2px solid rgba(0,0,0,0.08)', borderTopColor:BLUE, borderRadius:'50%', animation:'spin 0.8s linear infinite' }} />
-      <BottomNav />
+      {/* <BottomNav /> */}
       <style>{`@keyframes spin{to{transform:rotate(360deg)}}`}</style>
     </div>
   )
@@ -219,7 +219,7 @@ export default function Dashboard() {
       )}
 
       {/* NAV */}
-      <nav style={{ flexShrink:0, padding:'12px 20px', display:'flex', justifyContent:'space-between', alignItems:'center' }}>
+      <nav style={{ flexShrink:0, padding:'56px 20px 12px', display:'flex', justifyContent:'space-between', alignItems:'center' }}>
         <span style={{ fontSize:20, fontWeight:700, color:'#1A1A1A', letterSpacing:-0.5 }}>GlowApp</span>
         <div style={{ display:'flex', alignItems:'center', gap:8 }}>
           {streak > 0 && (
@@ -306,7 +306,7 @@ export default function Dashboard() {
 
       {showInstallPrompt && <InstallPrompt onDismiss={() => setShowInstallPrompt(false)} />}
 
-      <BottomNav />
+      {/* <BottomNav /> */}
       <style>{`
         @keyframes spin { to { transform: rotate(360deg) } }
         ::-webkit-scrollbar { display: none; }
