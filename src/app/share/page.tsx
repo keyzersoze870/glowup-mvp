@@ -8,7 +8,7 @@ const sf = `-apple-system, BlinkMacSystemFont, 'SF Pro Display', 'Helvetica Neue
 const CATEGORIES = [
   { key: 'training',    label: 'Sport',      icon: '🏋️', color: '#FF9F0A' },
   { key: 'nutrition',   label: 'Nutrition',  icon: '🥗',  color: '#30D158' },
-  { key: 'hydratation', label: 'Eau',        icon: '💧',  color: '#0A84FF' },
+  { key: 'hydratation', label: 'Water',        icon: '💧',  color: '#0A84FF' },
   { key: 'sommeil',     label: 'Sommeil',    icon: '🌙',  color: '#BF5AF2' },
   { key: 'skincare',    label: 'Skincare',   icon: '✨',  color: '#64D2FF' },
   { key: 'steps',       label: 'Stress',     icon: '🧘',  color: '#FF453A' },
@@ -18,8 +18,8 @@ function getScoreLabel(s: number) {
   if (s >= 80) return 'Elite 🔥'
   if (s >= 65) return 'Excellent ⚡'
   if (s >= 50) return 'Bien 👍'
-  if (s >= 35) return 'Moyen 📈'
-  return 'À améliorer 💪'
+  if (s >= 35) return 'Average 📈'
+  return 'Needs improvement 💪'
 }
 
 function getScoreColor(s: number) {
@@ -30,9 +30,9 @@ function getScoreColor(s: number) {
 
 function getRankPhrase(s: number) {
   if (s >= 80) return 'Top 5% des utilisateurs 🏆'
-  if (s >= 65) return 'Top 20% des utilisateurs 🎯'
+  if (s >= 65) return 'Top 20% of users 🎯'
   if (s >= 50) return 'Top 45% des utilisateurs 📊'
-  return '85% ont un meilleur score ⚠️'
+  return '85% have a higher score ⚠️'
 }
 
 export default function SharePage() {
@@ -82,7 +82,7 @@ export default function SharePage() {
           style={{ background:'none', border:'none', color:'rgba(0,0,0,0.55)', fontSize:14, cursor:'pointer', fontFamily:sf }}>
           ← Retour
         </button>
-        <span style={{ fontSize:16, fontWeight:700, color:'#1A1A1A', letterSpacing:-0.5 }}>Partager</span>
+        <span style={{ fontSize:16, fontWeight:700, color:'#1A1A1A', letterSpacing:-0.5 }}>Share</span>
         <div style={{ width:60 }} />
       </div>
 
@@ -106,7 +106,7 @@ export default function SharePage() {
           {/* HEADER */}
           <div style={{ display:'flex', justifyContent:'space-between', alignItems:'flex-start', marginBottom:24 }}>
             <div>
-              <p style={{ fontSize:11, color:'rgba(0,0,0,0.35)', letterSpacing:1, textTransform:'uppercase', marginBottom:4 }}>MON GLOW UP SCORE</p>
+              <p style={{ fontSize:11, color:'rgba(0,0,0,0.35)', letterSpacing:1, textTransform:'uppercase', marginBottom:4 }}>MY GLOW UP SCORE</p>
               <p style={{ fontSize:20, fontWeight:700, color:'#1A1A1A', letterSpacing:-0.5 }}>{profile.prenom}</p>
             </div>
             <div style={{ background:'rgba(10,132,255,0.15)', border:'0.5px solid rgba(10,132,255,0.3)', borderRadius:20, padding:'4px 12px' }}>
@@ -188,10 +188,10 @@ export default function SharePage() {
       {/* BOUTONS */}
       <div style={{ width:'100%', maxWidth:360, marginTop:12, display:'flex', flexDirection:'column', gap:8 }}>
         <button onClick={handleShare} style={{ width:'100%', padding:'15px', background:'#0A84FF', border:'none', borderRadius:14, color:'#1A1A1A', fontSize:15, fontWeight:600, cursor:'pointer', fontFamily:sf, letterSpacing:-0.3 }}>
-          {copied ? '✓ Lien copié !' : '⬆ Partager mon score'}
+          {copied ? '✓ Link copied!' : '⬆ Share mon score'}
         </button>
         <button onClick={() => router.push('/dashboard')} style={{ width:'100%', padding:'14px', background:'rgba(0,0,0,0.05)', border:'0.5px solid rgba(0,0,0,0.08)', borderRadius:14, color:'rgba(0,0,0,0.65)', fontSize:15, fontWeight:500, cursor:'pointer', fontFamily:sf }}>
-          Retour au dashboard
+          Back to dashboard
         </button>
       </div>
 

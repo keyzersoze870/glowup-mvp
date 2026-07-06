@@ -9,20 +9,20 @@ const sf = `-apple-system, BlinkMacSystemFont, 'SF Pro Display', 'Helvetica Neue
 const BLUE = '#0A84FF'
 
 const CATEGORIES = [
-  { key: 'training',    label: 'Sport',      icon: '🏋️', color: '#FF9F0A' },
+  { key: 'training',    label: 'Fitness',      icon: '🏋️', color: '#FF9F0A' },
   { key: 'nutrition',   label: 'Nutrition',  icon: '🥗',  color: '#30D158' },
-  { key: 'hydratation', label: 'Eau',        icon: '💧',  color: BLUE },
-  { key: 'sommeil',     label: 'Sommeil',    icon: '🌙',  color: '#BF5AF2' },
+  { key: 'hydratation', label: 'Water',        icon: '💧',  color: BLUE },
+  { key: 'sommeil',     label: 'Sleep',    icon: '🌙',  color: '#BF5AF2' },
   { key: 'skincare',    label: 'Skincare',   icon: '✨',  color: '#64D2FF' },
   { key: 'steps',       label: 'Stress',     icon: '🧘',  color: '#FF453A' },
 ]
 
 const CHECK_ITEMS = [
-  { key: 'sport',      icon: '🏋️', label: 'Séance de sport',   sub: '30 min minimum' },
-  { key: 'eau',        icon: '💧', label: '2L d\'eau',          sub: 'Répartis dans la journée' },
-  { key: 'nutrition',  icon: '🥗', label: 'Manger équilibré',   sub: 'Protéines + légumes' },
-  { key: 'sommeil',    icon: '🌙', label: 'Dormir 7-8h',        sub: 'Coucher avant 23h' },
-  { key: 'skincare',   icon: '✨', label: 'Routine skincare',   sub: 'Matin + soir' },
+  { key: 'sport',      icon: '🏋️', label: 'Workout session',   sub: '30 min minimum' },
+  { key: 'eau',        icon: '💧', label: '2L of water',          sub: 'Throughout the day' },
+  { key: 'nutrition',  icon: '🥗', label: 'Eat balanced',   sub: 'Protein + vegetables' },
+  { key: 'sommeil',    icon: '🌙', label: 'Sleep 7-8h',        sub: 'Bedtime before 11pm' },
+  { key: 'skincare',   icon: '✨', label: 'Routine skincare',   sub: 'Morning + evening' },
 ]
 
 function ScoreRing({ score, size = 160 }: { score: number, size?: number }) {
@@ -172,17 +172,17 @@ export default function Dashboard() {
 
   const segment = liveScore < 45 ? 'faible' : liveScore < 70 ? 'moyen' : 'eleve'
   const scoreColor = liveScore >= 70 ? '#30D158' : liveScore >= 45 ? '#FF9F0A' : '#FF453A'
-  const scoreLabel = liveScore >= 70 ? 'Pas encore Elite 👀' : liveScore >= 55 ? 'Potentiel gâché 😤' : liveScore >= 40 ? 'À améliorer ⚡' : 'Faible ⚠️'
+  const scoreLabel = liveScore >= 70 ? 'Not Elite yet 👀' : liveScore >= 55 ? 'Wasted potential 😤' : liveScore >= 40 ? 'Needs improvement ⚡' : 'Low ⚠️'
 
   const segmentMsg = segment === 'faible' ? score.message_faible
     : segment === 'moyen' ? score.message_moyen
     : score.message_eleve
 
   const paywallMsg = segment === 'faible'
-    ? `Ton plan personnalisé peut faire monter ton score de +30 points en 4 semaines.`
+    ? `Your personalized plan can boost your score by +30 points in 4 weeks.`
     : segment === 'moyen'
-    ? `Tu es à 2-3 semaines d'un score Elite. Les Premium progressent 3x plus vite.`
-    : `Débloque le programme avancé pour atteindre le score Elite (90+).`
+    ? `You're 2-3 weeks from an Elite score. Premium users progress 3x faster.`
+    : `Unlock the advanced program to reach an Elite score (90+).`
 
   return (
     <main style={{ minHeight:'100svh', background:'#FFFFFF', fontFamily:sf, display:'flex', flexDirection:'column', position:'relative' }}>
@@ -201,7 +201,7 @@ export default function Dashboard() {
               {paywallMsg}
             </p>
             <div style={{ display:'flex', flexDirection:'column', gap:10, marginBottom:16 }}>
-              {['Programme 8 semaines personnalisé', 'Historique & évolution du score', 'Coach IA disponible 24h/24', 'Alertes & rappels intelligents'].map(f => (
+              {['Personalized 8-week program', 'Score history & evolution', 'AI Coach available 24/7', 'Smart alerts & reminders'].map(f => (
                 <div key={f} style={{ display:'flex', alignItems:'center', gap:10 }}>
                   <span style={{ color:'#30D158', fontSize:14 }}>✓</span>
                   <span style={{ fontSize:13, color:'rgba(0,0,0,0.6)', letterSpacing:-0.2 }}>{f}</span>
@@ -230,35 +230,35 @@ export default function Dashboard() {
           )}
           <button onClick={() => router.push('/share')}
             style={{ background:'rgba(10,132,255,0.12)', border:'0.5px solid rgba(10,132,255,0.25)', borderRadius:20, padding:'6px 12px', color:'#0A84FF', fontSize:12, fontWeight:600, cursor:'pointer', fontFamily:sf, letterSpacing:-0.2 }}>
-            ⬆ Partager
+            ⬆ Share
           </button>
         </div>
       </nav>
 
       {/* HERO */}
       <div style={{ flexShrink:0, display:'flex', flexDirection:'column', alignItems:'center', padding:'4px 20px 12px' }}>
-        <p style={{ fontSize:13, color:'rgba(0,0,0,0.45)', letterSpacing:-0.2, marginBottom:4 }}>Bonjour {profile.prenom} 👋</p>
+        <p style={{ fontSize:13, color:'rgba(0,0,0,0.45)', letterSpacing:-0.2, marginBottom:4 }}>Hi {profile.prenom} 👋</p>
         <ScoreRing score={liveScore} />
         <div style={{ marginTop:4, textAlign:'center', width:'100%' }}>
           <span style={{ fontSize:22, fontWeight:800, color:scoreColor, letterSpacing:-0.5, display:'block', marginBottom:4 }}>{scoreLabel}</span>
           <p style={{ fontSize:12, fontStyle:'italic', fontWeight:300, color:'rgba(0,0,0,0.45)', letterSpacing:-0.1, marginBottom:10 }}>
             {liveScore < 45 ? (
-              <><span style={{ color:'#FF453A' }}>87%</span>{' '}des utilisateurs ont un meilleur score que toi, <span style={{ fontWeight:700, color:'#1A1A1A' }}>ne laisse pas ton corps se dégrader davantage.</span></>
+              <><span style={{ color:'#FF453A' }}>87%</span>{' '}of users have a higher score than you. <span style={{ fontWeight:700, color:'#1A1A1A' }}>Don't let your body decline further.</span></>
             ) : liveScore < 70 ? (
-              <><span style={{ color:'#FF453A' }}>52%</span>{' '}des utilisateurs ont un meilleur score que toi, <span style={{ fontWeight:700, color:'#1A1A1A' }}>ne gâche pas ton potentiel avant qu'il soit trop tard.</span></>
+              <><span style={{ color:'#FF453A' }}>52%</span>{' '}of users have a higher score than you. <span style={{ fontWeight:700, color:'#1A1A1A' }}>Don't waste your potential before it's too late.</span></>
             ) : (
-              <><span style={{ color:'#FF453A' }}>18%</span>{' '}des utilisateurs ont un meilleur score que toi, <span style={{ fontWeight:700, color:'#1A1A1A' }}>ne t'arrête pas si près du sommet.</span></>
+              <><span style={{ color:'#FF453A' }}>18%</span>{' '}of users have a higher score than you. <span style={{ fontWeight:700, color:'#1A1A1A' }}>Don't stop when you're this close to the top.</span></>
             )}
           </p>
           <p style={{ fontSize:13, fontWeight:600, color:'rgba(0,0,0,0.65)', letterSpacing:-0.1, lineHeight:1.5, maxWidth:280, textAlign:'center', margin:'0 auto 12px' }}>
-            <span style={{ color:'#1A1A1A', fontWeight:700 }}>{profile.prenom}</span>, <span style={{ color:'#0A84FF' }}>après analyse complète des 68 points de données de ton visage et tes réponses</span>, {segmentMsg?.replace(new RegExp(`^${profile.prenom}[,.]?\\s*`, 'i'), '')}
+            <span style={{ color:'#1A1A1A', fontWeight:700 }}>{profile.prenom}</span>, <span style={{ color:'#0A84FF' }}>after a complete analysis of 68 data points from your face and answers</span>, {segmentMsg?.replace(new RegExp(`^${profile.prenom}[,.]?\\s*`, 'i'), '')}
           </p>
           <p style={{ fontSize:13, color:'rgba(0,0,0,0.55)', letterSpacing:-0.2, lineHeight:1.5, maxWidth:280, textAlign:'center', margin:'0 auto 14px' }}>
-            Tu peux dès aujourd'hui commencer à faire monter ce score en suivant le plan personnalisé que j'ai créé pour toi ⬇️
+            You can start improving your score today by following the personalized plan I created for you ⬇️
           </p>
           <button onClick={() => router.push('/today')}
             style={{ padding:'11px 24px', background:BLUE, border:'none', borderRadius:12, color:'#1A1A1A', fontSize:13, fontWeight:600, cursor:'pointer', fontFamily:sf, letterSpacing:-0.2 }}>
-            Voir mon plan →
+            See my plan →
           </button>
         </div>
       </div>
@@ -269,7 +269,7 @@ export default function Dashboard() {
         {/* SCORE TAB */}
         {activeTab === 'score' && (
           <div style={{ display:'flex', flexDirection:'column', gap:8 }}>
-            <p style={{ fontSize:11, color:'rgba(0,0,0,0.3)', letterSpacing:0.5, textTransform:'uppercase', marginBottom:4 }}>Détail par catégorie</p>
+            <p style={{ fontSize:11, color:'rgba(0,0,0,0.3)', letterSpacing:0.5, textTransform:'uppercase', marginBottom:4 }}>Score breakdown</p>
             {CATEGORIES.map(cat => {
               const val = score[cat.key] as number
               const isWeak = score.point_faible === cat.key
@@ -298,7 +298,7 @@ export default function Dashboard() {
             <p style={{ fontSize:12, color:'rgba(0,0,0,0.35)', letterSpacing:-0.1, lineHeight:1.5, textAlign:'center', margin:'8px 0' }}>À remplir</p>
             <button onClick={() => router.push('/today')}
               style={{ width:'100%', padding:'14px', background:BLUE, border:'none', borderRadius:14, color:'#1A1A1A', fontSize:15, fontWeight:600, cursor:'pointer', fontFamily:sf, letterSpacing:-0.3 }}>
-              Voir mon plan →
+              See my plan →
             </button>
           </div>
         )}

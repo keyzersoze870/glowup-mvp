@@ -118,7 +118,7 @@ export default function TodayPage() {
     <main style={{ height:'100svh', background:'#FFFFFF', fontFamily:sf, overflow:'hidden', display:'flex', flexDirection:'column' }}>
 
       {/* NAV */}
-      <nav style={{ flexShrink:0, padding:'12px 20px', display:'flex', justifyContent:'space-between', alignItems:'center' }}>
+      <nav style={{ flexShrink:0, padding:'56px 20px 12px', display:'flex', justifyContent:'space-between', alignItems:'center' }}>
         <button onClick={() => router.push('/dashboard')}
           style={{ background:'none', border:'none', color:'rgba(0,0,0,0.55)', fontSize:14, cursor:'pointer', fontFamily:sf }}>
           ← Score
@@ -147,7 +147,7 @@ export default function TodayPage() {
           </svg>
           <div style={{ flex:1 }}>
             <p style={{ fontSize:12, color:'rgba(0,0,0,0.45)', marginBottom:4 }}>
-              {new Date().toLocaleDateString('fr-FR', { weekday:'long', day:'numeric', month:'long' })}
+              {new Date().toLocaleDateString('en-US', { weekday:'long', month:'long', day:'numeric' })}
             </p>
             {scoreVariation !== 0 && (
               <div style={{ display:'inline-flex', alignItems:'center', gap:4, background: scoreVariation > 0 ? 'rgba(48,209,88,0.12)' : 'rgba(255,69,58,0.12)', border:`0.5px solid ${scoreVariation > 0 ? 'rgba(48,209,88,0.3)' : 'rgba(255,69,58,0.3)'}`, borderRadius:20, padding:'3px 10px', marginBottom:6 }}>
@@ -157,7 +157,7 @@ export default function TodayPage() {
               </div>
             )}
             <p style={{ fontSize:13, color:'rgba(0,0,0,0.65)', lineHeight:1.4, letterSpacing:-0.2 }}>
-              {messageMatin || (loading ? 'Génération de tes missions...' : 'Prêt pour aujourd\'hui ?')}
+              {messageMatin || (loading ? 'Generating your missions...' : 'Prêt pour aujourd\'hui ?')}
             </p>
             {totalPoints > 0 && (
               <p style={{ fontSize:11, color:BLUE, marginTop:4, fontWeight:600 }}>+{totalPoints} pts gagnés aujourd'hui</p>
@@ -218,7 +218,7 @@ export default function TodayPage() {
                 <div key={i} style={{ flex:1, display:'flex', flexDirection:'column', alignItems:'center', gap:4 }}>
                   <div style={{ width:'100%', height:h, background: isToday ? scoreColor : 'rgba(0,0,0,0.12)', borderRadius:4, transition:'height 0.3s ease', minHeight:4 }} />
                   <span style={{ fontSize:8, color: isToday ? scoreColor : 'rgba(0,0,0,0.25)' }}>
-                    {isToday ? 'auj' : ['L','M','M','J','V','S'][i]}
+                    {isToday ? 'today' : ['M','T','W','T','F','S'][i]}
                   </span>
                 </div>
               )

@@ -12,15 +12,15 @@ const PROFILES = [
   {
     img: '/selfie1.png',
     metrics: [
-      { x: 50, y: 7,  label: 'Hydratation', val: '92', color: BLUE,   side: 'left' },
-      { x: 67, y: 33, label: 'Sommeil',     val: '61', color: PURPLE, side: 'right' },
-      { x: 22, y: 72, label: 'Sport',       val: '85', color: ORANGE, side: 'left' },
+      { x: 50, y: 7,  label: 'Hydration', val: '92', color: BLUE,   side: 'left' },
+      { x: 67, y: 33, label: 'Sleep',     val: '61', color: PURPLE, side: 'right' },
+      { x: 22, y: 72, label: 'Fitness',       val: '85', color: ORANGE, side: 'left' },
       { x: 78, y: 28, label: 'Stress',      val: '88', color: ORANGE, side: 'right' },
       { x: 36, y: 36, label: 'Skincare',    val: '74', color: CYAN,   side: 'left' },
       { x: 51, y: 60, label: 'Nutrition',   val: '79', color: GREEN,  side: 'right' },
     ],
     score: 78,
-    rank: '47% des utilisateurs ont un meilleur score que toi.',
+    rank: '47% of users have a higher score than you.',
   },
 ]
 
@@ -76,7 +76,7 @@ export default function LandingPage() {
       <nav style={{ flexShrink:0, padding:'56px 20px 12px', display:'flex', justifyContent:'space-between', alignItems:'center' }}>
         <span style={{ fontSize:20, fontWeight:700, color:'#1A1A1A', letterSpacing:-0.5 }}>GlowApp</span>
         <Link href="/onboarding" style={{ fontSize:12, fontWeight:600, color:'#1A1A1A', background:BLUE, padding:'7px 16px', borderRadius:20, textDecoration:'none', letterSpacing:-0.2 }}>
-          Commencer
+          Get Started
         </Link>
       </nav>
 
@@ -84,13 +84,13 @@ export default function LandingPage() {
       <div style={{ flexShrink:0, textAlign:'center', padding:'0 20px 8px' }}>
         <div style={{ display:'inline-flex', alignItems:'center', gap:6, background:'rgba(10,132,255,0.12)', border:'0.5px solid rgba(10,132,255,0.25)', padding:'4px 12px', borderRadius:20, marginBottom:10 }}>
           <div style={{ width:5, height:5, borderRadius:'50%', background:BLUE, animation:'blink 1.2s infinite' }} />
-          <span style={{ fontSize:10, color:BLUE, letterSpacing:0.2 }}>Analyse en cours</span>
+          <span style={{ fontSize:10, color:BLUE, letterSpacing:0.2 }}>Analyzing</span>
         </div>
         <h1 style={{ fontSize:24, fontWeight:700, color:'#1A1A1A', lineHeight:1.15, letterSpacing:-0.5, marginBottom:8 }}>
-          Calcule ton <span style={{ color:BLUE }}>Glow Up Score</span><br/>en 2 minutes
+          Get your <span style={{ color:BLUE }}>Glow Up Score</span><br/>in 2 minutes
         </h1>
         <p style={{ fontSize:12, color:'rgba(0,0,0,0.45)', lineHeight:1.5, letterSpacing:-0.1 }}>
-          Rejoins les 7 000 personnes qui ont déjà amélioré leur physique grâce à l'IA.
+          Join 7,000+ people who already improved their wellness with AI.
         </p>
       </div>
 
@@ -152,9 +152,9 @@ export default function LandingPage() {
         </div>
         <Link href="/onboarding" style={{ fontSize:15,fontWeight:600,color:'#1A1A1A',background:BLUE,padding:'14px 0',borderRadius:14,
           textDecoration:'none',letterSpacing:-0.3,display:'block',textAlign:'center' }}>
-          Calculer mon score — Gratuit
+          Get my score — Free
         </Link>
-        <div style={{ fontSize:11,color:'rgba(0,0,0,0.2)',marginTop:6,letterSpacing:-0.1 }}>2 min · Aucune CB requise</div>
+        <div style={{ fontSize:11,color:'rgba(0,0,0,0.2)',marginTop:6,letterSpacing:-0.1 }}>2 min · No credit card required</div>
       </div>
 
       <style>{`

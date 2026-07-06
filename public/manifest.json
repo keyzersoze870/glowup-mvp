@@ -1,7 +1,7 @@
 {
   "name": "GlowApp",
   "short_name": "GlowApp",
-  "description": "Ton Glow Up Score personnalisé par IA",
+  "description": "Your AI-powered Glow Up Score",
   "start_url": "/dashboard",
   "display": "standalone",
   "background_color": "#FFFFFF",
