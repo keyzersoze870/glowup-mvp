@@ -70,12 +70,12 @@ export default function LandingPage() {
   const sf = `-apple-system, BlinkMacSystemFont, 'SF Pro Display', 'Helvetica Neue', sans-serif`
 
   return (
-    <main style={{ height:'100svh', background:'#000', fontFamily:sf, overflow:'hidden', display:'flex', flexDirection:'column' }}>
+    <main style={{ height:'100svh', background:'#FFFFFF', fontFamily:sf, overflow:'hidden', display:'flex', flexDirection:'column' }}>
 
       {/* NAV */}
       <nav style={{ flexShrink:0, padding:'12px 20px', display:'flex', justifyContent:'space-between', alignItems:'center' }}>
-        <span style={{ fontSize:20, fontWeight:700, color:'#fff', letterSpacing:-0.5 }}>GlowApp</span>
-        <Link href="/onboarding" style={{ fontSize:12, fontWeight:600, color:'#fff', background:BLUE, padding:'7px 16px', borderRadius:20, textDecoration:'none', letterSpacing:-0.2 }}>
+        <span style={{ fontSize:20, fontWeight:700, color:'#1A1A1A', letterSpacing:-0.5 }}>GlowApp</span>
+        <Link href="/onboarding" style={{ fontSize:12, fontWeight:600, color:'#1A1A1A', background:BLUE, padding:'7px 16px', borderRadius:20, textDecoration:'none', letterSpacing:-0.2 }}>
           Commencer
         </Link>
       </nav>
@@ -86,16 +86,16 @@ export default function LandingPage() {
           <div style={{ width:5, height:5, borderRadius:'50%', background:BLUE, animation:'blink 1.2s infinite' }} />
           <span style={{ fontSize:10, color:BLUE, letterSpacing:0.2 }}>Analyse en cours</span>
         </div>
-        <h1 style={{ fontSize:24, fontWeight:700, color:'#fff', lineHeight:1.15, letterSpacing:-0.5, marginBottom:8 }}>
+        <h1 style={{ fontSize:24, fontWeight:700, color:'#1A1A1A', lineHeight:1.15, letterSpacing:-0.5, marginBottom:8 }}>
           Calcule ton <span style={{ color:BLUE }}>Glow Up Score</span><br/>en 2 minutes
         </h1>
-        <p style={{ fontSize:12, color:'rgba(255,255,255,0.4)', lineHeight:1.5, letterSpacing:-0.1 }}>
+        <p style={{ fontSize:12, color:'rgba(0,0,0,0.45)', lineHeight:1.5, letterSpacing:-0.1 }}>
           Rejoins les 7 000 personnes qui ont déjà amélioré leur physique grâce à l'IA.
         </p>
       </div>
 
       {/* PHOTO */}
-      <div style={{ flexShrink:0, position:'relative', height:340, margin:'10px 16px 0', borderRadius:16, overflow:'hidden', background:'#111', border:'0.5px solid rgba(255,255,255,0.08)' }}>
+      <div style={{ flexShrink:0, position:'relative', height:340, margin:'10px 16px 0', borderRadius:16, overflow:'hidden', background:'#F5F5F7', border:'0.5px solid rgba(0,0,0,0.07)' }}>
         {/* Coins */}
         {[{top:8,left:8,borderWidth:'1.5px 0 0 1.5px',borderRadius:'4px 0 0 0'},{top:8,right:8,borderWidth:'1.5px 1.5px 0 0',borderRadius:'0 4px 0 0'},{bottom:8,left:8,borderWidth:'0 0 1.5px 1.5px',borderRadius:'0 0 0 4px'},{bottom:8,right:8,borderWidth:'0 1.5px 1.5px 0',borderRadius:'0 0 4px 0'}].map((s,i) => (
           <div key={i} style={{ position:'absolute',...s,width:16,height:16,borderColor:'rgba(10,132,255,0.5)',borderStyle:'solid',zIndex:20 }} />
@@ -104,7 +104,7 @@ export default function LandingPage() {
         <img ref={imgRef} src={profile.img} alt="scan" onLoad={() => setImageLoaded(true)}
           style={{ width:'100%',height:'100%',objectFit:'cover',objectPosition:'center 15%',display:'block',filter:'brightness(0.9)' }}
         />
-        <div style={{ position:'absolute',inset:0,background:'radial-gradient(ellipse at center, transparent 50%, #000 95%)',pointerEvents:'none' }} />
+        <div style={{ position:'absolute',inset:0,background:'radial-gradient(ellipse at center, transparent 50%, #FFFFFF 95%)',pointerEvents:'none' }} />
 
         {/* Scan line */}
         {phase === 'scan' && imageLoaded && (
@@ -125,11 +125,11 @@ export default function LandingPage() {
               <div style={{ position:'absolute',top:'50%',[isRight?'left':'right']:8,
                 transform:'translateY(-50%)',display:'flex',flexDirection:isRight?'row':'row-reverse',alignItems:'center' }}>
                 <div style={{ width:18,height:0.5,background:pt.color,opacity:0.55,flexShrink:0 }} />
-                <div style={{ background:'rgba(0,0,0,0.85)',border:`0.5px solid rgba(255,255,255,0.08)`,borderRadius:7,padding:'2px 6px' }}>
+                <div style={{ background:'rgba(255,255,255,0.92)',border:`0.5px solid rgba(0,0,0,0.07)`,borderRadius:7,padding:'2px 6px' }}>
                   <div style={{ fontSize:12,fontWeight:700,color:pt.color,lineHeight:1,textAlign:isRight?'left':'right',letterSpacing:-0.3 }}>
                     {pt.val}<span style={{ fontSize:8,opacity:0.4,fontWeight:400 }}>/100</span>
                   </div>
-                  <div style={{ fontSize:8,fontWeight:500,color:'rgba(255,255,255,0.4)',marginTop:0,whiteSpace:'nowrap',textAlign:isRight?'left':'right' }}>{pt.label}</div>
+                  <div style={{ fontSize:8,fontWeight:500,color:'rgba(0,0,0,0.45)',marginTop:0,whiteSpace:'nowrap',textAlign:isRight?'left':'right' }}>{pt.label}</div>
                 </div>
               </div>
             </div>
@@ -139,9 +139,9 @@ export default function LandingPage() {
 
       {/* SCORE + CTA */}
       <div style={{ flexShrink:0, padding:'10px 20px 14px', textAlign:'center' }}>
-        <div style={{ fontSize:10,color:'rgba(255,255,255,0.3)',letterSpacing:1,marginBottom:2,textTransform:'uppercase' }}>Glow Up Score</div>
-        <div style={{ fontSize:50,fontWeight:700,color:'#fff',lineHeight:1,letterSpacing:-2 }}>
-          {displayScore}<span style={{ fontSize:20,fontWeight:400,color:'rgba(255,255,255,0.3)',letterSpacing:-0.5 }}>/100</span>
+        <div style={{ fontSize:10,color:'rgba(0,0,0,0.3)',letterSpacing:1,marginBottom:2,textTransform:'uppercase' }}>Glow Up Score</div>
+        <div style={{ fontSize:50,fontWeight:700,color:'#1A1A1A',lineHeight:1,letterSpacing:-2 }}>
+          {displayScore}<span style={{ fontSize:20,fontWeight:400,color:'rgba(0,0,0,0.3)',letterSpacing:-0.5 }}>/100</span>
         </div>
         <div style={{ minHeight:20,marginTop:4,marginBottom:10 }}>
           {showRank && (
@@ -150,11 +150,11 @@ export default function LandingPage() {
             </p>
           )}
         </div>
-        <Link href="/onboarding" style={{ fontSize:15,fontWeight:600,color:'#fff',background:BLUE,padding:'14px 0',borderRadius:14,
+        <Link href="/onboarding" style={{ fontSize:15,fontWeight:600,color:'#1A1A1A',background:BLUE,padding:'14px 0',borderRadius:14,
           textDecoration:'none',letterSpacing:-0.3,display:'block',textAlign:'center' }}>
           Calculer mon score — Gratuit
         </Link>
-        <div style={{ fontSize:11,color:'rgba(255,255,255,0.2)',marginTop:6,letterSpacing:-0.1 }}>2 min · Aucune CB requise</div>
+        <div style={{ fontSize:11,color:'rgba(0,0,0,0.2)',marginTop:6,letterSpacing:-0.1 }}>2 min · Aucune CB requise</div>
       </div>
 
       <style>{`

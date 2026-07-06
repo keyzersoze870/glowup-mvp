@@ -19,8 +19,8 @@ const OBJECTIFS = [
 function OptionCard({ label, icon, selected, onClick }: { label: string, icon: string, selected: boolean, onClick: () => void }) {
   return (
     <button onClick={onClick} style={{
-      width:'100%', padding:'14px 16px', background: selected ? 'rgba(10,132,255,0.12)' : 'rgba(255,255,255,0.05)',
-      border:`0.5px solid ${selected ? BLUE : 'rgba(255,255,255,0.1)'}`,
+      width:'100%', padding:'14px 16px', background: selected ? 'rgba(10,132,255,0.12)' : 'rgba(0,0,0,0.04)',
+      border:`0.5px solid ${selected ? BLUE : 'rgba(0,0,0,0.08)'}`,
       borderRadius:12, cursor:'pointer', display:'flex', alignItems:'center', gap:12,
       transition:'all 0.15s ease', fontFamily:sf,
     }}>
@@ -111,8 +111,8 @@ export default function OnboardingPage() {
 
   const Btn = ({ label, onClick, disabled }: { label: string, onClick: () => void, disabled?: boolean }) => (
     <button onClick={onClick} disabled={disabled} style={{
-      width:'100%', padding:'16px', background: disabled ? 'rgba(255,255,255,0.08)' : BLUE,
-      border:'none', borderRadius:14, color: disabled ? 'rgba(255,255,255,0.3)' : '#fff',
+      width:'100%', padding:'16px', background: disabled ? 'rgba(0,0,0,0.07)' : BLUE,
+      border:'none', borderRadius:14, color: disabled ? 'rgba(0,0,0,0.3)' : '#fff',
       fontSize:16, fontWeight:600, cursor: disabled ? 'default' : 'pointer',
       fontFamily:sf, letterSpacing:-0.3, transition:'all 0.2s ease',
     }}>{label}</button>
@@ -121,18 +121,18 @@ export default function OnboardingPage() {
   const StepHeader = ({ num, title, sub }: { num: number, title: string, sub?: string }) => (
     <div style={{ marginBottom:24 }}>
       <div style={{ fontSize:13, color:BLUE, fontWeight:500, marginBottom:8, letterSpacing:-0.2 }}>Étape {num} / {TOTAL_STEPS}</div>
-      <h1 style={{ fontSize:28, fontWeight:700, color:'#fff', letterSpacing:-0.8, lineHeight:1.15, marginBottom: sub ? 8 : 0 }}>{title}</h1>
-      {sub && <p style={{ fontSize:13, color:'rgba(255,255,255,0.4)', letterSpacing:-0.2, lineHeight:1.5 }}>{sub}</p>}
+      <h1 style={{ fontSize:28, fontWeight:700, color:'#1A1A1A', letterSpacing:-0.8, lineHeight:1.15, marginBottom: sub ? 8 : 0 }}>{title}</h1>
+      {sub && <p style={{ fontSize:13, color:'rgba(0,0,0,0.45)', letterSpacing:-0.2, lineHeight:1.5 }}>{sub}</p>}
     </div>
   )
 
   return (
-    <main style={{ height:'100svh', background:'#000', fontFamily:sf, overflow:'hidden', display:'flex', flexDirection:'column' }} onFocus={() => window.scrollTo(0,0)}>
+    <main style={{ height:'100svh', background:'#FFFFFF', fontFamily:sf, overflow:'hidden', display:'flex', flexDirection:'column' }} onFocus={() => window.scrollTo(0,0)}>
 
-      <nav style={{ flexShrink:0, padding:'12px 20px', display:'flex', justifyContent:'space-between', alignItems:'center', position:'sticky', top:0, zIndex:10, background:'#000' }}>
-        <span style={{ fontSize:20, fontWeight:700, color:'#fff', letterSpacing:-0.5 }}>GlowApp</span>
+      <nav style={{ flexShrink:0, padding:'12px 20px', display:'flex', justifyContent:'space-between', alignItems:'center', position:'sticky', top:0, zIndex:10, background:'#FFFFFF' }}>
+        <span style={{ fontSize:20, fontWeight:700, color:'#1A1A1A', letterSpacing:-0.5 }}>GlowApp</span>
         {step > 0 && (
-          <button onClick={back} style={{ background:'none', border:'none', color:'rgba(255,255,255,0.5)', fontSize:14, cursor:'pointer', fontFamily:sf }}>
+          <button onClick={back} style={{ background:'none', border:'none', color:'rgba(0,0,0,0.55)', fontSize:14, cursor:'pointer', fontFamily:sf }}>
             ← Retour
           </button>
         )}
@@ -140,7 +140,7 @@ export default function OnboardingPage() {
 
       <div style={{ flexShrink:0, padding:'0 20px 16px', display:'flex', gap:5 }}>
         {Array.from({ length: TOTAL_STEPS }).map((_, i) => (
-          <div key={i} style={{ flex:1, height:3, borderRadius:2, background: i <= step ? BLUE : 'rgba(255,255,255,0.12)', transition:'background 0.3s ease' }} />
+          <div key={i} style={{ flex:1, height:3, borderRadius:2, background: i <= step ? BLUE : 'rgba(0,0,0,0.1)', transition:'background 0.3s ease' }} />
         ))}
       </div>
 
@@ -154,15 +154,15 @@ export default function OnboardingPage() {
             <input ref={fileRef} type="file" accept="image/*" capture="user" onChange={handlePhoto} style={{ display:'none' }} />
 
             <button onClick={() => fileRef.current?.click()} style={{
-              width:'100%', height:220, background: photo ? 'transparent' : 'rgba(255,255,255,0.04)',
-              border:`0.5px dashed ${photo ? BLUE : 'rgba(255,255,255,0.15)'}`,
+              width:'100%', height:220, background: photo ? 'transparent' : 'rgba(0,0,0,0.03)',
+              border:`0.5px dashed ${photo ? BLUE : 'rgba(0,0,0,0.12)'}`,
               borderRadius:20, cursor:'pointer', overflow:'hidden', padding:0, position:'relative',
             }}>
               {photo ? (
                 <>
                   <img src={photo} alt="selfie" style={{ width:'100%', height:'100%', objectFit:'cover', objectPosition:'center top' }} />
                   <div style={{ position:'absolute', inset:0, background:'rgba(10,132,255,0.2)', display:'flex', alignItems:'center', justifyContent:'center' }}>
-                    <div style={{ background:'rgba(0,0,0,0.7)', borderRadius:12, padding:'8px 16px', fontSize:13, color:'#fff', fontWeight:500 }}>✓ Photo sélectionnée</div>
+                    <div style={{ background:'rgba(0,0,0,0.7)', borderRadius:12, padding:'8px 16px', fontSize:13, color:'#1A1A1A', fontWeight:500 }}>✓ Photo sélectionnée</div>
                   </div>
                 </>
               ) : (
@@ -171,8 +171,8 @@ export default function OnboardingPage() {
                     <span style={{ fontSize:28 }}>📷</span>
                   </div>
                   <div style={{ textAlign:'center' }}>
-                    <p style={{ fontSize:15, fontWeight:600, color:'#fff', letterSpacing:-0.3, marginBottom:4 }}>Prendre un selfie</p>
-                    <p style={{ fontSize:12, color:'rgba(255,255,255,0.3)' }}>ou importer depuis la galerie</p>
+                    <p style={{ fontSize:15, fontWeight:600, color:'#1A1A1A', letterSpacing:-0.3, marginBottom:4 }}>Prendre un selfie</p>
+                    <p style={{ fontSize:12, color:'rgba(0,0,0,0.3)' }}>ou importer depuis la galerie</p>
                   </div>
                 </div>
               )}
@@ -185,7 +185,7 @@ export default function OnboardingPage() {
             )}
 
             <Btn label="Continuer" onClick={next} disabled={!photo} />
-            <p style={{ fontSize:11, color:'rgba(255,255,255,0.2)', textAlign:'center' }}>Photo non stockée · Analyse locale uniquement</p>
+            <p style={{ fontSize:11, color:'rgba(0,0,0,0.2)', textAlign:'center' }}>Photo non stockée · Analyse locale uniquement</p>
           </div>
         )}
 
@@ -194,7 +194,7 @@ export default function OnboardingPage() {
           <div style={{ flex:1, display:'flex', flexDirection:'column', justifyContent:'center', gap:24 }}>
             <StepHeader num={2} title="Comment tu t'appelles ?" sub="Pour personnaliser ton score." />
             <input type="text" placeholder="Ton prénom" value={prenom} onChange={e => setPrenom(e.target.value)} autoFocus
-              style={{ width:'100%', padding:'16px', background:'rgba(255,255,255,0.06)', border:`0.5px solid ${prenom ? BLUE : 'rgba(255,255,255,0.12)'}`, borderRadius:14, color:'#fff', fontSize:18, fontWeight:500, fontFamily:sf, outline:'none', letterSpacing:-0.3 }}
+              style={{ width:'100%', padding:'16px', background:'rgba(0,0,0,0.05)', border:`0.5px solid ${prenom ? BLUE : 'rgba(0,0,0,0.1)'}`, borderRadius:14, color:'#1A1A1A', fontSize:18, fontWeight:500, fontFamily:sf, outline:'none', letterSpacing:-0.3 }}
             />
             <Btn label="Continuer" onClick={next} disabled={!prenom.trim()} />
           </div>
@@ -224,18 +224,18 @@ export default function OnboardingPage() {
                 { label:'Taille', placeholder:'175', value:taille, set:setTaille, unit:'cm' },
               ].map(f => (
                 <div key={f.label}>
-                  <label style={{ fontSize:11, color:'rgba(255,255,255,0.4)', fontWeight:500, letterSpacing:0.5, textTransform:'uppercase', display:'block', marginBottom:5 }}>{f.label}</label>
+                  <label style={{ fontSize:11, color:'rgba(0,0,0,0.45)', fontWeight:500, letterSpacing:0.5, textTransform:'uppercase', display:'block', marginBottom:5 }}>{f.label}</label>
                   <div style={{ position:'relative' }}>
                     <input type="number" placeholder={f.placeholder} value={f.value} onChange={e => f.set(e.target.value)}
-                      style={{ width:'100%', padding:'14px 44px 14px 16px', background:'rgba(255,255,255,0.06)', border:`0.5px solid ${f.value ? BLUE : 'rgba(255,255,255,0.12)'}`, borderRadius:12, color:'#fff', fontSize:16, fontWeight:500, fontFamily:sf, outline:'none', letterSpacing:-0.2 }}
+                      style={{ width:'100%', padding:'14px 44px 14px 16px', background:'rgba(0,0,0,0.05)', border:`0.5px solid ${f.value ? BLUE : 'rgba(0,0,0,0.1)'}`, borderRadius:12, color:'#1A1A1A', fontSize:16, fontWeight:500, fontFamily:sf, outline:'none', letterSpacing:-0.2 }}
                     />
-                    <span style={{ position:'absolute', right:14, top:'50%', transform:'translateY(-50%)', fontSize:13, color:'rgba(255,255,255,0.3)' }}>{f.unit}</span>
+                    <span style={{ position:'absolute', right:14, top:'50%', transform:'translateY(-50%)', fontSize:13, color:'rgba(0,0,0,0.3)' }}>{f.unit}</span>
                   </div>
                 </div>
               ))}
               {imc && (
                 <div style={{ padding:'12px 16px', background:'rgba(10,132,255,0.1)', border:'0.5px solid rgba(10,132,255,0.2)', borderRadius:12, display:'flex', justifyContent:'space-between', alignItems:'center' }}>
-                  <span style={{ fontSize:13, color:'rgba(255,255,255,0.5)' }}>IMC calculé</span>
+                  <span style={{ fontSize:13, color:'rgba(0,0,0,0.55)' }}>IMC calculé</span>
                   <span style={{ fontSize:18, fontWeight:700, color:BLUE, letterSpacing:-0.5 }}>{imc}</span>
                 </div>
               )}
@@ -265,7 +265,7 @@ export default function OnboardingPage() {
           <div style={{ flex:1, display:'flex', flexDirection:'column', justifyContent:'center', gap:16 }}>
             <StepHeader num={6} title="Eau & Skincare" />
             <div>
-              <label style={{ fontSize:11, color:'rgba(255,255,255,0.4)', fontWeight:500, letterSpacing:0.5, textTransform:'uppercase', display:'block', marginBottom:8 }}>Eau par jour</label>
+              <label style={{ fontSize:11, color:'rgba(0,0,0,0.45)', fontWeight:500, letterSpacing:0.5, textTransform:'uppercase', display:'block', marginBottom:8 }}>Eau par jour</label>
               <div style={{ display:'flex', flexDirection:'column', gap:6 }}>
                 {[
                   { val:'<1', label:'Moins d\'1 litre', icon:'🏜️' },
@@ -276,7 +276,7 @@ export default function OnboardingPage() {
               </div>
             </div>
             <div>
-              <label style={{ fontSize:11, color:'rgba(255,255,255,0.4)', fontWeight:500, letterSpacing:0.5, textTransform:'uppercase', display:'block', marginBottom:8 }}>Routine skincare</label>
+              <label style={{ fontSize:11, color:'rgba(0,0,0,0.45)', fontWeight:500, letterSpacing:0.5, textTransform:'uppercase', display:'block', marginBottom:8 }}>Routine skincare</label>
               <div style={{ display:'flex', flexDirection:'column', gap:6 }}>
                 {[
                   { val:'aucune', label:'Aucune', icon:'🤷' },
@@ -309,7 +309,7 @@ export default function OnboardingPage() {
                 {/* AUTH GATE — connecte-toi pour découvrir ton score */}
                 <div style={{ textAlign:'center', marginBottom:8 }}>
                   <div style={{ fontSize:40, marginBottom:12 }}>🔮</div>
-                  <h1 style={{ fontSize:26, fontWeight:700, color:'#fff', letterSpacing:-0.8, lineHeight:1.2, marginBottom:8 }}>
+                  <h1 style={{ fontSize:26, fontWeight:700, color:'#1A1A1A', letterSpacing:-0.8, lineHeight:1.2, marginBottom:8 }}>
                     Ton score est prêt
                   </h1>
                   <p style={{ fontSize:14, color:'rgba(255,255,255,0.45)', lineHeight:1.5, letterSpacing:-0.2 }}>
@@ -327,7 +327,7 @@ export default function OnboardingPage() {
                       provider: 'google',
                       options: { redirectTo: `${window.location.origin}/auth/callback` }
                     })
-                  }} style={{ width:'100%', padding:'14px', background:'#fff', border:'none', borderRadius:14, color:'#000', fontSize:15, fontWeight:600, cursor:'pointer', fontFamily:sf, display:'flex', alignItems:'center', justifyContent:'center', gap:10 }}>
+                  }} style={{ width:'100%', padding:'14px', background:'#F5F5F7', border:'none', borderRadius:14, color:'#000', fontSize:15, fontWeight:600, cursor:'pointer', fontFamily:sf, display:'flex', alignItems:'center', justifyContent:'center', gap:10 }}>
                     <svg width="18" height="18" viewBox="0 0 18 18">
                       <path fill="#4285F4" d="M16.51 8H8.98v3h4.3c-.18 1-.74 1.48-1.6 2.04v2.01h2.6a7.8 7.8 0 0 0 2.38-5.88c0-.57-.05-.66-.15-1.18z"/>
                       <path fill="#34A853" d="M8.98 17c2.16 0 3.97-.72 5.3-1.94l-2.6-2a4.8 4.8 0 0 1-7.18-2.54H1.83v2.07A8 8 0 0 0 8.98 17z"/>
@@ -338,9 +338,9 @@ export default function OnboardingPage() {
                   </button>
 
                   <div style={{ display:'flex', alignItems:'center', gap:12 }}>
-                    <div style={{ flex:1, height:'0.5px', background:'rgba(255,255,255,0.1)' }} />
-                    <span style={{ fontSize:12, color:'rgba(255,255,255,0.3)' }}>ou</span>
-                    <div style={{ flex:1, height:'0.5px', background:'rgba(255,255,255,0.1)' }} />
+                    <div style={{ flex:1, height:'0.5px', background:'rgba(0,0,0,0.08)' }} />
+                    <span style={{ fontSize:12, color:'rgba(0,0,0,0.3)' }}>ou</span>
+                    <div style={{ flex:1, height:'0.5px', background:'rgba(0,0,0,0.08)' }} />
                   </div>
 
                   {authError && (
@@ -350,17 +350,17 @@ export default function OnboardingPage() {
                   )}
 
                   <input type="email" placeholder="ton@email.com" value={email} onChange={e => setEmail(e.target.value)}
-                    style={{ width:'100%', padding:'14px 16px', background:'rgba(255,255,255,0.06)', border:`0.5px solid ${email ? BLUE : 'rgba(255,255,255,0.12)'}`, borderRadius:14, color:'#fff', fontSize:16, fontFamily:sf, outline:'none', letterSpacing:-0.2 }}
+                    style={{ width:'100%', padding:'14px 16px', background:'rgba(0,0,0,0.05)', border:`0.5px solid ${email ? BLUE : 'rgba(0,0,0,0.1)'}`, borderRadius:14, color:'#1A1A1A', fontSize:16, fontFamily:sf, outline:'none', letterSpacing:-0.2 }}
                   />
 
                   <button onClick={submit} disabled={loading || !email.trim()}
-                    style={{ width:'100%', padding:'16px', background:(!email.trim() || loading) ? 'rgba(255,255,255,0.08)' : BLUE, border:'none', borderRadius:14, color:(!email.trim() || loading) ? 'rgba(255,255,255,0.3)' : '#fff', fontSize:16, fontWeight:600, cursor:(!email.trim() || loading) ? 'default' : 'pointer', fontFamily:sf, letterSpacing:-0.3, display:'flex', alignItems:'center', justifyContent:'center', gap:8 }}>
+                    style={{ width:'100%', padding:'16px', background:(!email.trim() || loading) ? 'rgba(0,0,0,0.07)' : BLUE, border:'none', borderRadius:14, color:(!email.trim() || loading) ? 'rgba(0,0,0,0.3)' : '#fff', fontSize:16, fontWeight:600, cursor:(!email.trim() || loading) ? 'default' : 'pointer', fontFamily:sf, letterSpacing:-0.3, display:'flex', alignItems:'center', justifyContent:'center', gap:8 }}>
                     {loading
-                      ? <><span style={{ width:16,height:16,border:'2px solid rgba(255,255,255,0.3)',borderTopColor:'#fff',borderRadius:'50%',display:'inline-block',animation:'spin 0.8s linear infinite' }} />Génération du score...</>
+                      ? <><span style={{ width:16,height:16,border:'2px solid rgba(0,0,0,0.3)',borderTopColor:'#1A1A1A',borderRadius:'50%',display:'inline-block',animation:'spin 0.8s linear infinite' }} />Génération du score...</>
                       : '⚡ Découvrir mon Glow Up Score'}
                   </button>
 
-                  <p style={{ fontSize:11, color:'rgba(255,255,255,0.2)', textAlign:'center' }}>
+                  <p style={{ fontSize:11, color:'rgba(0,0,0,0.2)', textAlign:'center' }}>
                     En continuant, tu acceptes nos conditions d'utilisation
                   </p>
                 </div>
@@ -374,7 +374,7 @@ export default function OnboardingPage() {
         @keyframes spin { to { transform: rotate(360deg) } }
         input[type=number]::-webkit-inner-spin-button { -webkit-appearance: none }
         * { box-sizing:border-box; margin:0; padding:0; }
-        input::placeholder { color: rgba(255,255,255,0.2); }
+        input::placeholder { color: rgba(0,0,0,0.2); }
         ::-webkit-scrollbar { display: none; }
         html, body { height: 100%; overflow: hidden; position: fixed; width: 100%; }
       `}</style>

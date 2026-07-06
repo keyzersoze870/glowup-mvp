@@ -4,23 +4,23 @@
 @tailwind utilities;
 
 :root {
-  --bg: #08080E;
-  --surface: #111118;
-  --surface2: #18181F;
-  --surface3: #202028;
+  --bg: #FFFFFF;
+  --surface: #F5F5F7;
+  --surface2: #EEEFF1;
+  --surface3: #E5E5EA;
   --acid: #C8FF00;
   --acid-dim: rgba(200,255,0,0.08);
   --acid-border: rgba(200,255,0,0.2);
   --orange: #FF6B35;
   --orange-dim: rgba(255,107,53,0.08);
-  --text: #EFEFEF;
-  --muted: #666680;
-  --border: rgba(255,255,255,0.07);
-  --border-hover: rgba(255,255,255,0.12);
+  --text: #1A1A1A;
+  --muted: #86868B;
+  --border: rgba(0,0,0,0.08);
+  --border-hover: rgba(0,0,0,0.15);
 }
 
 * { box-sizing: border-box; }
-html, body { background: var(--bg); color: var(--text); font-family: 'Inter', sans-serif; }
+html, body { background: var(--bg); color: var(--text); font-family: 'Inter', sans-serif; -webkit-font-smoothing: antialiased; }
 body { min-height: 100vh; }
 
 .font-display { font-family: 'Barlow Condensed', sans-serif; }

@@ -74,15 +74,15 @@ export default function SharePage() {
   const circumference = 2 * Math.PI * 45
 
   return (
-    <main style={{ minHeight:'100svh', background:'#000', fontFamily:sf, display:'flex', flexDirection:'column', alignItems:'center', padding:'20px 20px 40px' }}>
+    <main style={{ minHeight:'100svh', background:'#FFFFFF', fontFamily:sf, display:'flex', flexDirection:'column', alignItems:'center', padding:'20px 20px 40px' }}>
 
       {/* NAV */}
       <div style={{ width:'100%', display:'flex', justifyContent:'space-between', alignItems:'center', marginBottom:20 }}>
         <button onClick={() => router.push('/dashboard')}
-          style={{ background:'none', border:'none', color:'rgba(255,255,255,0.5)', fontSize:14, cursor:'pointer', fontFamily:sf }}>
+          style={{ background:'none', border:'none', color:'rgba(0,0,0,0.55)', fontSize:14, cursor:'pointer', fontFamily:sf }}>
           ← Retour
         </button>
-        <span style={{ fontSize:16, fontWeight:700, color:'#fff', letterSpacing:-0.5 }}>Partager</span>
+        <span style={{ fontSize:16, fontWeight:700, color:'#1A1A1A', letterSpacing:-0.5 }}>Partager</span>
         <div style={{ width:60 }} />
       </div>
 
@@ -94,7 +94,7 @@ export default function SharePage() {
         overflow:'hidden',
         position:'relative',
         background:'linear-gradient(135deg, #0A0A0F 0%, #0D0D1A 40%, #0A0A0F 100%)',
-        border:'0.5px solid rgba(255,255,255,0.08)',
+        border:'0.5px solid rgba(0,0,0,0.07)',
         boxShadow:'0 0 60px rgba(10,132,255,0.15)',
       }}>
         {/* Fond gradient décoratif */}
@@ -106,8 +106,8 @@ export default function SharePage() {
           {/* HEADER */}
           <div style={{ display:'flex', justifyContent:'space-between', alignItems:'flex-start', marginBottom:24 }}>
             <div>
-              <p style={{ fontSize:11, color:'rgba(255,255,255,0.35)', letterSpacing:1, textTransform:'uppercase', marginBottom:4 }}>MON GLOW UP SCORE</p>
-              <p style={{ fontSize:20, fontWeight:700, color:'#fff', letterSpacing:-0.5 }}>{profile.prenom}</p>
+              <p style={{ fontSize:11, color:'rgba(0,0,0,0.35)', letterSpacing:1, textTransform:'uppercase', marginBottom:4 }}>MON GLOW UP SCORE</p>
+              <p style={{ fontSize:20, fontWeight:700, color:'#1A1A1A', letterSpacing:-0.5 }}>{profile.prenom}</p>
             </div>
             <div style={{ background:'rgba(10,132,255,0.15)', border:'0.5px solid rgba(10,132,255,0.3)', borderRadius:20, padding:'4px 12px' }}>
               <span style={{ fontSize:11, color:'#0A84FF', fontWeight:600, letterSpacing:0.3 }}>GlowApp</span>
@@ -124,7 +124,7 @@ export default function SharePage() {
                   <feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge>
                 </filter>
               </defs>
-              <circle cx="50" cy="50" r="45" fill="none" stroke="rgba(255,255,255,0.05)" strokeWidth="6"/>
+              <circle cx="50" cy="50" r="45" fill="none" stroke="rgba(0,0,0,0.04)" strokeWidth="6"/>
               <circle cx="50" cy="50" r="45" fill="none" stroke={scoreColor} strokeWidth="6"
                 strokeLinecap="round"
                 strokeDasharray={circumference}
@@ -132,16 +132,16 @@ export default function SharePage() {
                 transform="rotate(-90 50 50)"
                 filter="url(#glow)"/>
               <text x="50" y="44" textAnchor="middle" dominantBaseline="middle"
-                style={{ fontFamily:sf, fontWeight:700, fontSize:26, fill:'#fff', letterSpacing:-1 }}>{score.total}</text>
+                style={{ fontFamily:sf, fontWeight:700, fontSize:26, fill:'#1A1A1A', letterSpacing:-1 }}>{score.total}</text>
               <text x="50" y="60" textAnchor="middle" dominantBaseline="middle"
-                style={{ fontFamily:sf, fontSize:9, fill:'rgba(255,255,255,0.35)', letterSpacing:0.5 }}>/ 100</text>
+                style={{ fontFamily:sf, fontSize:9, fill:'rgba(0,0,0,0.35)', letterSpacing:0.5 }}>/ 100</text>
             </svg>
 
             <div style={{ textAlign:'center', marginTop:8 }}>
               <p style={{ fontSize:18, fontWeight:700, color:scoreColor, letterSpacing:-0.5, marginBottom:4 }}>
                 {getScoreLabel(score.total)}
               </p>
-              <p style={{ fontSize:12, color:'rgba(255,255,255,0.4)', letterSpacing:-0.1 }}>
+              <p style={{ fontSize:12, color:'rgba(0,0,0,0.45)', letterSpacing:-0.1 }}>
                 {getRankPhrase(score.total)}
               </p>
             </div>
@@ -152,13 +152,13 @@ export default function SharePage() {
             {CATEGORIES.map(cat => {
               const val = score[cat.key] as number
               return (
-                <div key={cat.key} style={{ background:'rgba(255,255,255,0.04)', border:`0.5px solid rgba(255,255,255,0.07)`, borderRadius:14, padding:'10px 12px' }}>
+                <div key={cat.key} style={{ background:'rgba(0,0,0,0.03)', border:`0.5px solid rgba(0,0,0,0.06)`, borderRadius:14, padding:'10px 12px' }}>
                   <div style={{ display:'flex', alignItems:'center', justifyContent:'space-between', marginBottom:6 }}>
                     <span style={{ fontSize:14 }}>{cat.icon}</span>
                     <span style={{ fontSize:14, fontWeight:700, color:cat.color, letterSpacing:-0.3 }}>{val}<span style={{ fontSize:9, opacity:0.5, fontWeight:400 }}>/10</span></span>
                   </div>
-                  <p style={{ fontSize:10, color:'rgba(255,255,255,0.4)', marginBottom:5, letterSpacing:-0.1 }}>{cat.label}</p>
-                  <div style={{ height:2.5, background:'rgba(255,255,255,0.06)', borderRadius:2, overflow:'hidden' }}>
+                  <p style={{ fontSize:10, color:'rgba(0,0,0,0.45)', marginBottom:5, letterSpacing:-0.1 }}>{cat.label}</p>
+                  <div style={{ height:2.5, background:'rgba(0,0,0,0.05)', borderRadius:2, overflow:'hidden' }}>
                     <div style={{ height:'100%', width:`${(val/10)*100}%`, background:cat.color, borderRadius:2 }} />
                   </div>
                 </div>
@@ -167,11 +167,11 @@ export default function SharePage() {
           </div>
 
           {/* FOOTER */}
-          <div style={{ borderTop:'0.5px solid rgba(255,255,255,0.07)', paddingTop:14 }}>
-            <p style={{ fontSize:11, color:'rgba(255,255,255,0.25)', textAlign:'center', letterSpacing:-0.1, marginBottom:4 }}>
+          <div style={{ borderTop:'0.5px solid rgba(0,0,0,0.06)', paddingTop:14 }}>
+            <p style={{ fontSize:11, color:'rgba(0,0,0,0.25)', textAlign:'center', letterSpacing:-0.1, marginBottom:4 }}>
               Calcule ton score sur
             </p>
-            <p style={{ fontSize:13, fontWeight:600, color:'rgba(255,255,255,0.5)', textAlign:'center', letterSpacing:-0.3 }}>
+            <p style={{ fontSize:13, fontWeight:600, color:'rgba(0,0,0,0.55)', textAlign:'center', letterSpacing:-0.3 }}>
               glowup-mvp.vercel.app
             </p>
           </div>
@@ -179,18 +179,18 @@ export default function SharePage() {
       </div>
 
       {/* INSTRUCTIONS */}
-      <div style={{ width:'100%', maxWidth:360, marginTop:16, padding:'14px', background:'rgba(255,255,255,0.04)', border:'0.5px solid rgba(255,255,255,0.08)', borderRadius:16, textAlign:'center' }}>
-        <p style={{ fontSize:12, color:'rgba(255,255,255,0.4)', lineHeight:1.5 }}>
+      <div style={{ width:'100%', maxWidth:360, marginTop:16, padding:'14px', background:'rgba(0,0,0,0.03)', border:'0.5px solid rgba(0,0,0,0.07)', borderRadius:16, textAlign:'center' }}>
+        <p style={{ fontSize:12, color:'rgba(0,0,0,0.45)', lineHeight:1.5 }}>
           📸 Fais un screenshot de ta carte et poste-la sur TikTok avec <span style={{ color:'#0A84FF' }}>#GlowApp</span>
         </p>
       </div>
 
       {/* BOUTONS */}
       <div style={{ width:'100%', maxWidth:360, marginTop:12, display:'flex', flexDirection:'column', gap:8 }}>
-        <button onClick={handleShare} style={{ width:'100%', padding:'15px', background:'#0A84FF', border:'none', borderRadius:14, color:'#fff', fontSize:15, fontWeight:600, cursor:'pointer', fontFamily:sf, letterSpacing:-0.3 }}>
+        <button onClick={handleShare} style={{ width:'100%', padding:'15px', background:'#0A84FF', border:'none', borderRadius:14, color:'#1A1A1A', fontSize:15, fontWeight:600, cursor:'pointer', fontFamily:sf, letterSpacing:-0.3 }}>
           {copied ? '✓ Lien copié !' : '⬆ Partager mon score'}
         </button>
-        <button onClick={() => router.push('/dashboard')} style={{ width:'100%', padding:'14px', background:'rgba(255,255,255,0.06)', border:'0.5px solid rgba(255,255,255,0.1)', borderRadius:14, color:'rgba(255,255,255,0.6)', fontSize:15, fontWeight:500, cursor:'pointer', fontFamily:sf }}>
+        <button onClick={() => router.push('/dashboard')} style={{ width:'100%', padding:'14px', background:'rgba(0,0,0,0.05)', border:'0.5px solid rgba(0,0,0,0.08)', borderRadius:14, color:'rgba(0,0,0,0.65)', fontSize:15, fontWeight:500, cursor:'pointer', fontFamily:sf }}>
           Retour au dashboard
         </button>
       </div>

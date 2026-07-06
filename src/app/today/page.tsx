@@ -105,8 +105,8 @@ export default function TodayPage() {
   const totalPoints = missions.reduce((acc, m) => acc + (checked[m.id] ? m.points : 0), 0)
 
   if (!profile || !score) return (
-    <div style={{ height:'100svh', background:'#000', display:'flex', alignItems:'center', justifyContent:'center' }}>
-      <div style={{ width:24, height:24, border:`2px solid rgba(255,255,255,0.1)`, borderTopColor:BLUE, borderRadius:'50%', animation:'spin 0.8s linear infinite' }} />
+    <div style={{ height:'100svh', background:'#FFFFFF', display:'flex', alignItems:'center', justifyContent:'center' }}>
+      <div style={{ width:24, height:24, border:`2px solid rgba(0,0,0,0.08)`, borderTopColor:BLUE, borderRadius:'50%', animation:'spin 0.8s linear infinite' }} />
       <style>{`@keyframes spin{to{transform:rotate(360deg)}}`}</style>
     </div>
   )
@@ -115,15 +115,15 @@ export default function TodayPage() {
   const circumference = 2 * Math.PI * 38
 
   return (
-    <main style={{ height:'100svh', background:'#000', fontFamily:sf, overflow:'hidden', display:'flex', flexDirection:'column' }}>
+    <main style={{ height:'100svh', background:'#FFFFFF', fontFamily:sf, overflow:'hidden', display:'flex', flexDirection:'column' }}>
 
       {/* NAV */}
       <nav style={{ flexShrink:0, padding:'12px 20px', display:'flex', justifyContent:'space-between', alignItems:'center' }}>
         <button onClick={() => router.push('/dashboard')}
-          style={{ background:'none', border:'none', color:'rgba(255,255,255,0.5)', fontSize:14, cursor:'pointer', fontFamily:sf }}>
+          style={{ background:'none', border:'none', color:'rgba(0,0,0,0.55)', fontSize:14, cursor:'pointer', fontFamily:sf }}>
           ← Score
         </button>
-        <span style={{ fontSize:16, fontWeight:700, color:'#fff', letterSpacing:-0.5 }}>Aujourd'hui</span>
+        <span style={{ fontSize:16, fontWeight:700, color:'#1A1A1A', letterSpacing:-0.5 }}>Aujourd'hui</span>
         <div style={{ display:'flex', alignItems:'center', gap:6, background:'rgba(255,149,10,0.12)', border:'0.5px solid rgba(255,149,10,0.25)', padding:'4px 10px', borderRadius:20 }}>
           <span style={{ fontSize:12 }}>🔥</span>
           <span style={{ fontSize:12, fontWeight:600, color:'#FF9F0A' }}>{streak}j</span>
@@ -133,20 +133,20 @@ export default function TodayPage() {
       <div style={{ flex:1, overflowY:'auto', padding:'0 20px 40px' }}>
 
         {/* SCORE DU JOUR */}
-        <div style={{ display:'flex', alignItems:'center', gap:16, padding:'12px 16px', background:'rgba(255,255,255,0.04)', border:'0.5px solid rgba(255,255,255,0.08)', borderRadius:16, marginBottom:16 }}>
+        <div style={{ display:'flex', alignItems:'center', gap:16, padding:'12px 16px', background:'rgba(0,0,0,0.03)', border:'0.5px solid rgba(0,0,0,0.07)', borderRadius:16, marginBottom:16 }}>
           <svg width={90} height={90} viewBox="0 0 90 90">
-            <circle cx="45" cy="45" r="38" fill="none" stroke="rgba(255,255,255,0.06)" strokeWidth="6"/>
+            <circle cx="45" cy="45" r="38" fill="none" stroke="rgba(0,0,0,0.05)" strokeWidth="6"/>
             <circle cx="45" cy="45" r="38" fill="none" stroke={scoreColor} strokeWidth="6"
               strokeLinecap="round" strokeDasharray={circumference}
               strokeDashoffset={circumference - (liveScore / 100) * circumference}
               transform="rotate(-90 45 45)" style={{ transition:'stroke-dashoffset 0.3s ease' }}/>
             <text x="45" y="41" textAnchor="middle" dominantBaseline="middle"
-              style={{ fontFamily:sf, fontWeight:700, fontSize:20, fill:'#fff', letterSpacing:-1 }}>{liveScore}</text>
+              style={{ fontFamily:sf, fontWeight:700, fontSize:20, fill:'#1A1A1A', letterSpacing:-1 }}>{liveScore}</text>
             <text x="45" y="55" textAnchor="middle" dominantBaseline="middle"
-              style={{ fontFamily:sf, fontSize:7, fill:'rgba(255,255,255,0.3)' }}>/ 100</text>
+              style={{ fontFamily:sf, fontSize:7, fill:'rgba(0,0,0,0.3)' }}>/ 100</text>
           </svg>
           <div style={{ flex:1 }}>
-            <p style={{ fontSize:12, color:'rgba(255,255,255,0.4)', marginBottom:4 }}>
+            <p style={{ fontSize:12, color:'rgba(0,0,0,0.45)', marginBottom:4 }}>
               {new Date().toLocaleDateString('fr-FR', { weekday:'long', day:'numeric', month:'long' })}
             </p>
             {scoreVariation !== 0 && (
@@ -156,7 +156,7 @@ export default function TodayPage() {
                 </span>
               </div>
             )}
-            <p style={{ fontSize:13, color:'rgba(255,255,255,0.6)', lineHeight:1.4, letterSpacing:-0.2 }}>
+            <p style={{ fontSize:13, color:'rgba(0,0,0,0.65)', lineHeight:1.4, letterSpacing:-0.2 }}>
               {messageMatin || (loading ? 'Génération de tes missions...' : 'Prêt pour aujourd\'hui ?')}
             </p>
             {totalPoints > 0 && (
@@ -166,14 +166,14 @@ export default function TodayPage() {
         </div>
 
         {/* MISSIONS DU JOUR */}
-        <p style={{ fontSize:11, color:'rgba(255,255,255,0.3)', letterSpacing:0.5, textTransform:'uppercase', marginBottom:10 }}>
+        <p style={{ fontSize:11, color:'rgba(0,0,0,0.3)', letterSpacing:0.5, textTransform:'uppercase', marginBottom:10 }}>
           Missions du jour · {doneCount}/{missions.length}
         </p>
 
         {loading ? (
           <div style={{ display:'flex', flexDirection:'column', gap:10 }}>
             {[1,2,3].map(i => (
-              <div key={i} style={{ height:72, background:'rgba(255,255,255,0.04)', borderRadius:14, animation:'pulse 1.5s ease-in-out infinite' }} />
+              <div key={i} style={{ height:72, background:'rgba(0,0,0,0.03)', borderRadius:14, animation:'pulse 1.5s ease-in-out infinite' }} />
             ))}
           </div>
         ) : (
@@ -183,13 +183,13 @@ export default function TodayPage() {
               const color = CAT_COLORS[m.categorie] || BLUE
               return (
                 <button key={m.id} onClick={() => toggleMission(m.id, m.points)}
-                  style={{ width:'100%', background: done ? `rgba(${color === '#30D158' ? '48,209,88' : color === BLUE ? '10,132,255' : color === '#FF9F0A' ? '255,159,10' : color === '#BF5AF2' ? '191,90,242' : color === '#64D2FF' ? '100,210,255' : '255,69,58'},0.08)` : 'rgba(255,255,255,0.05)', border:`0.5px solid ${done ? color + '33' : 'rgba(255,255,255,0.08)'}`, borderRadius:14, padding:'14px 16px', display:'flex', alignItems:'center', gap:12, cursor:'pointer', fontFamily:sf, transition:'all 0.15s', textAlign:'left' }}>
+                  style={{ width:'100%', background: done ? `rgba(${color === '#30D158' ? '48,209,88' : color === BLUE ? '10,132,255' : color === '#FF9F0A' ? '255,159,10' : color === '#BF5AF2' ? '191,90,242' : color === '#64D2FF' ? '100,210,255' : '255,69,58'},0.08)` : 'rgba(0,0,0,0.04)', border:`0.5px solid ${done ? color + '33' : 'rgba(0,0,0,0.07)'}`, borderRadius:14, padding:'14px 16px', display:'flex', alignItems:'center', gap:12, cursor:'pointer', fontFamily:sf, transition:'all 0.15s', textAlign:'left' }}>
                   <span style={{ fontSize:22, flexShrink:0 }}>{CAT_ICONS[m.categorie] || '⚡'}</span>
                   <div style={{ flex:1 }}>
-                    <p style={{ fontSize:14, fontWeight:600, color: done ? 'rgba(255,255,255,0.4)' : '#fff', letterSpacing:-0.3, textDecoration: done ? 'line-through' : 'none', marginBottom:2 }}>{m.texte}</p>
-                    <p style={{ fontSize:11, color: done ? 'rgba(255,255,255,0.2)' : 'rgba(255,255,255,0.35)' }}>+{m.points} pts</p>
+                    <p style={{ fontSize:14, fontWeight:600, color: done ? 'rgba(0,0,0,0.45)' : '#fff', letterSpacing:-0.3, textDecoration: done ? 'line-through' : 'none', marginBottom:2 }}>{m.texte}</p>
+                    <p style={{ fontSize:11, color: done ? 'rgba(0,0,0,0.2)' : 'rgba(0,0,0,0.35)' }}>+{m.points} pts</p>
                   </div>
-                  <div style={{ width:24, height:24, borderRadius:'50%', background: done ? color : 'rgba(255,255,255,0.08)', border:`0.5px solid ${done ? color : 'rgba(255,255,255,0.15)'}`, display:'flex', alignItems:'center', justifyContent:'center', flexShrink:0, transition:'all 0.15s' }}>
+                  <div style={{ width:24, height:24, borderRadius:'50%', background: done ? color : 'rgba(0,0,0,0.07)', border:`0.5px solid ${done ? color : 'rgba(0,0,0,0.12)'}`, display:'flex', alignItems:'center', justifyContent:'center', flexShrink:0, transition:'all 0.15s' }}>
                     {done && <span style={{ fontSize:13, color:'#000', fontWeight:700 }}>✓</span>}
                   </div>
                 </button>
@@ -203,21 +203,21 @@ export default function TodayPage() {
           <div style={{ marginTop:16, padding:'16px', background:'rgba(48,209,88,0.08)', border:'0.5px solid rgba(48,209,88,0.2)', borderRadius:16, textAlign:'center' }}>
             <p style={{ fontSize:24, marginBottom:8 }}>🎉</p>
             <p style={{ fontSize:14, fontWeight:600, color:'#30D158', letterSpacing:-0.3, marginBottom:4 }}>Journée parfaite !</p>
-            <p style={{ fontSize:13, color:'rgba(255,255,255,0.5)', lineHeight:1.5 }}>{eveningMessage}</p>
+            <p style={{ fontSize:13, color:'rgba(0,0,0,0.55)', lineHeight:1.5 }}>{eveningMessage}</p>
           </div>
         )}
 
         {/* HISTORIQUE RAPIDE — 7 derniers scores */}
         <div style={{ marginTop:20 }}>
-          <p style={{ fontSize:11, color:'rgba(255,255,255,0.3)', letterSpacing:0.5, textTransform:'uppercase', marginBottom:10 }}>Progression</p>
-          <div style={{ background:'rgba(255,255,255,0.04)', border:'0.5px solid rgba(255,255,255,0.08)', borderRadius:14, padding:'16px', display:'flex', alignItems:'flex-end', gap:6, height:80 }}>
+          <p style={{ fontSize:11, color:'rgba(0,0,0,0.3)', letterSpacing:0.5, textTransform:'uppercase', marginBottom:10 }}>Progression</p>
+          <div style={{ background:'rgba(0,0,0,0.03)', border:'0.5px solid rgba(0,0,0,0.07)', borderRadius:14, padding:'16px', display:'flex', alignItems:'flex-end', gap:6, height:80 }}>
             {[score.total - 8, score.total - 5, score.total - 6, score.total - 3, score.total - 4, score.total - 1, liveScore].map((s, i) => {
               const h = Math.max(8, (Math.max(0, s) / 100) * 48)
               const isToday = i === 6
               return (
                 <div key={i} style={{ flex:1, display:'flex', flexDirection:'column', alignItems:'center', gap:4 }}>
-                  <div style={{ width:'100%', height:h, background: isToday ? scoreColor : 'rgba(255,255,255,0.15)', borderRadius:4, transition:'height 0.3s ease', minHeight:4 }} />
-                  <span style={{ fontSize:8, color: isToday ? scoreColor : 'rgba(255,255,255,0.25)' }}>
+                  <div style={{ width:'100%', height:h, background: isToday ? scoreColor : 'rgba(0,0,0,0.12)', borderRadius:4, transition:'height 0.3s ease', minHeight:4 }} />
+                  <span style={{ fontSize:8, color: isToday ? scoreColor : 'rgba(0,0,0,0.25)' }}>
                     {isToday ? 'auj' : ['L','M','M','J','V','S'][i]}
                   </span>
                 </div>

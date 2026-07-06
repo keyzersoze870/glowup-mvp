@@ -19,7 +19,7 @@ export default function BottomNav() {
       position: 'fixed', bottom: 0, left: 0, right: 0, zIndex: 100,
       background: 'rgba(0,0,0,0.92)',
       backdropFilter: 'blur(20px)',
-      borderTop: '0.5px solid rgba(255,255,255,0.08)',
+      borderTop: '0.5px solid rgba(0,0,0,0.07)',
       display: 'flex',
       paddingBottom: 'env(safe-area-inset-bottom)',
     }}>
@@ -36,7 +36,7 @@ export default function BottomNav() {
             <span style={{ fontSize: 20, opacity: active ? 1 : 0.35, filter: active ? `drop-shadow(0 0 4px ${BLUE})` : 'none', transition: 'all 0.15s' }}>
               {tab.icon}
             </span>
-            <span style={{ fontSize: 10, fontWeight: active ? 600 : 400, color: active ? BLUE : 'rgba(255,255,255,0.35)', letterSpacing: -0.1, transition: 'all 0.15s' }}>
+            <span style={{ fontSize: 10, fontWeight: active ? 600 : 400, color: active ? BLUE : 'rgba(0,0,0,0.35)', letterSpacing: -0.1, transition: 'all 0.15s' }}>
               {tab.label}
             </span>
           </button>

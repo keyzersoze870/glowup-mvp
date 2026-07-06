@@ -73,17 +73,17 @@ export default function InstallPrompt({ onDismiss }: { onDismiss: () => void }) 
       <div style={{
         width: '100%', background: '#0A0A0A', borderTopLeftRadius: 24, borderTopRightRadius: 24,
         padding: '28px 24px calc(24px + env(safe-area-inset-bottom))',
-        fontFamily: sf, border: '0.5px solid rgba(255,255,255,0.1)', borderBottom: 'none',
+        fontFamily: sf, border: '0.5px solid rgba(0,0,0,0.08)', borderBottom: 'none',
       }}>
-        <div style={{ width: 40, height: 4, background: 'rgba(255,255,255,0.2)', borderRadius: 2, margin: '0 auto 20px' }} />
+        <div style={{ width: 40, height: 4, background: 'rgba(0,0,0,0.2)', borderRadius: 2, margin: '0 auto 20px' }} />
 
         <div style={{ textAlign: 'center', marginBottom: 24 }}>
           <div style={{
             width: 64, height: 64, borderRadius: 16, background: BLUE,
             display: 'flex', alignItems: 'center', justifyContent: 'center',
-            margin: '0 auto 14px', fontSize: 28, fontWeight: 800, color: '#fff',
+            margin: '0 auto 14px', fontSize: 28, fontWeight: 800, color: '#1A1A1A',
           }}>G</div>
-          <h2 style={{ fontSize: 20, fontWeight: 700, color: '#fff', letterSpacing: -0.5, marginBottom: 6 }}>
+          <h2 style={{ fontSize: 20, fontWeight: 700, color: '#1A1A1A', letterSpacing: -0.5, marginBottom: 6 }}>
             {inApp || needsSafari ? "Une dernière étape" : "Garde ton score à portée de main"}
           </h2>
           <p style={{ fontSize: 13, color: 'rgba(255,255,255,0.45)', lineHeight: 1.5, letterSpacing: -0.1, maxWidth: 280, margin: '0 auto' }}>
@@ -102,7 +102,7 @@ export default function InstallPrompt({ onDismiss }: { onDismiss: () => void }) 
                 width: 40, height: 40, borderRadius: 12, background: 'rgba(255,159,10,0.15)',
                 display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0, fontSize: 20,
               }}>⋯</div>
-              <p style={{ fontSize: 14, color: '#fff', letterSpacing: -0.1, lineHeight: 1.4 }}>
+              <p style={{ fontSize: 14, color: '#1A1A1A', letterSpacing: -0.1, lineHeight: 1.4 }}>
                 Touche les <span style={{ fontWeight: 700, color: '#FF9F0A' }}>trois points</span> en haut à droite, puis <span style={{ fontWeight: 700, color: '#FF9F0A' }}>"Ouvrir dans le navigateur"</span>
               </p>
             </div>
@@ -114,20 +114,20 @@ export default function InstallPrompt({ onDismiss }: { onDismiss: () => void }) 
                 width: 40, height: 40, borderRadius: 12, background: 'rgba(255,159,10,0.15)',
                 display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0, fontSize: 20,
               }}>⋯</div>
-              <p style={{ fontSize: 14, color: '#fff', letterSpacing: -0.1, lineHeight: 1.4 }}>
+              <p style={{ fontSize: 14, color: '#1A1A1A', letterSpacing: -0.1, lineHeight: 1.4 }}>
                 Touche les <span style={{ fontWeight: 700, color: '#FF9F0A' }}>trois points</span> en bas, puis <span style={{ fontWeight: 700, color: '#FF9F0A' }}>"Ouvrir dans Safari"</span>
               </p>
             </div>
           </div>
         ) : platform === 'ios' && (
-          <div style={{ background: 'rgba(255,255,255,0.05)', border: '0.5px solid rgba(255,255,255,0.08)', borderRadius: 16, padding: 18, marginBottom: 16 }}>
+          <div style={{ background: 'rgba(0,0,0,0.04)', border: '0.5px solid rgba(0,0,0,0.07)', borderRadius: 16, padding: 18, marginBottom: 16 }}>
             <div style={{ display: 'flex', alignItems: 'center', gap: 14, marginBottom: 16 }}>
               <div style={{
                 width: 40, height: 40, borderRadius: 12, background: 'rgba(10,132,255,0.15)',
                 display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0,
                 fontSize: 20, animation: 'bounce-up 1.4s ease-in-out infinite',
               }}>⬆️</div>
-              <p style={{ fontSize: 14, color: '#fff', letterSpacing: -0.1, lineHeight: 1.4 }}>
+              <p style={{ fontSize: 14, color: '#1A1A1A', letterSpacing: -0.1, lineHeight: 1.4 }}>
                 Touche l'icône <span style={{ fontWeight: 700, color: BLUE }}>Partager</span> tout en bas de l'écran Safari
               </p>
             </div>
@@ -136,7 +136,7 @@ export default function InstallPrompt({ onDismiss }: { onDismiss: () => void }) 
                 width: 40, height: 40, borderRadius: 12, background: 'rgba(10,132,255,0.15)',
                 display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0, fontSize: 18,
               }}>➕</div>
-              <p style={{ fontSize: 14, color: '#fff', letterSpacing: -0.1, lineHeight: 1.4 }}>
+              <p style={{ fontSize: 14, color: '#1A1A1A', letterSpacing: -0.1, lineHeight: 1.4 }}>
                 Choisis <span style={{ fontWeight: 700, color: BLUE }}>"Sur l'écran d'accueil"</span> dans le menu qui s'ouvre
               </p>
             </div>
@@ -144,21 +144,21 @@ export default function InstallPrompt({ onDismiss }: { onDismiss: () => void }) 
         )}
 
         {!inApp && platform === 'android' && deferredPrompt && (
-          <p style={{ fontSize: 12, color: 'rgba(255,255,255,0.35)', textAlign: 'center', marginBottom: 14, lineHeight: 1.5 }}>
+          <p style={{ fontSize: 12, color: 'rgba(0,0,0,0.35)', textAlign: 'center', marginBottom: 14, lineHeight: 1.5 }}>
             Touche le bouton ci-dessous, Chrome te proposera d'installer l'app directement.
           </p>
         )}
 
         {!inApp && platform === 'android' && !deferredPrompt && (
-          <div style={{ background: 'rgba(255,255,255,0.05)', border: '0.5px solid rgba(255,255,255,0.08)', borderRadius: 16, padding: 16, marginBottom: 16 }}>
+          <div style={{ background: 'rgba(0,0,0,0.04)', border: '0.5px solid rgba(0,0,0,0.07)', borderRadius: 16, padding: 16, marginBottom: 16 }}>
             <div style={{ display: 'flex', alignItems: 'center', gap: 12, marginBottom: 12 }}>
-              <div style={{ width: 24, height: 24, borderRadius: 8, background: BLUE, display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 12, fontWeight: 700, color: '#fff', flexShrink: 0 }}>1</div>
+              <div style={{ width: 24, height: 24, borderRadius: 8, background: BLUE, display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 12, fontWeight: 700, color: '#1A1A1A', flexShrink: 0 }}>1</div>
               <p style={{ fontSize: 13, color: 'rgba(255,255,255,0.8)', letterSpacing: -0.1 }}>
                 Touche le menu <span style={{ fontWeight: 700 }}>⋮</span> en haut à droite
               </p>
             </div>
             <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
-              <div style={{ width: 24, height: 24, borderRadius: 8, background: BLUE, display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 12, fontWeight: 700, color: '#fff', flexShrink: 0 }}>2</div>
+              <div style={{ width: 24, height: 24, borderRadius: 8, background: BLUE, display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 12, fontWeight: 700, color: '#1A1A1A', flexShrink: 0 }}>2</div>
               <p style={{ fontSize: 13, color: 'rgba(255,255,255,0.8)', letterSpacing: -0.1 }}>
                 Sélectionne <span style={{ fontWeight: 700 }}>"Installer l'application"</span>
               </p>
@@ -169,7 +169,7 @@ export default function InstallPrompt({ onDismiss }: { onDismiss: () => void }) 
         {!inApp && platform === 'android' && deferredPrompt ? (
           <button onClick={handleAndroidInstall} disabled={installing} style={{
             width: '100%', padding: 14, background: BLUE, border: 'none', borderRadius: 14,
-            color: '#fff', fontSize: 15, fontWeight: 600, cursor: 'pointer', fontFamily: sf,
+            color: '#1A1A1A', fontSize: 15, fontWeight: 600, cursor: 'pointer', fontFamily: sf,
             letterSpacing: -0.3, marginBottom: 8, opacity: installing ? 0.6 : 1,
           }}>
             {installing ? 'Installation...' : 'Installer l\'application'}
@@ -177,7 +177,7 @@ export default function InstallPrompt({ onDismiss }: { onDismiss: () => void }) 
         ) : (
           <button onClick={handleDismiss} style={{
             width: '100%', padding: 14, background: BLUE, border: 'none', borderRadius: 14,
-            color: '#fff', fontSize: 15, fontWeight: 600, cursor: 'pointer', fontFamily: sf,
+            color: '#1A1A1A', fontSize: 15, fontWeight: 600, cursor: 'pointer', fontFamily: sf,
             letterSpacing: -0.3, marginBottom: 8,
           }}>
             {inApp ? "J'ai compris" : "C'est noté"}
@@ -185,7 +185,7 @@ export default function InstallPrompt({ onDismiss }: { onDismiss: () => void }) 
         )}
         <button onClick={handleDismiss} style={{
           width: '100%', padding: 10, background: 'none', border: 'none',
-          color: 'rgba(255,255,255,0.3)', fontSize: 13, cursor: 'pointer', fontFamily: sf,
+          color: 'rgba(0,0,0,0.3)', fontSize: 13, cursor: 'pointer', fontFamily: sf,
         }}>
           Plus tard
         </button>
