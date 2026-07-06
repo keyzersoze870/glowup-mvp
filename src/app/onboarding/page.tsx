@@ -129,7 +129,7 @@ export default function OnboardingPage() {
   return (
     <main style={{ height:'100svh', background:'#FFFFFF', fontFamily:sf, overflow:'hidden', display:'flex', flexDirection:'column' }} onFocus={() => window.scrollTo(0,0)}>
 
-      <nav style={{ flexShrink:0, padding:'12px 20px', display:'flex', justifyContent:'space-between', alignItems:'center', position:'sticky', top:0, zIndex:10, background:'#FFFFFF' }}>
+      <nav style={{ flexShrink:0, padding:'16px 20px 12px', display:'flex', justifyContent:'space-between', alignItems:'center', position:'sticky', top:0, zIndex:10, background:'#FFFFFF' }}>
         <span style={{ fontSize:20, fontWeight:700, color:'#1A1A1A', letterSpacing:-0.5 }}>GlowApp</span>
         {step > 0 && (
           <button onClick={back} style={{ background:'none', border:'none', color:'rgba(0,0,0,0.55)', fontSize:14, cursor:'pointer', fontFamily:sf }}>
@@ -148,7 +148,7 @@ export default function OnboardingPage() {
 
         {/* STEP 0 — Selfie EN PREMIER */}
         {step === 0 && (
-          <div style={{ flex:1, display:'flex', flexDirection:'column', justifyContent:'center', gap:20 }}>
+          <div style={{ flex:1, display:'flex', flexDirection:'column', paddingTop:40, gap:20 }}>
             <StepHeader num={1} title="Commence par ton selfie" sub="L'IA scanne ton visage pour analyser ta peau, ton stress et ton hydratation." />
 
             <input ref={fileRef} type="file" accept="image/*" capture="user" onChange={handlePhoto} style={{ display:'none' }} />
@@ -162,7 +162,7 @@ export default function OnboardingPage() {
                 <>
                   <img src={photo} alt="selfie" style={{ width:'100%', height:'100%', objectFit:'cover', objectPosition:'center top' }} />
                   <div style={{ position:'absolute', inset:0, background:'rgba(10,132,255,0.2)', display:'flex', alignItems:'center', justifyContent:'center' }}>
-                    <div style={{ background:'rgba(0,0,0,0.7)', borderRadius:12, padding:'8px 16px', fontSize:13, color:'#1A1A1A', fontWeight:500 }}>✓ Photo sélectionnée</div>
+                    <div style={{ background:'rgba(255,255,255,0.9)', borderRadius:12, padding:'8px 16px', fontSize:13, color:'#1A1A1A', fontWeight:500 }}>✓ Photo sélectionnée</div>
                   </div>
                 </>
               ) : (
@@ -191,7 +191,7 @@ export default function OnboardingPage() {
 
         {/* STEP 1 — Prénom */}
         {step === 1 && (
-          <div style={{ flex:1, display:'flex', flexDirection:'column', justifyContent:'center', gap:24 }}>
+          <div style={{ flex:1, display:'flex', flexDirection:'column', paddingTop:40, gap:24 }}>
             <StepHeader num={2} title="Comment tu t'appelles ?" sub="Pour personnaliser ton score." />
             <input type="text" placeholder="Ton prénom" value={prenom} onChange={e => setPrenom(e.target.value)} autoFocus
               style={{ width:'100%', padding:'16px', background:'rgba(0,0,0,0.05)', border:`0.5px solid ${prenom ? BLUE : 'rgba(0,0,0,0.1)'}`, borderRadius:14, color:'#1A1A1A', fontSize:18, fontWeight:500, fontFamily:sf, outline:'none', letterSpacing:-0.3 }}
@@ -202,7 +202,7 @@ export default function OnboardingPage() {
 
         {/* STEP 2 — Objectifs */}
         {step === 2 && (
-          <div style={{ flex:1, display:'flex', flexDirection:'column', justifyContent:'center', gap:12 }}>
+          <div style={{ flex:1, display:'flex', flexDirection:'column', paddingTop:40, gap:12 }}>
             <StepHeader num={3} title="Quels sont tes objectifs ?" sub="Sélectionne tout ce qui te correspond." />
             <div style={{ display:'flex', flexDirection:'column', gap:8 }}>
               {OBJECTIFS.map(o => (
@@ -215,7 +215,7 @@ export default function OnboardingPage() {
 
         {/* STEP 3 — Mensurations */}
         {step === 3 && (
-          <div style={{ flex:1, display:'flex', flexDirection:'column', justifyContent:'center', gap:16 }}>
+          <div style={{ flex:1, display:'flex', flexDirection:'column', paddingTop:40, gap:16 }}>
             <StepHeader num={4} title="Tes mensurations" sub="Pour calculer ton IMC." />
             <div style={{ display:'flex', flexDirection:'column', gap:10 }}>
               {[
@@ -246,7 +246,7 @@ export default function OnboardingPage() {
 
         {/* STEP 4 — Sport */}
         {step === 4 && (
-          <div style={{ flex:1, display:'flex', flexDirection:'column', justifyContent:'center', gap:12 }}>
+          <div style={{ flex:1, display:'flex', flexDirection:'column', paddingTop:40, gap:12 }}>
             <StepHeader num={5} title="Ton activité sportive" sub="Combien de fois par semaine ?" />
             <div style={{ display:'flex', flexDirection:'column', gap:8 }}>
               {[
@@ -262,7 +262,7 @@ export default function OnboardingPage() {
 
         {/* STEP 5 — Eau + Skincare */}
         {step === 5 && (
-          <div style={{ flex:1, display:'flex', flexDirection:'column', justifyContent:'center', gap:16 }}>
+          <div style={{ flex:1, display:'flex', flexDirection:'column', paddingTop:40, gap:16 }}>
             <StepHeader num={6} title="Eau & Skincare" />
             <div>
               <label style={{ fontSize:11, color:'rgba(0,0,0,0.45)', fontWeight:500, letterSpacing:0.5, textTransform:'uppercase', display:'block', marginBottom:8 }}>Eau par jour</label>
@@ -291,7 +291,7 @@ export default function OnboardingPage() {
 
         {/* STEP 6 — Stress + Auth gate */}
         {step === 6 && (
-          <div style={{ flex:1, display:'flex', flexDirection:'column', justifyContent:'center', gap:12 }}>
+          <div style={{ flex:1, display:'flex', flexDirection:'column', paddingTop:40, gap:12 }}>
             {!stress ? (
               <>
                 <StepHeader num={7} title="Ton niveau de stress" sub="Comment tu te sens au quotidien ?" />
