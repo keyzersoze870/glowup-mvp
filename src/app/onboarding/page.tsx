@@ -25,7 +25,7 @@ function OptionCard({ label, icon, selected, onClick }: { label: string, icon: s
       transition:'all 0.15s ease', fontFamily:sf,
     }}>
       <span style={{ fontSize:20 }}>{icon}</span>
-      <span style={{ fontSize:15, fontWeight:500, color: selected ? '#fff' : 'rgba(255,255,255,0.7)', letterSpacing:-0.2 }}>{label}</span>
+      <span style={{ fontSize:15, fontWeight:500, color: selected ? '#fff' : '#1A1A1A', letterSpacing:-0.2 }}>{label}</span>
       {selected && <span style={{ marginLeft:'auto', color:BLUE, fontSize:16 }}>✓</span>}
     </button>
   )
@@ -312,7 +312,7 @@ export default function OnboardingPage() {
                   <h1 style={{ fontSize:26, fontWeight:700, color:'#1A1A1A', letterSpacing:-0.8, lineHeight:1.2, marginBottom:8 }}>
                     Ton score est prêt
                   </h1>
-                  <p style={{ fontSize:14, color:'rgba(255,255,255,0.45)', lineHeight:1.5, letterSpacing:-0.2 }}>
+                  <p style={{ fontSize:14, color:'rgba(0,0,0,0.45)', lineHeight:1.5, letterSpacing:-0.2 }}>
                     Connecte-toi pour découvrir ton Glow Up Score et sauvegarder ta progression.
                   </p>
                 </div>

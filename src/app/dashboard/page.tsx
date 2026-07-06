@@ -117,7 +117,7 @@ export default function Dashboard() {
     // Affiche l'invitation à installer une seule fois, après que le score a été vu
     const alreadySeen = localStorage.getItem('glowup_install_prompt_seen')
     if (!alreadySeen && !isStandalone()) {
-      const t = setTimeout(() => setShowInstallPrompt(true), 1800)
+      const t = setTimeout(() => setShowInstallPrompt(false), 1800)
       return () => clearTimeout(t)
     }
   }, [])
@@ -185,7 +185,7 @@ export default function Dashboard() {
     : `Débloque le programme avancé pour atteindre le score Elite (90+).`
 
   return (
-    <main style={{ height:'100svh', background:'#FFFFFF', fontFamily:sf, display:'flex', flexDirection:'column', position:'relative' }}>
+    <main style={{ minHeight:'100svh', background:'#FFFFFF', fontFamily:sf, display:'flex', flexDirection:'column', position:'relative' }}>
 
       {/* PAYWALL OVERLAY */}
       {showPaywall && (
@@ -204,7 +204,7 @@ export default function Dashboard() {
               {['Programme 8 semaines personnalisé', 'Historique & évolution du score', 'Coach IA disponible 24h/24', 'Alertes & rappels intelligents'].map(f => (
                 <div key={f} style={{ display:'flex', alignItems:'center', gap:10 }}>
                   <span style={{ color:'#30D158', fontSize:14 }}>✓</span>
-                  <span style={{ fontSize:13, color:'rgba(255,255,255,0.7)', letterSpacing:-0.2 }}>{f}</span>
+                  <span style={{ fontSize:13, color:'rgba(0,0,0,0.6)', letterSpacing:-0.2 }}>{f}</span>
                 </div>
               ))}
             </div>
@@ -250,7 +250,7 @@ export default function Dashboard() {
               <><span style={{ color:'#FF453A' }}>18%</span>{' '}des utilisateurs ont un meilleur score que toi, <span style={{ fontWeight:700, color:'#1A1A1A' }}>ne t'arrête pas si près du sommet.</span></>
             )}
           </p>
-          <p style={{ fontSize:13, fontWeight:600, color:'rgba(255,255,255,0.75)', letterSpacing:-0.1, lineHeight:1.5, maxWidth:280, textAlign:'center', margin:'0 auto 12px' }}>
+          <p style={{ fontSize:13, fontWeight:600, color:'rgba(0,0,0,0.65)', letterSpacing:-0.1, lineHeight:1.5, maxWidth:280, textAlign:'center', margin:'0 auto 12px' }}>
             <span style={{ color:'#1A1A1A', fontWeight:700 }}>{profile.prenom}</span>, <span style={{ color:'#0A84FF' }}>après analyse complète des 68 points de données de ton visage et tes réponses</span>, {segmentMsg?.replace(new RegExp(`^${profile.prenom}[,.]?\\s*`, 'i'), '')}
           </p>
           <p style={{ fontSize:13, color:'rgba(0,0,0,0.55)', letterSpacing:-0.2, lineHeight:1.5, maxWidth:280, textAlign:'center', margin:'0 auto 14px' }}>

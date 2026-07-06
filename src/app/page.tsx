@@ -73,7 +73,7 @@ export default function LandingPage() {
     <main style={{ height:'100svh', background:'#FFFFFF', fontFamily:sf, overflow:'hidden', display:'flex', flexDirection:'column' }}>
 
       {/* NAV */}
-      <nav style={{ flexShrink:0, padding:'12px 20px', display:'flex', justifyContent:'space-between', alignItems:'center' }}>
+      <nav style={{ flexShrink:0, padding:'56px 20px 12px', display:'flex', justifyContent:'space-between', alignItems:'center' }}>
         <span style={{ fontSize:20, fontWeight:700, color:'#1A1A1A', letterSpacing:-0.5 }}>GlowApp</span>
         <Link href="/onboarding" style={{ fontSize:12, fontWeight:600, color:'#1A1A1A', background:BLUE, padding:'7px 16px', borderRadius:20, textDecoration:'none', letterSpacing:-0.2 }}>
           Commencer
