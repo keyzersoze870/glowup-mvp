@@ -1,0 +1,17 @@
+{
+  "/_global-error/page": "/_global-error",
+  "/_not-found/page": "/_not-found",
+  "/api/create-checkout/route": "/api/create-checkout",
+  "/api/daily-checkin/route": "/api/daily-checkin",
+  "/api/daily-missions/route": "/api/daily-missions",
+  "/api/daily-score/route": "/api/daily-score",
+  "/api/generate-score/route": "/api/generate-score",
+  "/auth/callback/route": "/auth/callback",
+  "/dashboard/page": "/dashboard",
+  "/favicon.ico/route": "/favicon.ico",
+  "/login/page": "/login",
+  "/onboarding/page": "/onboarding",
+  "/page": "/",
+  "/share/page": "/share",
+  "/today/page": "/today"
+}
