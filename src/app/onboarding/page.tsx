@@ -5,14 +5,14 @@ import { supabase } from '@/lib/supabase'
 
 const sf = `-apple-system, BlinkMacSystemFont, 'SF Pro Display', 'Helvetica Neue', sans-serif`
 const BLUE = '#0A84FF'
-const TOTAL_STEPS = 7
+const TOTAL_STEPS = 9
 
-const OBJECTIFS = [
-  { val:'perte_poids', label:'Lose weight', icon:'⚖️' },
+const GOALS = [
+  { val:'weight_loss', label:'Lose weight', icon:'⚖️' },
   { val:'muscle',      label:'Build muscle', icon:'💪' },
-  { val:'energie',     label:'Get more energy', icon:'⚡' },
-  { val:'peau',        label:'Improve my skin', icon:'✨' },
-  { val:'sommeil',     label:'Sleep better', icon:'🌙' },
+  { val:'energy',      label:'Get more energy', icon:'⚡' },
+  { val:'skin',        label:'Improve my skin', icon:'✨' },
+  { val:'sleep',       label:'Sleep better', icon:'🌙' },
   { val:'stress',      label:'Reduce stress', icon:'🧘' },
 ]
 
@@ -47,15 +47,18 @@ export default function OnboardingPage() {
   const [sport, setSport] = useState('')
   const [eau, setEau] = useState('')
   const [skincare, setSkincare] = useState('')
+  const [sleep, setSleep] = useState('')
+  const [nutrition, setNutrition] = useState('')
   const [stress, setStress] = useState('')
   const [authError, setAuthError] = useState('')
 
-  const imc = poids && taille ? (Number(poids) / ((Number(taille) / 100) ** 2)).toFixed(1) : null
+  // BMI: lbs & inches -> kg & m
+  const bmi = poids && taille ? ((Number(poids) * 703) / (Number(taille) ** 2)).toFixed(1) : null
 
   const next = () => setStep(s => s + 1)
   const back = () => setStep(s => s - 1)
 
-  const toggleObjectif = (val: string) => {
+  const toggleGoal = (val: string) => {
     setObjectifs(prev => prev.includes(val) ? prev.filter(o => o !== val) : [...prev, val])
   }
 
@@ -71,10 +74,9 @@ export default function OnboardingPage() {
     setLoading(true)
     setAuthError('')
     try {
-      const data = { prenom, objectifs, poids: Number(poids), taille: Number(taille), age: Number(age), sport, eau, skincare, stress }
+      const data = { prenom, objectifs, poids: Number(poids), taille: Number(taille), age: Number(age), sport, eau, skincare, sleep, nutrition, stress }
       localStorage.setItem('glowup_profile_pending', JSON.stringify(data))
 
-      // Génère le score en premier — c'est ça qui doit s'afficher quoi qu'il arrive
       const res = await fetch('/api/generate-score', {
         method: 'POST', headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(data),
@@ -85,7 +87,6 @@ export default function OnboardingPage() {
         localStorage.setItem('glowup_score', JSON.stringify(json.score))
       }
 
-      // Envoie le magic link en parallèle, sans bloquer l'accès au score si ça échore
       try {
         const { error: emailError } = await supabase.auth.signInWithOtp({
           email,
@@ -101,7 +102,6 @@ export default function OnboardingPage() {
         console.error('Email send error:', emailErr)
       }
 
-      // Le score a été généré, on continue vers le dashboard quoi qu'il arrive
       router.push('/dashboard')
     } catch(e: any) {
       console.error(e)
@@ -146,13 +146,11 @@ export default function OnboardingPage() {
 
       <div style={{ flex:1, padding:'0 24px', paddingBottom:'40px', overflowY:'auto', display:'flex', flexDirection:'column' }}>
 
-        {/* STEP 0 — Selfie EN PREMIER */}
+        {/* STEP 0 — Selfie */}
         {step === 0 && (
           <div style={{ flex:1, display:'flex', flexDirection:'column', paddingTop:40, gap:20 }}>
             <StepHeader num={1} title="Start with your selfie" sub="AI scans your face to analyze your skin, stress and hydration levels." />
-
             <input ref={fileRef} type="file" accept="image/*" capture="user" onChange={handlePhoto} style={{ display:'none' }} />
-
             <button onClick={() => fileRef.current?.click()} style={{
               width:'100%', height:220, background: photo ? 'transparent' : 'rgba(0,0,0,0.03)',
               border:`0.5px dashed ${photo ? BLUE : 'rgba(0,0,0,0.12)'}`,
@@ -177,51 +175,49 @@ export default function OnboardingPage() {
                 </div>
               )}
             </button>
-
             {photo && (
               <button onClick={() => fileRef.current?.click()} style={{ background:'none', border:'none', color:BLUE, fontSize:13, fontWeight:500, cursor:'pointer', fontFamily:sf }}>
                 Change photo
               </button>
             )}
-
             <Btn label="Continue" onClick={next} disabled={!photo} />
             <p style={{ fontSize:11, color:'rgba(0,0,0,0.2)', textAlign:'center' }}>Photo not stored · Local analysis only</p>
           </div>
         )}
 
-        {/* STEP 1 — Prénom */}
+        {/* STEP 1 — Name */}
         {step === 1 && (
           <div style={{ flex:1, display:'flex', flexDirection:'column', paddingTop:40, gap:24 }}>
             <StepHeader num={2} title="What's your name?" sub="To personalize your score." />
-            <input type="text" placeholder="Yorr first name" value={prenom} onChange={e => setPrenom(e.target.value)} autoFocus
+            <input type="text" placeholder="Your first name" value={prenom} onChange={e => setPrenom(e.target.value)} autoFocus
               style={{ width:'100%', padding:'16px', background:'rgba(0,0,0,0.05)', border:`0.5px solid ${prenom ? BLUE : 'rgba(0,0,0,0.1)'}`, borderRadius:14, color:'#1A1A1A', fontSize:18, fontWeight:500, fontFamily:sf, outline:'none', letterSpacing:-0.3 }}
             />
             <Btn label="Continue" onClick={next} disabled={!prenom.trim()} />
           </div>
         )}
 
-        {/* STEP 2 — Objectifs */}
+        {/* STEP 2 — Goals */}
         {step === 2 && (
           <div style={{ flex:1, display:'flex', flexDirection:'column', paddingTop:40, gap:12 }}>
             <StepHeader num={3} title="What are your goals?" sub="Select everything that applies." />
             <div style={{ display:'flex', flexDirection:'column', gap:8 }}>
-              {OBJECTIFS.map(o => (
-                <OptionCard key={o.val} label={o.label} icon={o.icon} selected={objectifs.includes(o.val)} onClick={() => toggleObjectif(o.val)} />
+              {GOALS.map(o => (
+                <OptionCard key={o.val} label={o.label} icon={o.icon} selected={objectifs.includes(o.val)} onClick={() => toggleGoal(o.val)} />
               ))}
             </div>
             <Btn label="Continue" onClick={next} disabled={objectifs.length === 0} />
           </div>
         )}
 
-        {/* STEP 3 — Mensurations */}
+        {/* STEP 3 — Measurements (US: lbs, inches) */}
         {step === 3 && (
           <div style={{ flex:1, display:'flex', flexDirection:'column', paddingTop:40, gap:16 }}>
-            <StepHeader num={4} title="Yorr measurements" sub="To calculate your BMI." />
+            <StepHeader num={4} title="Your measurements" sub="To calculate your BMI." />
             <div style={{ display:'flex', flexDirection:'column', gap:10 }}>
               {[
                 { label:'Age', placeholder:'25', value:age, set:setAge, unit:'yrs' },
-                { label:'Weight', placeholder:'70', value:poids, set:setPoids, unit:'kg' },
-                { label:'Height', placeholder:'175', value:taille, set:setTaille, unit:'cm' },
+                { label:'Weight', placeholder:'150', value:poids, set:setPoids, unit:'lbs' },
+                { label:'Height', placeholder:'65', value:taille, set:setTaille, unit:'in' },
               ].map(f => (
                 <div key={f.label}>
                   <label style={{ fontSize:11, color:'rgba(0,0,0,0.45)', fontWeight:500, letterSpacing:0.5, textTransform:'uppercase', display:'block', marginBottom:5 }}>{f.label}</label>
@@ -233,10 +229,10 @@ export default function OnboardingPage() {
                   </div>
                 </div>
               ))}
-              {imc && (
+              {bmi && (
                 <div style={{ padding:'12px 16px', background:'rgba(10,132,255,0.1)', border:'0.5px solid rgba(10,132,255,0.2)', borderRadius:12, display:'flex', justifyContent:'space-between', alignItems:'center' }}>
                   <span style={{ fontSize:13, color:'rgba(0,0,0,0.55)' }}>BMI calculated</span>
-                  <span style={{ fontSize:18, fontWeight:700, color:BLUE, letterSpacing:-0.5 }}>{imc}</span>
+                  <span style={{ fontSize:18, fontWeight:700, color:BLUE, letterSpacing:-0.5 }}>{bmi}</span>
                 </div>
               )}
             </div>
@@ -244,10 +240,10 @@ export default function OnboardingPage() {
           </div>
         )}
 
-        {/* STEP 4 — Sport */}
+        {/* STEP 4 — Fitness */}
         {step === 4 && (
           <div style={{ flex:1, display:'flex', flexDirection:'column', paddingTop:40, gap:12 }}>
-            <StepHeader num={5} title="Yorr fitness activity" sub="How many times per week?" />
+            <StepHeader num={5} title="Your fitness activity" sub="How many times per week?" />
             <div style={{ display:'flex', flexDirection:'column', gap:8 }}>
               {[
                 { val:'0', label:'Never', icon:'🛋️' },
@@ -260,18 +256,50 @@ export default function OnboardingPage() {
           </div>
         )}
 
-        {/* STEP 5 — Eau + Skincare */}
+        {/* STEP 5 — Sleep */}
         {step === 5 && (
+          <div style={{ flex:1, display:'flex', flexDirection:'column', paddingTop:40, gap:12 }}>
+            <StepHeader num={6} title="Your sleep" sub="How many hours per night on average?" />
+            <div style={{ display:'flex', flexDirection:'column', gap:8 }}>
+              {[
+                { val:'<5', label:'Less than 5 hours', icon:'😵' },
+                { val:'5-6', label:'5 to 6 hours', icon:'😴' },
+                { val:'7-8', label:'7 to 8 hours', icon:'😊' },
+                { val:'8+', label:'More than 8 hours', icon:'😇' },
+              ].map(o => <OptionCard key={o.val} label={o.label} icon={o.icon} selected={sleep === o.val} onClick={() => setSleep(o.val)} />)}
+            </div>
+            <Btn label="Continue" onClick={next} disabled={!sleep} />
+          </div>
+        )}
+
+        {/* STEP 6 — Nutrition */}
+        {step === 6 && (
+          <div style={{ flex:1, display:'flex', flexDirection:'column', paddingTop:40, gap:12 }}>
+            <StepHeader num={7} title="Your nutrition" sub="How would you describe your diet?" />
+            <div style={{ display:'flex', flexDirection:'column', gap:8 }}>
+              {[
+                { val:'poor', label:'Mostly fast food & snacks', icon:'🍔' },
+                { val:'average', label:'Mixed — some healthy, some not', icon:'🍕' },
+                { val:'good', label:'Mostly healthy & balanced', icon:'🥗' },
+                { val:'excellent', label:'Very clean & structured', icon:'🥑' },
+              ].map(o => <OptionCard key={o.val} label={o.label} icon={o.icon} selected={nutrition === o.val} onClick={() => setNutrition(o.val)} />)}
+            </div>
+            <Btn label="Continue" onClick={next} disabled={!nutrition} />
+          </div>
+        )}
+
+        {/* STEP 7 — Water + Skincare */}
+        {step === 7 && (
           <div style={{ flex:1, display:'flex', flexDirection:'column', paddingTop:40, gap:16 }}>
-            <StepHeader num={6} title="Water & Skincare" />
+            <StepHeader num={8} title="Water & Skincare" />
             <div>
               <label style={{ fontSize:11, color:'rgba(0,0,0,0.45)', fontWeight:500, letterSpacing:0.5, textTransform:'uppercase', display:'block', marginBottom:8 }}>Water per day</label>
               <div style={{ display:'flex', flexDirection:'column', gap:6 }}>
                 {[
-                  { val:'<1', label:'Less than 1 liter', icon:'🏜️' },
-                  { val:'1-1.5', label:'1 to 1.5 liters', icon:'💧' },
-                  { val:'1.5-2', label:'1.5 to 2 liters', icon:'💧💧' },
-                  { val:'2+', label:'More than 2 liters', icon:'🌊' },
+                  { val:'<1', label:'Less than 4 cups', icon:'🏜️' },
+                  { val:'1-1.5', label:'4 to 6 cups', icon:'💧' },
+                  { val:'1.5-2', label:'6 to 8 cups', icon:'💧💧' },
+                  { val:'2+', label:'More than 8 cups', icon:'🌊' },
                 ].map(o => <OptionCard key={o.val} label={o.label} icon={o.icon} selected={eau === o.val} onClick={() => setEau(o.val)} />)}
               </div>
             </div>
@@ -279,8 +307,8 @@ export default function OnboardingPage() {
               <label style={{ fontSize:11, color:'rgba(0,0,0,0.45)', fontWeight:500, letterSpacing:0.5, textTransform:'uppercase', display:'block', marginBottom:8 }}>Skincare routine</label>
               <div style={{ display:'flex', flexDirection:'column', gap:6 }}>
                 {[
-                  { val:'aucune', label:'None', icon:'🤷' },
-                  { val:'basique', label:'Basic', icon:'🧴' },
+                  { val:'none', label:'None', icon:'🤷' },
+                  { val:'basic', label:'Basic', icon:'🧴' },
                   { val:'complete', label:'Complete', icon:'✨' },
                 ].map(o => <OptionCard key={o.val} label={o.label} icon={o.icon} selected={skincare === o.val} onClick={() => setSkincare(o.val)} />)}
               </div>
@@ -289,28 +317,27 @@ export default function OnboardingPage() {
           </div>
         )}
 
-        {/* STEP 6 — Stress + Auth gate */}
-        {step === 6 && (
+        {/* STEP 8 — Stress + Auth gate */}
+        {step === 8 && (
           <div style={{ flex:1, display:'flex', flexDirection:'column', paddingTop:40, gap:12 }}>
             {!stress ? (
               <>
-                <StepHeader num={7} title="Yorr stress level" sub="How do yor feel on a daily basis?" />
+                <StepHeader num={9} title="Your stress level" sub="How do you feel on a daily basis?" />
                 <div style={{ display:'flex', flexDirection:'column', gap:8 }}>
                   {[
-                    { val:'faible', label:'Low — I feel calm', icon:'😌' },
-                    { val:'modere', label:'Moderate — some tension', icon:'😐' },
-                    { val:'eleve', label:'High — often stressed', icon:'😰' },
+                    { val:'low', label:'Low — I feel calm', icon:'😌' },
+                    { val:'moderate', label:'Moderate — some tension', icon:'😐' },
+                    { val:'high', label:'High — often stressed', icon:'😰' },
                     { val:'extreme', label:'Extreme — exhausted', icon:'🔥' },
                   ].map(o => <OptionCard key={o.val} label={o.label} icon={o.icon} selected={stress === o.val} onClick={() => setStress(o.val)} />)}
                 </div>
               </>
             ) : (
               <>
-                {/* AUTH GATE — connecte-toi porr décorvrir ton score */}
                 <div style={{ textAlign:'center', marginBottom:8 }}>
                   <div style={{ fontSize:40, marginBottom:12 }}>🔮</div>
                   <h1 style={{ fontSize:26, fontWeight:700, color:'#1A1A1A', letterSpacing:-0.8, lineHeight:1.2, marginBottom:8 }}>
-                    Yorr score is ready
+                    Your score is ready
                   </h1>
                   <p style={{ fontSize:14, color:'rgba(0,0,0,0.45)', lineHeight:1.5, letterSpacing:-0.2 }}>
                     Sign in to discover your Glow Up Score and save your progress.
@@ -318,10 +345,8 @@ export default function OnboardingPage() {
                 </div>
 
                 <div style={{ display:'flex', flexDirection:'column', gap:10 }}>
-                  {/* Google */}
                   <button onClick={async () => {
-                    // Sauvegarder le profil avant redirect
-                    const data = { prenom, objectifs, poids: Number(poids), taille: Number(taille), age: Number(age), sport, eau, skincare, stress }
+                    const data = { prenom, objectifs, poids: Number(poids), taille: Number(taille), age: Number(age), sport, eau, skincare, sleep, nutrition, stress }
                     localStorage.setItem('glowup_profile_pending', JSON.stringify(data))
                     await supabase.auth.signInWithOAuth({
                       provider: 'google',
@@ -334,7 +359,7 @@ export default function OnboardingPage() {
                       <path fill="#FBBC05" d="M4.5 10.52a4.8 4.8 0 0 1 0-3.04V5.41H1.83a8 8 0 0 0 0 7.18l2.67-2.07z"/>
                       <path fill="#EA4335" d="M8.98 4.18c1.17 0 2.23.4 3.06 1.2l2.3-2.3A8 8 0 0 0 1.83 5.4L4.5 7.49a4.77 4.77 0 0 1 4.48-3.31z"/>
                     </svg>
-                    Continue avec Google
+                    Continue with Google
                   </button>
 
                   <div style={{ display:'flex', alignItems:'center', gap:12 }}>
@@ -349,7 +374,7 @@ export default function OnboardingPage() {
                     </p>
                   )}
 
-                  <input type="email" placeholder="ton@email.com" value={email} onChange={e => setEmail(e.target.value)}
+                  <input type="email" placeholder="your@email.com" value={email} onChange={e => setEmail(e.target.value)}
                     style={{ width:'100%', padding:'14px 16px', background:'rgba(0,0,0,0.05)', border:`0.5px solid ${email ? BLUE : 'rgba(0,0,0,0.1)'}`, borderRadius:14, color:'#1A1A1A', fontSize:16, fontFamily:sf, outline:'none', letterSpacing:-0.2 }}
                   />
 
@@ -357,7 +382,7 @@ export default function OnboardingPage() {
                     style={{ width:'100%', padding:'16px', background:(!email.trim() || loading) ? 'rgba(0,0,0,0.07)' : BLUE, border:'none', borderRadius:14, color:(!email.trim() || loading) ? 'rgba(0,0,0,0.3)' : '#fff', fontSize:16, fontWeight:600, cursor:(!email.trim() || loading) ? 'default' : 'pointer', fontFamily:sf, letterSpacing:-0.3, display:'flex', alignItems:'center', justifyContent:'center', gap:8 }}>
                     {loading
                       ? <><span style={{ width:16,height:16,border:'2px solid rgba(0,0,0,0.3)',borderTopColor:'#1A1A1A',borderRadius:'50%',display:'inline-block',animation:'spin 0.8s linear infinite' }} />Generating your score...</>
-                      : '⚡ Décorvrir mon Glow Up Score'}
+                      : '⚡ Discover my Glow Up Score'}
                   </button>
 
                   <p style={{ fontSize:11, color:'rgba(0,0,0,0.2)', textAlign:'center' }}>

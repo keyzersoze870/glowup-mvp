@@ -18,6 +18,7 @@ const PROFILES = [
       { x: 78, y: 28, label: 'Stress',      val: '88', color: ORANGE, side: 'right' },
       { x: 36, y: 36, label: 'Skincare',    val: '74', color: CYAN,   side: 'left' },
       { x: 51, y: 60, label: 'Nutrition',   val: '79', color: GREEN,  side: 'right' },
+      { x: 30, y: 55, label: 'Sleep',       val: '65', color: PURPLE, side: 'left' },
     ],
     score: 78,
     rank: '47% of users have a higher score than you.',
