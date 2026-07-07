@@ -2,29 +2,130 @@
 import { useEffect, useState } from 'react'
 import { useRouter } from 'next/navigation'
 import { supabase } from '@/lib/supabase'
-import BottomNav from '@/components/BottomNav'
-import InstallPrompt, { isStandalone } from '@/components/InstallPrompt'
 
 const sf = `-apple-system, BlinkMacSystemFont, 'SF Pro Display', 'Helvetica Neue', sans-serif`
 const BLUE = '#0A84FF'
 
+// ─── SCORING MATRIX ───
+function calculateScore(profile: any) {
+  let fitness = 0, sleep = 0, nutrition = 0, water = 0, stress = 0, skincare = 0, bmiScore = 0
+
+  // Fitness /20
+  if (profile.sport === '5+') fitness = 20
+  else if (profile.sport === '3-4') fitness = 15
+  else if (profile.sport === '1-2') fitness = 8
+  else fitness = 0
+
+  // Sleep /18
+  if (profile.sleep === '7-8') sleep = 18
+  else if (profile.sleep === '8+') sleep = 14
+  else if (profile.sleep === '5-6') sleep = 6
+  else sleep = 0
+
+  // Nutrition /18
+  if (profile.nutrition === 'excellent') nutrition = 18
+  else if (profile.nutrition === 'good') nutrition = 14
+  else if (profile.nutrition === 'average') nutrition = 7
+  else nutrition = 0
+
+  // Water /12
+  if (profile.eau === '2+') water = 12
+  else if (profile.eau === '1.5-2') water = 9
+  else if (profile.eau === '1-1.5') water = 4
+  else water = 0
+
+  // Stress /14
+  if (profile.stress === 'low') stress = 14
+  else if (profile.stress === 'moderate') stress = 10
+  else if (profile.stress === 'high') stress = 4
+  else stress = 0
+
+  // Skincare /10
+  if (profile.skincare === 'complete') skincare = 10
+  else if (profile.skincare === 'basic') skincare = 5
+  else skincare = 0
+
+  // BMI /8
+  const bmi = profile.poids && profile.taille ? (profile.poids * 703) / (profile.taille ** 2) : 22
+  if (bmi >= 18.5 && bmi < 25) bmiScore = 8
+  else if ((bmi >= 25 && bmi < 30) || bmi < 18.5) bmiScore = 4
+  else bmiScore = 1
+
+  const total = fitness + sleep + nutrition + water + stress + skincare + bmiScore
+
+  const categories = { fitness, sleep, nutrition, water, stress, skincare, bmi: bmiScore }
+
+  // Find weakest category (by % of max)
+  const maxes: Record<string, number> = { fitness:20, sleep:18, nutrition:18, water:12, stress:14, skincare:10, bmi:8 }
+  let weakest = 'fitness'
+  let weakestRatio = 1
+  for (const [key, val] of Object.entries(categories)) {
+    const ratio = val / maxes[key]
+    if (ratio < weakestRatio) { weakestRatio = ratio; weakest = key }
+  }
+
+  return { total, categories, weakest }
+}
+
+// ─── PERCENTILE (score -> "X% scored higher") ───
+function getPercentileAbove(score: number): number {
+  if (score <= 0) return 99
+  if (score >= 100) return 1
+  // Slightly curved mapping so most users land in the painful 50-80% range
+  return Math.round(100 - (score * 0.88 + (score / 100) * 12))
+}
+
+// ─── SEGMENT MESSAGES ───
+function getSegment(score: number, name: string, weakest: string) {
+  const weakLabels: Record<string, string> = {
+    fitness: 'fitness routine', sleep: 'sleep schedule', nutrition: 'nutrition',
+    water: 'hydration', stress: 'stress levels', skincare: 'skincare routine', bmi: 'body composition'
+  }
+  const weak = weakLabels[weakest] || 'overall habits'
+  const pctAbove = getPercentileAbove(score)
+
+  if (score < 36) return {
+    label: 'Wake up call 🚨',
+    color: '#FF453A',
+    hook: `${pctAbove}% of users scored higher than you.`,
+    hookBold: `Your body is sending you signals — are you listening?`,
+    message: `${name}, your ${weak} alone is dragging your entire score down. Fixing just this one area could add +15 points in 2 weeks.`,
+  }
+  if (score < 56) return {
+    label: 'Wasted potential 😤',
+    color: '#FF9F0A',
+    hook: `${pctAbove}% of users scored higher than you.`,
+    hookBold: `You have the foundation — you're just not using it.`,
+    message: `${name}, your ${weak} is holding you back. Everything else is decent, but this one weak spot is sabotaging your progress.`,
+  }
+  if (score < 76) return {
+    label: 'So close ⚡',
+    color: '#FF9F0A',
+    hook: `${pctAbove}% of users scored higher than you.`,
+    hookBold: `Elite is within reach — don't quit now.`,
+    message: `${name}, your ${weak} is your only bottleneck. Fix that and you cross into Elite territory.`,
+  }
+  return {
+    label: 'Elite 👑',
+    color: '#30D158',
+    hook: `Only ${pctAbove}% of users scored higher than you.`,
+    hookBold: `Most people would kill for this score.`,
+    message: `${name}, you're already ahead of ${100 - pctAbove}% of users. The personalized plan will help you stay there and push to 95+.`,
+  }
+}
+
+// ─── CATEGORY CONFIG ───
 const CATEGORIES = [
-  { key: 'training',    label: 'Fitness',      icon: '🏋️', color: '#FF9F0A' },
-  { key: 'nutrition',   label: 'Nutrition',  icon: '🥗',  color: '#30D158' },
-  { key: 'hydratation', label: 'Water',        icon: '💧',  color: BLUE },
-  { key: 'sommeil',     label: 'Sleep',    icon: '🌙',  color: '#BF5AF2' },
-  { key: 'skincare',    label: 'Skincare',   icon: '✨',  color: '#64D2FF' },
-  { key: 'steps',       label: 'Stress',     icon: '🧘',  color: '#FF453A' },
+  { key: 'fitness',  label: 'Fitness',   icon: '🏋️', color: '#FF9F0A', max: 20 },
+  { key: 'sleep',    label: 'Sleep',     icon: '🌙',  color: '#BF5AF2', max: 18 },
+  { key: 'nutrition',label: 'Nutrition', icon: '🥗',  color: '#30D158', max: 18 },
+  { key: 'stress',   label: 'Stress',    icon: '🧘',  color: '#FF453A', max: 14 },
+  { key: 'water',    label: 'Water',     icon: '💧',  color: BLUE, max: 12 },
+  { key: 'skincare', label: 'Skincare',  icon: '✨',  color: '#64D2FF', max: 10 },
+  { key: 'bmi',      label: 'BMI',       icon: '📊',  color: '#FF6B35', max: 8 },
 ]
 
-const CHECK_ITEMS = [
-  { key: 'sport',      icon: '🏋️', label: 'Workout session',   sub: '30 min minimum' },
-  { key: 'eau',        icon: '💧', label: '2L of water',          sub: 'Throughout the day' },
-  { key: 'nutrition',  icon: '🥗', label: 'Eat balanced',   sub: 'Protein + vegetables' },
-  { key: 'sommeil',    icon: '🌙', label: 'Sleep 7-8h',        sub: 'Bedtime before 11pm' },
-  { key: 'skincare',   icon: '✨', label: 'Routine skincare',   sub: 'Morning + evening' },
-]
-
+// ─── BELL CURVE ───
 function BellCurve({ score, color }: { score: number, color: string }) {
   const markerPos = Math.min(Math.max(score, 5), 95)
   const w = 300, h = 100
@@ -39,10 +140,9 @@ function BellCurve({ score, color }: { score: number, color: string }) {
   const markerX = (markerPos / 100) * w
   const mx = (markerPos / 100) * 6 - 3
   const markerY = h - (Math.exp(-0.5 * mx * mx) / Math.sqrt(2 * Math.PI)) * h * 2.2
-  const sf2 = `-apple-system, BlinkMacSystemFont, 'SF Pro Display', 'Helvetica Neue', sans-serif`
 
   return (
-    <div style={{ width:'100%', maxWidth:300, margin:'16px auto 8px', position:'relative' }}>
+    <div style={{ width:'100%', maxWidth:300, margin:'16px auto 8px' }}>
       <svg viewBox={`0 0 ${w} ${h + 30}`} style={{ width:'100%', height:'auto' }}>
         <defs>
           <linearGradient id="bellGrad" x1="0" y1="0" x2="0" y2="1">
@@ -54,17 +154,17 @@ function BellCurve({ score, color }: { score: number, color: string }) {
         <polyline points={linePoints} fill="none" stroke={color} strokeWidth="2" strokeLinecap="round" />
         <line x1={markerX} y1={markerY} x2={markerX} y2={h} stroke="#1A1A1A" strokeWidth="1.5" strokeDasharray="3,3" />
         <polygon points={`${markerX-6},${h+4} ${markerX+6},${h+4} ${markerX},${h-2}`} fill="#1A1A1A" />
-        <text x={markerX} y={h+20} textAnchor="middle" style={{ fontSize:10, fontWeight:600, fill:'#1A1A1A', fontFamily:sf2 }}>{`You're here`}</text>
+        <text x={markerX} y={h+20} textAnchor="middle" style={{ fontSize:10, fontWeight:600, fill:'#1A1A1A', fontFamily:sf }}>{`You're here`}</text>
       </svg>
     </div>
   )
 }
 
-function ScoreRing({ score, size = 160 }: { score: number, size?: number }) {
+// ─── SCORE RING ───
+function ScoreRing({ score, color, size = 160 }: { score: number, color: string, size?: number }) {
   const [displayed, setDisplayed] = useState(0)
   const r = 54; const c = 2 * Math.PI * r
   const offset = c - (displayed / 100) * c
-  const color = displayed >= 70 ? '#30D158' : displayed >= 45 ? '#FF9F0A' : '#FF453A'
 
   useEffect(() => {
     let frame: number; let cur = 0
@@ -91,133 +191,30 @@ function ScoreRing({ score, size = 160 }: { score: number, size?: number }) {
   )
 }
 
-function CheckItem({ icon, label, sub, onCheck }: { icon: string, label: string, sub: string, onCheck: (done: boolean) => void }) {
-  const [done, setDone] = useState(false)
-  const toggle = () => { const next = !done; setDone(next); onCheck(next) }
-  return (
-    <button onClick={toggle} style={{ width:'100%', background: done ? 'rgba(48,209,88,0.08)' : 'rgba(0,0,0,0.04)', border:`0.5px solid ${done ? 'rgba(48,209,88,0.2)' : 'rgba(0,0,0,0.07)'}`, borderRadius:14, padding:'14px 16px', display:'flex', alignItems:'center', gap:12, cursor:'pointer', fontFamily:sf, transition:'all 0.15s' }}>
-      <span style={{ fontSize:20 }}>{icon}</span>
-      <div style={{ flex:1, textAlign:'left' }}>
-        <p style={{ fontSize:14, fontWeight:600, color: done ? 'rgba(0,0,0,0.35)' : '#fff', letterSpacing:-0.3, textDecoration: done ? 'line-through' : 'none' }}>{label}</p>
-        <p style={{ fontSize:11, color:'rgba(0,0,0,0.3)', marginTop:1 }}>{sub}</p>
-      </div>
-      <div style={{ width:22, height:22, borderRadius:'50%', background: done ? '#30D158' : 'rgba(0,0,0,0.07)', border:`0.5px solid ${done ? '#30D158' : 'rgba(0,0,0,0.12)'}`, display:'flex', alignItems:'center', justifyContent:'center', flexShrink:0, transition:'all 0.15s' }}>
-        {done && <span style={{ fontSize:12, color:'#000', fontWeight:700 }}>✓</span>}
-      </div>
-    </button>
-  )
-}
-
+// ─── MAIN DASHBOARD ───
 export default function Dashboard() {
   const router = useRouter()
   const [profile, setProfile] = useState<any>(null)
-  const [score, setScore] = useState<any>(null)
-  const [activeTab, setActiveTab] = useState<'score'|'plan'|'today'>('score')
-  const [streak, setStreak] = useState(0)
-  const [checkedCount, setCheckedCount] = useState(0)
+  const [computed, setComputed] = useState<any>(null)
   const [showPaywall, setShowPaywall] = useState(false)
-  const [liveScore, setLiveScore] = useState(0)
-  const [showInstallPrompt, setShowInstallPrompt] = useState(false)
 
   useEffect(() => {
-    const init = async () => {
-      const p = localStorage.getItem('glowup_profile')
-      const s = localStorage.getItem('glowup_score')
-      const userId = localStorage.getItem('glowup_user_id')
-      if (!p || !s) { router.push('/onboarding'); return }
-      const parsedScore = JSON.parse(s)
-      setProfile(JSON.parse(p))
-      setScore(parsedScore)
-
-      if (!userId) {
-        setLiveScore(parsedScore.total)
-        return
-      }
-
-      try {
-        const res = await fetch(`/api/daily-score?userId=${userId}&initialScore=${parsedScore.total}`)
-        const data = await res.json()
-        if (data.success) {
-          setLiveScore(data.scoreDepart)
-          setStreak(data.streak || 0)
-        } else {
-          setLiveScore(parsedScore.total)
-        }
-      } catch (e) {
-        setLiveScore(parsedScore.total)
-      }
-    }
-    init()
-
-    // Affiche l'invitation à installer une seule fois, après que le score a été vu
-    const alreadySeen = localStorage.getItem('glowup_install_prompt_seen')
-    if (!alreadySeen && !isStandalone()) {
-      const t = setTimeout(() => setShowInstallPrompt(false), 1800)
-      return () => clearTimeout(t)
-    }
+    const p = localStorage.getItem('glowup_profile')
+    if (!p) { router.push('/onboarding'); return }
+    const parsed = JSON.parse(p)
+    setProfile(parsed)
+    const result = calculateScore(parsed)
+    setComputed(result)
   }, [])
 
-  const handleCheck = (done: boolean) => {
-    const next = checkedCount + (done ? 1 : -1)
-    setCheckedCount(next)
-    // Score monte en temps réel avec chaque item coché
-    setLiveScore(s => Math.min(100, s + (done ? 2 : -2)))
-    // Paywall après 3 items cochés
-    if (next === 3) setTimeout(() => setShowPaywall(true), 800)
-  }
-
-  const handlePremium = async () => {
-    try {
-      const res = await fetch('/api/create-checkout', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ prenom: profile?.prenom }),
-      })
-      const json = await res.json()
-      if (json.url) window.location.href = json.url
-    } catch (e) { console.error(e) }
-  }
-
-  const handleStreakUpdate = async () => {
-    const newStreak = streak + 1
-    setStreak(newStreak)
-    localStorage.setItem('glowup_streak', String(newStreak))
-
-    // Sauvegarder dans Supabase
-    try {
-      const userId = localStorage.getItem('glowup_user_id')
-      if (userId) {
-        await supabase.from('daily_checklist').upsert({
-          user_id: userId,
-          date: new Date().toISOString().split('T')[0],
-          sport: true, eau: true, nutrition: true, sommeil: true, skincare: true,
-          streak: newStreak,
-        }, { onConflict: 'user_id,date' })
-      }
-    } catch (e) { console.log('Streak save error:', e) }
-  }
-
-  if (!score || !profile) return (
+  if (!profile || !computed) return (
     <div style={{ minHeight:'100svh', background:'#FFFFFF', display:'flex', alignItems:'center', justifyContent:'center' }}>
       <div style={{ width:24, height:24, border:'2px solid rgba(0,0,0,0.08)', borderTopColor:BLUE, borderRadius:'50%', animation:'spin 0.8s linear infinite' }} />
-      {/* <BottomNav /> */}
       <style>{`@keyframes spin{to{transform:rotate(360deg)}}`}</style>
     </div>
   )
 
-  const segment = liveScore < 45 ? 'faible' : liveScore < 70 ? 'moyen' : 'eleve'
-  const scoreColor = liveScore >= 70 ? '#30D158' : liveScore >= 45 ? '#FF9F0A' : '#FF453A'
-  const scoreLabel = liveScore >= 70 ? 'Not Elite yet 👀' : liveScore >= 55 ? 'Wasted potential 😤' : liveScore >= 40 ? 'Needs improvement ⚡' : 'Low ⚠️'
-
-  const segmentMsg = segment === 'faible' ? score.message_faible
-    : segment === 'moyen' ? score.message_moyen
-    : score.message_eleve
-
-  const paywallMsg = segment === 'faible'
-    ? `Your personalized plan can boost your score by +30 points in 4 weeks.`
-    : segment === 'moyen'
-    ? `You're 2-3 weeks from an Elite score. Premium users progress 3x faster.`
-    : `Unlock the advanced program to reach an Elite score (90+).`
+  const seg = getSegment(computed.total, profile.prenom, computed.weakest)
 
   return (
     <main style={{ minHeight:'100svh', background:'#FFFFFF', fontFamily:sf, display:'flex', flexDirection:'column', position:'relative' }}>
@@ -230,24 +227,24 @@ export default function Dashboard() {
             <div style={{ width:40, height:4, background:'rgba(0,0,0,0.2)', borderRadius:2, margin:'0 auto 20px' }} />
             <div style={{ fontSize:28, textAlign:'center', marginBottom:8 }}>🔒</div>
             <h2 style={{ fontSize:22, fontWeight:700, color:'#1A1A1A', letterSpacing:-0.8, textAlign:'center', marginBottom:8 }}>
-              Passe au niveau supérieur
+              Unlock your full plan
             </h2>
             <p style={{ fontSize:14, color:'rgba(0,0,0,0.55)', textAlign:'center', lineHeight:1.5, marginBottom:20, letterSpacing:-0.2 }}>
-              {paywallMsg}
+              Your personalized {computed.total < 56 ? '8-week' : '4-week'} plan can boost your score by +{computed.total < 56 ? '30' : '15'} points.
             </p>
             <div style={{ display:'flex', flexDirection:'column', gap:10, marginBottom:16 }}>
-              {['Personalized 8-week program', 'Score history & evolution', 'AI Coach available 24/7', 'Smart alerts & reminders'].map(f => (
+              {['Personalized improvement program', 'Daily missions tailored to you', 'AI Coach available 24/7', 'Score tracking & progress'].map(f => (
                 <div key={f} style={{ display:'flex', alignItems:'center', gap:10 }}>
                   <span style={{ color:'#30D158', fontSize:14 }}>✓</span>
                   <span style={{ fontSize:13, color:'rgba(0,0,0,0.6)', letterSpacing:-0.2 }}>{f}</span>
                 </div>
               ))}
             </div>
-            <button style={{ width:'100%', padding:'16px', background:BLUE, border:'none', borderRadius:14, color:'#1A1A1A', fontSize:16, fontWeight:600, cursor:'pointer', fontFamily:sf, letterSpacing:-0.3, marginBottom:10 }} onClick={handlePremium}>
-              Commencer — 9€/mois
+            <button style={{ width:'100%', padding:'16px', background:BLUE, border:'none', borderRadius:14, color:'#FFFFFF', fontSize:16, fontWeight:600, cursor:'pointer', fontFamily:sf, letterSpacing:-0.3, marginBottom:10 }}>
+              Start — $9.99/month
             </button>
             <button onClick={() => setShowPaywall(false)} style={{ width:'100%', padding:'12px', background:'none', border:'none', color:'rgba(0,0,0,0.3)', fontSize:14, cursor:'pointer', fontFamily:sf }}>
-              Continuer gratuitement
+              Continue for free
             </button>
           </div>
         </div>
@@ -256,93 +253,72 @@ export default function Dashboard() {
       {/* NAV */}
       <nav style={{ flexShrink:0, padding:'56px 20px 12px', display:'flex', justifyContent:'space-between', alignItems:'center' }}>
         <span style={{ fontSize:20, fontWeight:700, color:'#1A1A1A', letterSpacing:-0.5 }}>GlowApp</span>
-        <div style={{ display:'flex', alignItems:'center', gap:8 }}>
-          {streak > 0 && (
-            <div style={{ display:'flex', alignItems:'center', gap:4, background:'rgba(255,149,10,0.12)', border:'0.5px solid rgba(255,149,10,0.25)', padding:'4px 10px', borderRadius:20 }}>
-              <span style={{ fontSize:12 }}>🔥</span>
-              <span style={{ fontSize:12, fontWeight:600, color:'#FF9F0A', letterSpacing:-0.2 }}>{streak} jours</span>
-            </div>
-          )}
-          <button onClick={() => router.push('/share')}
-            style={{ background:'rgba(10,132,255,0.12)', border:'0.5px solid rgba(10,132,255,0.25)', borderRadius:20, padding:'6px 12px', color:'#0A84FF', fontSize:12, fontWeight:600, cursor:'pointer', fontFamily:sf, letterSpacing:-0.2 }}>
-            ⬆ Share
-          </button>
-        </div>
+        <button onClick={() => router.push('/share')}
+          style={{ background:'rgba(10,132,255,0.12)', border:'0.5px solid rgba(10,132,255,0.25)', borderRadius:20, padding:'6px 12px', color:'#0A84FF', fontSize:12, fontWeight:600, cursor:'pointer', fontFamily:sf, letterSpacing:-0.2 }}>
+          ⬆ Share
+        </button>
       </nav>
 
       {/* HERO */}
       <div style={{ flexShrink:0, display:'flex', flexDirection:'column', alignItems:'center', padding:'4px 20px 12px' }}>
         <p style={{ fontSize:13, color:'rgba(0,0,0,0.45)', letterSpacing:-0.2, marginBottom:4 }}>Hi {profile.prenom} 👋</p>
-        <ScoreRing score={liveScore} />
+        <ScoreRing score={computed.total} color={seg.color} />
         <div style={{ marginTop:4, textAlign:'center', width:'100%' }}>
-          <span style={{ fontSize:22, fontWeight:800, color:scoreColor, letterSpacing:-0.5, display:'block', marginBottom:4 }}>{scoreLabel}</span>
-          <BellCurve score={liveScore} color={scoreColor} />
+          <span style={{ fontSize:22, fontWeight:800, color:seg.color, letterSpacing:-0.5, display:'block', marginBottom:4 }}>{seg.label}</span>
+          <BellCurve score={computed.total} color={seg.color} />
           <p style={{ fontSize:12, fontStyle:'italic', fontWeight:300, color:'rgba(0,0,0,0.45)', letterSpacing:-0.1, marginBottom:10 }}>
-            {liveScore < 45 ? (
-              <><span style={{ color:'#FF453A' }}>87%</span>{' '}of users have a higher score than you. <span style={{ fontWeight:700, color:'#1A1A1A' }}>Don't let your body decline further.</span></>
-            ) : liveScore < 70 ? (
-              <><span style={{ color:'#FF453A' }}>52%</span>{' '}of users have a higher score than you. <span style={{ fontWeight:700, color:'#1A1A1A' }}>Don't waste your potential before it's too late.</span></>
-            ) : (
-              <><span style={{ color:'#FF453A' }}>18%</span>{' '}of users have a higher score than you. <span style={{ fontWeight:700, color:'#1A1A1A' }}>Don't stop when you're this close to the top.</span></>
-            )}
+            <span style={{ color:'#FF453A', fontWeight:600 }}>{seg.hook}</span>{' '}
+            <span style={{ fontWeight:700, color:'#1A1A1A' }}>{seg.hookBold}</span>
           </p>
-          <p style={{ fontSize:13, fontWeight:600, color:'rgba(0,0,0,0.65)', letterSpacing:-0.1, lineHeight:1.5, maxWidth:280, textAlign:'center', margin:'0 auto 12px' }}>
-            <span style={{ color:'#1A1A1A', fontWeight:700 }}>{profile.prenom}</span>, <span style={{ color:'#0A84FF' }}>after a complete analysis of 68 data points from your face and answers</span>, {segmentMsg?.replace(new RegExp(`^${profile.prenom}[,.]?\\s*`, 'i'), '')}
+          <p style={{ fontSize:13, fontWeight:500, color:'rgba(0,0,0,0.55)', letterSpacing:-0.1, lineHeight:1.5, maxWidth:300, textAlign:'center', margin:'0 auto 12px' }}>
+            {seg.message}
           </p>
-          <p style={{ fontSize:13, color:'rgba(0,0,0,0.55)', letterSpacing:-0.2, lineHeight:1.5, maxWidth:280, textAlign:'center', margin:'0 auto 14px' }}>
-            You can start improving your score today by following the personalized plan I created for you ⬇️
+          <p style={{ fontSize:13, color:'rgba(0,0,0,0.45)', letterSpacing:-0.2, lineHeight:1.5, maxWidth:280, textAlign:'center', margin:'0 auto 14px' }}>
+            Start improving today by following the plan I created for you ⬇️
           </p>
-          <button onClick={() => router.push('/today')}
+          <button onClick={() => setShowPaywall(true)}
             style={{ padding:'11px 24px', background:BLUE, border:'none', borderRadius:12, color:'#FFFFFF', fontSize:13, fontWeight:600, cursor:'pointer', fontFamily:sf, letterSpacing:-0.2 }}>
             See my plan →
           </button>
         </div>
       </div>
 
-      {/* CONTENT */}
-      <div style={{ flex:1, overflowY:'auto', padding:'0 20px 100px' }}>
-
-        {/* SCORE TAB */}
-        {activeTab === 'score' && (
-          <div style={{ display:'flex', flexDirection:'column', gap:8 }}>
-            <p style={{ fontSize:11, color:'rgba(0,0,0,0.3)', letterSpacing:0.5, textTransform:'uppercase', marginBottom:4 }}>Score breakdown</p>
-            {CATEGORIES.map(cat => {
-              const val = score[cat.key] as number
-              const isWeak = score.point_faible === cat.key
-              return (
-                <div key={cat.key} style={{ background: isWeak ? 'rgba(255,69,58,0.06)' : 'rgba(0,0,0,0.04)', border:`0.5px solid ${isWeak ? 'rgba(255,69,58,0.2)' : 'rgba(0,0,0,0.07)'}`, borderRadius:14, padding:'14px 16px' }}>
-                  <div style={{ display:'flex', alignItems:'center', justifyContent:'space-between', marginBottom:10 }}>
-                    <div style={{ display:'flex', alignItems:'center', gap:10 }}>
-                      <span style={{ fontSize:18 }}>{cat.icon}</span>
-                      <div>
-                        <span style={{ fontSize:14, fontWeight:600, color:'#1A1A1A', letterSpacing:-0.3 }}>{cat.label}</span>
-                        {isWeak && <span style={{ display:'block', fontSize:10, color:'#FF453A', marginTop:1 }}>⚠ Point faible</span>}
-                      </div>
+      {/* SCORE BREAKDOWN */}
+      <div style={{ flex:1, overflowY:'auto', padding:'0 20px 40px' }}>
+        <p style={{ fontSize:11, color:'rgba(0,0,0,0.3)', letterSpacing:0.5, textTransform:'uppercase', marginBottom:12 }}>Score breakdown</p>
+        <div style={{ display:'flex', flexDirection:'column', gap:8 }}>
+          {CATEGORIES.map(cat => {
+            const val = computed.categories[cat.key] as number
+            const isWeak = computed.weakest === cat.key
+            const pct = (val / cat.max) * 100
+            return (
+              <div key={cat.key} style={{ background: isWeak ? 'rgba(255,69,58,0.06)' : 'rgba(0,0,0,0.04)', border:`0.5px solid ${isWeak ? 'rgba(255,69,58,0.2)' : 'rgba(0,0,0,0.07)'}`, borderRadius:14, padding:'14px 16px' }}>
+                <div style={{ display:'flex', alignItems:'center', justifyContent:'space-between', marginBottom:10 }}>
+                  <div style={{ display:'flex', alignItems:'center', gap:10 }}>
+                    <span style={{ fontSize:18 }}>{cat.icon}</span>
+                    <div>
+                      <span style={{ fontSize:14, fontWeight:600, color:'#1A1A1A', letterSpacing:-0.3 }}>{cat.label}</span>
+                      {isWeak && <span style={{ display:'block', fontSize:10, color:'#FF453A', marginTop:1 }}>⚠ Weakest area</span>}
                     </div>
-                    <span style={{ fontSize:18, fontWeight:700, color:cat.color, letterSpacing:-0.5 }}>
-                      {val}<span style={{ fontSize:11, fontWeight:400, color:'rgba(0,0,0,0.3)' }}>/10</span>
-                    </span>
                   </div>
-                  <div style={{ height:4, background:'rgba(0,0,0,0.07)', borderRadius:2, overflow:'hidden' }}>
-                    <div style={{ height:'100%', width:`${(val/10)*100}%`, background:cat.color, borderRadius:2 }} />
-                  </div>
+                  <span style={{ fontSize:18, fontWeight:700, color:cat.color, letterSpacing:-0.5 }}>
+                    {val}<span style={{ fontSize:11, fontWeight:400, color:'rgba(0,0,0,0.3)' }}>/{cat.max}</span>
+                  </span>
                 </div>
-              )
-            })}
+                <div style={{ height:4, background:'rgba(0,0,0,0.07)', borderRadius:2, overflow:'hidden' }}>
+                  <div style={{ height:'100%', width:`${pct}%`, background:cat.color, borderRadius:2 }} />
+                </div>
+              </div>
+            )
+          })}
+        </div>
 
-            {/* À remplir + CTA bas */}
-            <p style={{ fontSize:12, color:'rgba(0,0,0,0.35)', letterSpacing:-0.1, lineHeight:1.5, textAlign:'center', margin:'8px 0' }}>À remplir</p>
-            <button onClick={() => router.push('/today')}
-              style={{ width:'100%', padding:'14px', background:BLUE, border:'none', borderRadius:14, color:'#1A1A1A', fontSize:15, fontWeight:600, cursor:'pointer', fontFamily:sf, letterSpacing:-0.3 }}>
-              See my plan →
-            </button>
-          </div>
-        )}
+        <button onClick={() => setShowPaywall(true)}
+          style={{ width:'100%', padding:'14px', background:BLUE, border:'none', borderRadius:14, color:'#FFFFFF', fontSize:15, fontWeight:600, cursor:'pointer', fontFamily:sf, letterSpacing:-0.3, marginTop:16 }}>
+          See my plan →
+        </button>
       </div>
 
-      {showInstallPrompt && <InstallPrompt onDismiss={() => setShowInstallPrompt(false)} />}
-
-      {/* <BottomNav /> */}
       <style>{`
         @keyframes spin { to { transform: rotate(360deg) } }
         ::-webkit-scrollbar { display: none; }
