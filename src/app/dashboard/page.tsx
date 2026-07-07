@@ -293,7 +293,7 @@ export default function Dashboard() {
             You can start improving your score today by following the personalized plan I created for you ⬇️
           </p>
           <button onClick={() => router.push('/today')}
-            style={{ padding:'11px 24px', background:BLUE, border:'none', borderRadius:12, color:'#1A1A1A', fontSize:13, fontWeight:600, cursor:'pointer', fontFamily:sf, letterSpacing:-0.2 }}>
+            style={{ padding:'11px 24px', background:BLUE, border:'none', borderRadius:12, color:'#FFFFFF', fontSize:13, fontWeight:600, cursor:'pointer', fontFamily:sf, letterSpacing:-0.2 }}>
             See my plan →
           </button>
         </div>

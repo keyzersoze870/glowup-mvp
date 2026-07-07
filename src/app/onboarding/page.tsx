@@ -19,7 +19,7 @@ const GOALS = [
 function OptionCard({ label, icon, selected, onClick }: { label: string, icon: string, selected: boolean, onClick: () => void }) {
   return (
     <button onClick={onClick} style={{
-      width:'100%', padding:'14px 16px', background: selected ? 'rgba(10,132,255,0.12)' : 'rgba(0,0,0,0.04)',
+      width:'100%', padding:'14px 16px', background: selected ? BLUE : 'rgba(0,0,0,0.04)',
       border:`0.5px solid ${selected ? BLUE : 'rgba(0,0,0,0.08)'}`,
       borderRadius:12, cursor:'pointer', display:'flex', alignItems:'center', gap:12,
       transition:'all 0.15s ease', fontFamily:sf,

@@ -151,7 +151,7 @@ export default function LandingPage() {
             </p>
           )}
         </div>
-        <Link href="/onboarding" style={{ fontSize:15,fontWeight:600,color:'#1A1A1A',background:BLUE,padding:'14px 0',borderRadius:14,
+        <Link href="/onboarding" style={{ fontSize:15,fontWeight:600,color:'#FFFFFF',background:BLUE,padding:'14px 0',borderRadius:14,
           textDecoration:'none',letterSpacing:-0.3,display:'block',textAlign:'center' }}>
           Get my score — Free
         </Link>
