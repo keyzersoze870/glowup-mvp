@@ -340,7 +340,7 @@ export default function OnboardingPage() {
                 <div style={{ position:'relative', marginBottom:16 }}>
                   <div style={{ filter:'blur(8px)', pointerEvents:'none', userSelect:'none', opacity:0.7 }}>
                     {/* Fake score ring */}
-                    <div style={{ display:'flex', justifyContent:'center', marginBottom:8 }}>
+                    <div style={{ display:'flex', justifyContent:'center', marginBottom:8, position:'relative' }}>
                       <svg width={120} height={120} viewBox="0 0 120 120">
                         <circle cx="60" cy="60" r="54" fill="none" stroke="rgba(0,0,0,0.05)" strokeWidth="7"/>
                         <circle cx="60" cy="60" r="54" fill="none" stroke="#FF9F0A" strokeWidth="7"
@@ -352,6 +352,23 @@ export default function OnboardingPage() {
                           style={{ fontFamily:sf, fontSize:8, fill:'rgba(0,0,0,0.3)' }}>/ 100</text>
                       </svg>
                     </div>
+
+                    {/* Category badges floating around */}
+                    <div style={{ position:'relative', height:40, marginBottom:4 }}>
+                      {/* Left side badges */}
+                      <div style={{ position:'absolute', left:8, top:-90, display:'flex', flexDirection:'column', gap:6 }}>
+                        <div style={{ background:'rgba(10,132,255,0.12)', borderRadius:8, padding:'4px 8px', fontSize:11, fontWeight:600, color:BLUE }}>💧 Water · 4/12</div>
+                        <div style={{ background:'rgba(191,90,242,0.12)', borderRadius:8, padding:'4px 8px', fontSize:11, fontWeight:600, color:'#BF5AF2' }}>🌙 Sleep · 6/18</div>
+                        <div style={{ background:'rgba(255,69,58,0.12)', borderRadius:8, padding:'4px 8px', fontSize:11, fontWeight:600, color:'#FF453A' }}>🧘 Stress · 4/14</div>
+                      </div>
+                      {/* Right side badges */}
+                      <div style={{ position:'absolute', right:8, top:-90, display:'flex', flexDirection:'column', gap:6 }}>
+                        <div style={{ background:'rgba(255,159,10,0.12)', borderRadius:8, padding:'4px 8px', fontSize:11, fontWeight:600, color:'#FF9F0A' }}>🏋️ Fitness · 8/20</div>
+                        <div style={{ background:'rgba(48,209,88,0.12)', borderRadius:8, padding:'4px 8px', fontSize:11, fontWeight:600, color:'#30D158' }}>🥗 Nutrition · 7/18</div>
+                        <div style={{ background:'rgba(100,210,255,0.12)', borderRadius:8, padding:'4px 8px', fontSize:11, fontWeight:600, color:'#64D2FF' }}>✨ Skincare · 5/10</div>
+                      </div>
+                    </div>
+
                     {/* Fake bell curve */}
                     <svg viewBox="0 0 300 130" style={{ width:'100%', maxWidth:280, display:'block', margin:'0 auto' }}>
                       <defs>
