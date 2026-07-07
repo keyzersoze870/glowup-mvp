@@ -5,40 +5,30 @@ import { useRouter } from 'next/navigation'
 const sf = `-apple-system, BlinkMacSystemFont, 'SF Pro Display', 'Helvetica Neue', sans-serif`
 const BLUE = '#0A84FF'
 
-// Same scoring logic as dashboard
 function calculateScore(profile: any) {
   let fitness = 0, sleep = 0, nutrition = 0, water = 0, stress = 0, skincare = 0, bmiScore = 0
-
   if (profile.sport === '5+') fitness = 20
   else if (profile.sport === '3-4') fitness = 15
   else if (profile.sport === '1-2') fitness = 8
-
   if (profile.sleep === '7-8') sleep = 18
   else if (profile.sleep === '8+') sleep = 14
   else if (profile.sleep === '5-6') sleep = 6
-
   if (profile.nutrition === 'excellent') nutrition = 18
   else if (profile.nutrition === 'good') nutrition = 14
   else if (profile.nutrition === 'average') nutrition = 7
-
   if (profile.eau === '2+') water = 12
   else if (profile.eau === '1.5-2') water = 9
   else if (profile.eau === '1-1.5') water = 4
-
   if (profile.stress === 'low') stress = 14
   else if (profile.stress === 'moderate') stress = 10
   else if (profile.stress === 'high') stress = 4
-
   if (profile.skincare === 'complete') skincare = 10
   else if (profile.skincare === 'basic') skincare = 5
-
   const bmi = profile.poids && profile.taille ? (profile.poids * 703) / (profile.taille ** 2) : 22
   if (bmi >= 18.5 && bmi < 25) bmiScore = 8
   else if ((bmi >= 25 && bmi < 30) || bmi < 18.5) bmiScore = 4
   else bmiScore = 1
-
-  const total = fitness + sleep + nutrition + water + stress + skincare + bmiScore
-  return total
+  return fitness + sleep + nutrition + water + stress + skincare + bmiScore
 }
 
 function getPercentileAbove(score: number): number {
@@ -47,10 +37,24 @@ function getPercentileAbove(score: number): number {
   return Math.round(100 - (score * 0.88 + (score / 100) * 12))
 }
 
+// ─── ANALYSIS STEPS ───
+const ANALYSIS_STEPS = [
+  { text: 'Scanning facial structure...', icon: '🔬', duration: 700 },
+  { text: 'Analyzing skin texture...', icon: '✨', duration: 650 },
+  { text: 'Evaluating hydration levels...', icon: '💧', duration: 600 },
+  { text: 'Measuring stress markers...', icon: '🧘', duration: 700 },
+  { text: 'Calculating sleep impact...', icon: '🌙', duration: 600 },
+  { text: 'Assessing nutrition balance...', icon: '🥗', duration: 550 },
+  { text: 'Computing overall score...', icon: '⚡', duration: 700 },
+]
+
 export default function PaywallPage() {
   const router = useRouter()
   const [profile, setProfile] = useState<any>(null)
   const [score, setScore] = useState(0)
+  const [phase, setPhase] = useState<'analyzing'|'reveal'>('analyzing')
+  const [analysisStep, setAnalysisStep] = useState(0)
+  const [progress, setProgress] = useState(0)
   const [displayed, setDisplayed] = useState(0)
   const [showPlans, setShowPlans] = useState(false)
   const [selectedPlan, setSelectedPlan] = useState<'weekly'|'monthly'|'yearly'>('weekly')
@@ -63,23 +67,47 @@ export default function PaywallPage() {
     const s = calculateScore(parsed)
     setScore(s)
 
-    // Save score
-    localStorage.setItem('glowup_live_score', JSON.stringify({
-      score: s,
-      lastDate: new Date().toDateString(),
-    }))
+    localStorage.setItem('glowup_live_score', JSON.stringify({ score: s, lastDate: new Date().toDateString() }))
     localStorage.setItem('glowup_score', JSON.stringify({ total: s }))
 
-    // Animate score reveal
+    // Run analysis animation
+    let stepIdx = 0
+    let prog = 0
+    const progInterval = setInterval(() => {
+      prog += 1.8
+      setProgress(Math.min(prog, 100))
+    }, 100)
+
+    const runStep = () => {
+      if (stepIdx >= ANALYSIS_STEPS.length) {
+        clearInterval(progInterval)
+        setProgress(100)
+        setTimeout(() => setPhase('reveal'), 500)
+        return
+      }
+      setAnalysisStep(stepIdx)
+      setTimeout(() => {
+        stepIdx++
+        runStep()
+      }, ANALYSIS_STEPS[stepIdx].duration)
+    }
+    runStep()
+
+    return () => clearInterval(progInterval)
+  }, [])
+
+  // Animate score after reveal
+  useEffect(() => {
+    if (phase !== 'reveal') return
     let cur = 0
     const go = () => {
-      cur += Math.ceil((s - cur) / 8)
-      setDisplayed(Math.min(cur, s))
-      if (cur < s) requestAnimationFrame(go)
+      cur += Math.ceil((score - cur) / 8)
+      setDisplayed(Math.min(cur, score))
+      if (cur < score) requestAnimationFrame(go)
       else setTimeout(() => setShowPlans(true), 600)
     }
-    setTimeout(() => requestAnimationFrame(go), 800)
-  }, [])
+    setTimeout(() => requestAnimationFrame(go), 400)
+  }, [phase, score])
 
   if (!profile) return (
     <div style={{ height:'100svh', background:'#FFFFFF', display:'flex', alignItems:'center', justifyContent:'center' }}>
@@ -88,13 +116,61 @@ export default function PaywallPage() {
     </div>
   )
 
+  // ─── PHASE 1: ANALYZING ───
+  if (phase === 'analyzing') {
+    const step = ANALYSIS_STEPS[analysisStep] || ANALYSIS_STEPS[0]
+    return (
+      <main style={{ height:'100svh', background:'#FFFFFF', fontFamily:sf, display:'flex', flexDirection:'column', alignItems:'center', justifyContent:'center', padding:'0 32px' }}>
+        
+        {/* Pulsing ring */}
+        <div style={{ width:120, height:120, borderRadius:'50%', border:'3px solid rgba(10,132,255,0.15)', display:'flex', alignItems:'center', justifyContent:'center', marginBottom:32, animation:'pulse 2s ease-in-out infinite' }}>
+          <div style={{ width:90, height:90, borderRadius:'50%', border:'3px solid rgba(10,132,255,0.3)', display:'flex', alignItems:'center', justifyContent:'center', animation:'pulse 2s ease-in-out infinite 0.3s' }}>
+            <span style={{ fontSize:36, animation:'pulse 2s ease-in-out infinite 0.6s' }}>{step.icon}</span>
+          </div>
+        </div>
+
+        <p style={{ fontSize:16, fontWeight:600, color:'#1A1A1A', letterSpacing:-0.3, marginBottom:8, textAlign:'center', minHeight:24 }}>
+          {step.text}
+        </p>
+
+        <p style={{ fontSize:12, color:'rgba(0,0,0,0.35)', marginBottom:24 }}>
+          Analyzing {profile.prenom}'s profile...
+        </p>
+
+        {/* Progress bar */}
+        <div style={{ width:'100%', maxWidth:260, height:4, background:'rgba(0,0,0,0.06)', borderRadius:2, overflow:'hidden' }}>
+          <div style={{ height:'100%', width:`${progress}%`, background:BLUE, borderRadius:2, transition:'width 0.1s linear' }} />
+        </div>
+        <p style={{ fontSize:11, color:'rgba(0,0,0,0.25)', marginTop:8 }}>{Math.round(progress)}%</p>
+
+        {/* Analysis details appearing */}
+        <div style={{ marginTop:32, display:'flex', flexDirection:'column', gap:6, width:'100%', maxWidth:260 }}>
+          {ANALYSIS_STEPS.slice(0, analysisStep).map((s, i) => (
+            <div key={i} style={{ display:'flex', alignItems:'center', gap:8, animation:'fadeIn 0.3s ease' }}>
+              <span style={{ color:'#30D158', fontSize:12 }}>✓</span>
+              <span style={{ fontSize:12, color:'rgba(0,0,0,0.35)' }}>{s.text.replace('...', '')}</span>
+            </div>
+          ))}
+        </div>
+
+        <style>{`
+          @keyframes spin { to { transform: rotate(360deg) } }
+          @keyframes pulse { 0%,100% { transform:scale(1); opacity:1 } 50% { transform:scale(1.05); opacity:0.7 } }
+          @keyframes fadeIn { from { opacity:0; transform:translateY(4px) } to { opacity:1; transform:translateY(0) } }
+          * { box-sizing:border-box; margin:0; padding:0; }
+        `}</style>
+      </main>
+    )
+  }
+
+  // ─── PHASE 2: REVEAL + PAYWALL ───
   const pctAbove = Math.max(getPercentileAbove(score), score >= 76 ? 15 : 0)
   const scoreColor = score >= 70 ? '#30D158' : score >= 45 ? '#FF9F0A' : '#FF453A'
+  const scoreLabel = score >= 76 ? 'Elite 👑' : score >= 56 ? 'So close ⚡' : score >= 36 ? 'Wasted potential 😤' : 'Wake up call 🚨'
   const r = 54
   const c = 2 * Math.PI * r
   const offset = c - (displayed / 100) * c
 
-  // Bell curve points
   const w = 300, h = 100
   const bellPts: string[] = []
   for (let i = 0; i <= w; i++) {
@@ -116,24 +192,32 @@ export default function PaywallPage() {
   return (
     <main style={{ minHeight:'100svh', background:'#FFFFFF', fontFamily:sf, display:'flex', flexDirection:'column', alignItems:'center', padding:'60px 24px 40px', overflow:'auto' }}>
 
-      {/* SCORE REVEAL */}
-      <p style={{ fontSize:13, color:'rgba(0,0,0,0.45)', letterSpacing:-0.2, marginBottom:8 }}>
+      <p style={{ fontSize:13, color:'rgba(0,0,0,0.45)', letterSpacing:-0.2, marginBottom:8, animation:'fadeIn 0.5s ease' }}>
         {profile.prenom}, your Glow Up Score is
       </p>
 
-      <svg width={160} height={160} viewBox="0 0 120 120" style={{ marginBottom:4 }}>
-        <circle cx="60" cy="60" r={r} fill="none" stroke="rgba(0,0,0,0.05)" strokeWidth="7"/>
-        <circle cx="60" cy="60" r={r} fill="none" stroke={scoreColor} strokeWidth="7"
-          strokeLinecap="round" strokeDasharray={c} strokeDashoffset={offset}
-          transform="rotate(-90 60 60)" style={{ transition:'stroke-dashoffset 0.03s' }}/>
-        <text x="60" y="57" textAnchor="middle" dominantBaseline="middle"
-          style={{ fontFamily:sf, fontWeight:700, fontSize:28, fill:'#1A1A1A', letterSpacing:-1 }}>{displayed}</text>
-        <text x="60" y="72" textAnchor="middle" dominantBaseline="middle"
-          style={{ fontFamily:sf, fontSize:8, fill:'rgba(0,0,0,0.3)', letterSpacing:0.5 }}>/ 100</text>
-      </svg>
+      {/* SCORE RING — chiffre flouté */}
+      <div style={{ position:'relative', marginBottom:4, animation:'fadeIn 0.8s ease' }}>
+        <svg width={160} height={160} viewBox="0 0 120 120">
+          <circle cx="60" cy="60" r={r} fill="none" stroke="rgba(0,0,0,0.05)" strokeWidth="7"/>
+          <circle cx="60" cy="60" r={r} fill="none" stroke={scoreColor} strokeWidth="7"
+            strokeLinecap="round" strokeDasharray={c} strokeDashoffset={offset}
+            transform="rotate(-90 60 60)" style={{ transition:'stroke-dashoffset 0.03s' }}/>
+          <text x="60" y="57" textAnchor="middle" dominantBaseline="middle"
+            style={{ fontFamily:sf, fontWeight:700, fontSize:28, fill:'#1A1A1A', letterSpacing:-1, filter:'blur(8px)' }}>{displayed}</text>
+          <text x="60" y="72" textAnchor="middle" dominantBaseline="middle"
+            style={{ fontFamily:sf, fontSize:8, fill:'rgba(0,0,0,0.3)', letterSpacing:0.5 }}>/ 100</text>
+        </svg>
+        <div style={{ position:'absolute', inset:0, display:'flex', alignItems:'center', justifyContent:'center' }}>
+          <span style={{ fontSize:11, fontWeight:600, color:'rgba(0,0,0,0.4)', background:'rgba(255,255,255,0.8)', borderRadius:8, padding:'3px 10px' }}>🔒</span>
+        </div>
+      </div>
+
+      {/* SCORE LABEL (visible) */}
+      <span style={{ fontSize:20, fontWeight:800, color:scoreColor, letterSpacing:-0.5, marginBottom:4, animation:'fadeIn 1s ease' }}>{scoreLabel}</span>
 
       {/* BELL CURVE */}
-      <div style={{ width:'100%', maxWidth:300, marginBottom:8 }}>
+      <div style={{ width:'100%', maxWidth:300, marginBottom:8, animation:'fadeIn 1.2s ease' }}>
         <svg viewBox={`0 0 ${w} ${h + 30}`} style={{ width:'100%', height:'auto' }}>
           <defs>
             <linearGradient id="payGrad" x1="0" y1="0" x2="0" y2="1">
@@ -152,11 +236,11 @@ export default function PaywallPage() {
       <p style={{ fontSize:13, color:'#FF453A', fontWeight:600, letterSpacing:-0.2, marginBottom:4 }}>
         {pctAbove}% of users scored higher than you.
       </p>
-      <p style={{ fontSize:12, color:'rgba(0,0,0,0.45)', marginBottom:24, textAlign:'center', lineHeight:1.5, maxWidth:280 }}>
+      <p style={{ fontSize:12, color:'rgba(0,0,0,0.45)', marginBottom:20, textAlign:'center', lineHeight:1.5, maxWidth:280 }}>
         Unlock your personalized plan to improve your score and track your progress daily.
       </p>
 
-      {/* BLURRED BREAKDOWN PREVIEW */}
+      {/* BLURRED BREAKDOWN */}
       <div style={{ width:'100%', maxWidth:340, marginBottom:20, position:'relative' }}>
         <div style={{ filter:'blur(6px)', pointerEvents:'none', userSelect:'none', opacity:0.6 }}>
           {[
@@ -181,9 +265,34 @@ export default function PaywallPage() {
         </div>
       </div>
 
-      {/* PRICING PLANS */}
+      {/* SOCIAL PROOF */}
       {showPlans && (
         <div style={{ width:'100%', maxWidth:340, animation:'fadeIn 0.5s ease' }}>
+          
+          <div style={{ background:'rgba(48,209,88,0.06)', border:'0.5px solid rgba(48,209,88,0.15)', borderRadius:12, padding:'12px 16px', marginBottom:16 }}>
+            <div style={{ display:'flex', flexDirection:'column', gap:8 }}>
+              <div style={{ display:'flex', alignItems:'center', gap:8 }}>
+                <span style={{ fontSize:14 }}>📈</span>
+                <p style={{ fontSize:12, color:'rgba(0,0,0,0.55)', lineHeight:1.4 }}>
+                  <span style={{ fontWeight:700, color:'#1A1A1A' }}>14,289 women</span> improved their score this month
+                </p>
+              </div>
+              <div style={{ display:'flex', alignItems:'center', gap:8 }}>
+                <span style={{ fontSize:14 }}>⭐</span>
+                <p style={{ fontSize:12, color:'rgba(0,0,0,0.55)', lineHeight:1.4 }}>
+                  Average improvement: <span style={{ fontWeight:700, color:'#30D158' }}>+23 points</span> in 4 weeks
+                </p>
+              </div>
+              <div style={{ display:'flex', alignItems:'center', gap:8 }}>
+                <span style={{ fontSize:14 }}>💬</span>
+                <p style={{ fontSize:12, color:'rgba(0,0,0,0.55)', lineHeight:1.4, fontStyle:'italic' }}>
+                  "I went from 38 to 71 in 6 weeks. I finally feel in control." — <span style={{ fontWeight:600 }}>Jessica, 28</span>
+                </p>
+              </div>
+            </div>
+          </div>
+
+          {/* PRICING */}
           <div style={{ display:'flex', flexDirection:'column', gap:8, marginBottom:16 }}>
             {(['weekly', 'monthly', 'yearly'] as const).map(plan => (
               <button key={plan} onClick={() => setSelectedPlan(plan)}
@@ -215,7 +324,6 @@ export default function PaywallPage() {
             ))}
           </div>
 
-          {/* CTA */}
           <button
             style={{ width:'100%', padding:'16px', background:BLUE, border:'none', borderRadius:14, color:'#FFFFFF', fontSize:16, fontWeight:600, cursor:'pointer', fontFamily:sf, letterSpacing:-0.3, marginBottom:8 }}>
             Start free trial — then {plans[selectedPlan].price}{plans[selectedPlan].per}
@@ -230,6 +338,7 @@ export default function PaywallPage() {
       <style>{`
         @keyframes spin { to { transform: rotate(360deg) } }
         @keyframes fadeIn { from { opacity:0; transform:translateY(10px) } to { opacity:1; transform:translateY(0) } }
+        @keyframes pulse { 0%,100% { transform:scale(1); opacity:1 } 50% { transform:scale(1.05); opacity:0.7 } }
         ::-webkit-scrollbar { display: none; }
         * { box-sizing:border-box; margin:0; padding:0; }
       `}</style>
