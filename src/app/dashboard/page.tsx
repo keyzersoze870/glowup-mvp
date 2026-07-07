@@ -77,40 +77,91 @@ function getPercentileAbove(score: number): number {
 
 // ─── SEGMENT MESSAGES ───
 function getSegment(score: number, name: string, weakest: string) {
-  const weakLabels: Record<string, string> = {
-    fitness: 'fitness routine', sleep: 'sleep schedule', nutrition: 'nutrition',
-    water: 'hydration', stress: 'stress levels', skincare: 'skincare routine', bmi: 'body composition'
-  }
-  const weak = weakLabels[weakest] || 'overall habits'
   const pctAbove = getPercentileAbove(score)
 
-  if (score < 36) return {
-    label: 'Wake up call 🚨',
-    color: '#FF453A',
-    hook: `${pctAbove}% of users scored higher than you.`,
-    hookBold: `Your body is sending you signals — are you listening?`,
-    message: `${name}, your ${weak} alone is dragging your entire score down. Fixing just this one area could add +15 points in 2 weeks.`,
+  // ─── CRITICAL (0-35) ───
+  if (score < 36) {
+    const msgs: Record<string, string> = {
+      fitness: `${name}, your metabolism is slowing down every week you skip. Women who train 3x/week see visible body changes in 21 days.`,
+      sleep: `${name}, under 5 hours is aging your skin 2x faster. One week of proper sleep and your dark circles start fading.`,
+      nutrition: `${name}, fast food is breaking down your collagen. Your skin, hair, and nails are literally made of what you eat.`,
+      water: `${name}, dehydration makes your skin look 3-5 years older. 8 cups a day and you'll see the difference in your face within a week.`,
+      stress: `${name}, chronic stress spikes cortisol, which stores fat around your belly and breaks out your skin. It's undoing everything else you do right.`,
+      skincare: `${name}, without a routine, UV damage and dead cells are building up daily. Your skin is aging invisibly right now.`,
+      bmi: `${name}, your current weight is putting extra pressure on your joints, your energy, and your confidence. Small changes compound fast.`,
+    }
+    return {
+      label: 'Wake up call 🚨',
+      color: '#FF453A',
+      hook: `${pctAbove}% of users scored higher than you.`,
+      hookBold: `Your body is sending you signals — are you listening?`,
+      message: msgs[weakest] || msgs.fitness,
+    }
   }
-  if (score < 56) return {
-    label: 'Wasted potential 😤',
-    color: '#FF9F0A',
-    hook: `${pctAbove}% of users scored higher than you.`,
-    hookBold: `You have the foundation — you're just not using it.`,
-    message: `${name}, your ${weak} is holding you back. Everything else is decent, but this one weak spot is sabotaging your progress.`,
+
+  // ─── WASTED POTENTIAL (36-55) ───
+  if (score < 56) {
+    const msgs: Record<string, string> = {
+      fitness: `${name}, you have the discipline for everything else — but skipping workouts is the one thing keeping you average.`,
+      sleep: `${name}, you're doing the work during the day but destroying it at night. Your body repairs and glows while you sleep — and you're not giving it the chance.`,
+      nutrition: `${name}, your routine is solid but your diet is canceling it out. You can't out-train a bad diet, and your skin knows it.`,
+      water: `${name}, you're eating right, training, taking care of your skin — but dehydration is silently undermining all of it.`,
+      stress: `${name}, everything else is decent, but stress is the silent killer of results. High cortisol blocks fat loss, triggers breakouts, and ruins your sleep.`,
+      skincare: `${name}, you're investing in your body but ignoring your face. No skincare means every other effort shows less.`,
+      bmi: `${name}, your habits are improving but your body hasn't caught up yet. Consistency for 4 weeks and the mirror will tell you.`,
+    }
+    return {
+      label: 'Wasted potential 😤',
+      color: '#FF9F0A',
+      hook: `${pctAbove}% of users scored higher than you.`,
+      hookBold: `You have the foundation — you're just not using it.`,
+      message: msgs[weakest] || msgs.fitness,
+    }
   }
-  if (score < 76) return {
-    label: 'So close ⚡',
-    color: '#FF9F0A',
-    hook: `${pctAbove}% of users scored higher than you.`,
-    hookBold: `Elite is within reach — don't quit now.`,
-    message: `${name}, your ${weak} is your only bottleneck. Fix that and you cross into Elite territory.`,
+
+  // ─── SO CLOSE (56-75) ───
+  if (score < 76) {
+    const msgs: Record<string, string> = {
+      fitness: `${name}, you're one habit away from Elite. Add 3 sessions a week and watch everything else accelerate.`,
+      sleep: `${name}, you're so close — but bad sleep is the ceiling you keep hitting. Fix your sleep and your score jumps overnight. Literally.`,
+      nutrition: `${name}, your only gap is nutrition. Clean that up and you'll feel the difference in energy, skin, and mood within days.`,
+      water: `${name}, this close to Elite and it's water holding you back? That's the easiest fix on this list. Start today.`,
+      stress: `${name}, stress is the only thing between you and Elite. One breathing routine, 5 minutes a day, can shift everything.`,
+      skincare: `${name}, you're almost Elite but your skin is letting you down. A simple morning + evening routine closes the gap.`,
+      bmi: `${name}, you're doing almost everything right. A small adjustment in portions and consistency puts you in the top 15%.`,
+    }
+    return {
+      label: 'So close ⚡',
+      color: '#FF9F0A',
+      hook: `${pctAbove}% of users scored higher than you.`,
+      hookBold: `Elite is within reach — don't quit now.`,
+      message: msgs[weakest] || msgs.fitness,
+    }
   }
+
+  // ─── ELITE (76-100) ───
+  const elitePct = Math.max(pctAbove, 15)
+  const msgs: Record<string, string> = {
+    fitness: `${name}, you're Elite — but stop training for 2 weeks and your muscle starts breaking down. Maintaining is harder than building. Don't let it slip.`,
+    sleep: `${name}, Elite today, but your sleep is your weak link. One month of bad nights and your skin, focus, and metabolism will drag you back to average.`,
+    nutrition: `${name}, you've earned Elite, but your nutrition is the crack in the armor. One bad habit left unchecked and your body will correct your score for you.`,
+    water: `${name}, Elite with low hydration is a ticking clock. Your skin will show it first — fine lines, dullness, tired eyes. The glow fades faster than you think.`,
+    stress: `${name}, Elite doesn't mean invincible. Stress is the #1 reason Elite users drop 20+ points in a single month. Burnout doesn't warn you — it just hits.`,
+    skincare: `${name}, you're in the top 15%, but without skincare you're aging faster than your score suggests. What you see in the mirror today won't last without protection.`,
+    bmi: `${name}, Elite now, but your body composition is shifting. Metabolism slows every year after 25 — what works today won't work next year without a plan.`,
+  }
+
+  const noWeakness = score >= 90
+  const eliteMsg = noWeakness
+    ? `${name}, you're in the top 15%. But Elite is the hardest level to maintain — 91% of Elite users drop back within 60 days without a structured plan. The question isn't how you got here. It's whether you'll still be here next month.`
+    : (msgs[weakest] || msgs.fitness)
+
   return {
     label: 'Elite 👑',
     color: '#30D158',
-    hook: `Only ${pctAbove}% of users scored higher than you.`,
+    hook: `${elitePct}% of users scored higher than you.`,
     hookBold: `Most people would kill for this score.`,
-    message: `${name}, you're already ahead of ${100 - pctAbove}% of users. The personalized plan will help you stay there and push to 95+.`,
+    message: eliteMsg,
   }
 }
 
