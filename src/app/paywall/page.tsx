@@ -1,75 +1,69 @@
 'use client'
 import { useEffect, useState } from 'react'
 import { useRouter } from 'next/navigation'
+import { supabase } from '@/lib/supabase'
 
 const sf = `-apple-system, BlinkMacSystemFont, 'SF Pro Display', 'Helvetica Neue', sans-serif`
 const BLUE = '#0A84FF'
-const ACCENT = '#90D5FF'
+const ACCENT = '#4A9FE5'
 const RED = '#FF453A'
 
-function calculateScore(p: any) {
-  let sleep=0,stress=0,exercise=0,nutrition=0,water=0,outdoor=0,sugar=0
-  // Sleep /20
+function calculateScore(p:any){
+  let sleep=0,stress=0,exercise=0,nutrition=0,water=0,outdoor=0
   if(p.sleepHours==='7-8') sleep=14; else if(p.sleepHours==='8+') sleep=11; else if(p.sleepHours==='5-6') sleep=5
   if(p.bedtime==='before10') sleep+=6; else if(p.bedtime==='10-11') sleep+=4; else if(p.bedtime==='11-12') sleep+=2
-  // Stress /18
   if(p.stressLevel==='low') stress=12; else if(p.stressLevel==='moderate') stress=8; else if(p.stressLevel==='high') stress=3
   if(p.relaxation==='regular') stress+=6; else if(p.relaxation==='sometimes') stress+=3
-  // Exercise /16
   if(p.exercise==='3-4') exercise=12; else if(p.exercise==='5+') exercise=16; else if(p.exercise==='1-2') exercise=6
   if(p.outdoor==='60+') exercise=Math.min(exercise+4,16); else if(p.outdoor==='30-60') exercise=Math.min(exercise+3,16); else if(p.outdoor==='15-30') exercise=Math.min(exercise+1,16)
-  // Nutrition /16
   if(p.diet==='good') nutrition=10; else if(p.diet==='average') nutrition=5
   if(p.sugar==='low') nutrition+=6; else if(p.sugar==='moderate') nutrition+=3
-  // Water /10
   if(p.water==='8+') water=10; else if(p.water==='6-8') water=7; else if(p.water==='4-6') water=4
-  // Outdoor /10
   if(p.outdoor==='60+') outdoor=10; else if(p.outdoor==='30-60') outdoor=7; else if(p.outdoor==='15-30') outdoor=4; else outdoor=1
-  // Caffeine penalty
-  let caffeinePenalty=0
-  if(p.caffeine==='heavy') caffeinePenalty=6; else if(p.caffeine==='moderate') caffeinePenalty=2
-
-  const total = Math.max(0, sleep+stress+exercise+nutrition+water+outdoor-caffeinePenalty)
-  const categories = { sleep:Math.min(sleep,20), stress:Math.min(stress,18), exercise:Math.min(exercise,16), nutrition:Math.min(nutrition,16), water, outdoor }
-  const maxes:Record<string,number> = { sleep:20, stress:18, exercise:16, nutrition:16, water:10, outdoor:10 }
-  let weakest='sleep', wr=1
-  for(const[k,v] of Object.entries(categories)){const r=v/maxes[k]; if(r<wr){wr=r;weakest=k}}
-  return { total:Math.min(total,100), categories, weakest }
+  let caffPen=0; if(p.caffeine==='heavy') caffPen=6; else if(p.caffeine==='moderate') caffPen=2
+  const total=Math.max(0,Math.min(100,sleep+stress+exercise+nutrition+water+outdoor-caffPen))
+  const cats={sleep:Math.min(sleep,20),stress:Math.min(stress,18),exercise:Math.min(exercise,16),nutrition:Math.min(nutrition,16),water,outdoor}
+  const maxes:Record<string,number>={sleep:20,stress:18,exercise:16,nutrition:16,water:10,outdoor:10}
+  let w='sleep',wr=1; for(const[k,v] of Object.entries(cats)){const r=v/maxes[k];if(r<wr){wr=r;w=k}}
+  return{total,categories:cats,weakest:w}
 }
+function getPercentileAbove(s:number):number{return Math.max(15,Math.round(100-(s*0.88+(s/100)*12)))}
 
-function getPercentileAbove(s:number):number{ return Math.max(15, Math.round(100-(s*0.88+(s/100)*12))) }
-
-const ANALYSIS_STEPS = [
-  { text:'Scanning facial cortisol signs...', icon:'🔬', duration:600 },
-  { text:'Measuring stress markers...', icon:'😰', duration:550 },
-  { text:'Analyzing sleep impact...', icon:'🌙', duration:500 },
-  { text:'Evaluating diet & hydration...', icon:'🥗', duration:550 },
-  { text:'Calculating cortisol level...', icon:'⚡', duration:800 },
+const ANALYSIS_STEPS=[
+  {text:'Scanning facial cortisol signs...',icon:'🔬',duration:600},
+  {text:'Measuring stress markers...',icon:'😰',duration:550},
+  {text:'Analyzing sleep impact...',icon:'🌙',duration:500},
+  {text:'Evaluating diet & hydration...',icon:'🥗',duration:550},
+  {text:'Calculating cortisol level...',icon:'⚡',duration:800},
 ]
 
-export default function PaywallPage() {
-  const router = useRouter()
-  const [profile, setProfile] = useState<any>(null)
-  const [score, setScore] = useState(0)
-  const [weakest, setWeakest] = useState('sleep')
-  const [phase, setPhase] = useState<'analyzing'|'reveal'>('analyzing')
-  const [analysisStep, setAnalysisStep] = useState(0)
-  const [progress, setProgress] = useState(0)
-  const [displayed, setDisplayed] = useState(0)
-  const [showPlans, setShowPlans] = useState(false)
-  const [selectedPlan, setSelectedPlan] = useState<'weekly'|'monthly'|'yearly'>('weekly')
+export default function PaywallPage(){
+  const router=useRouter()
+  const[profile,setProfile]=useState<any>(null)
+  const[score,setScore]=useState(0)
+  const[weakest,setWeakest]=useState('sleep')
+  const[phase,setPhase]=useState<'analyzing'|'reveal'>('analyzing')
+  const[analysisStep,setAnalysisStep]=useState(0)
+  const[progress,setProgress]=useState(0)
+  const[displayed,setDisplayed]=useState(0)
+  const[showPlans,setShowPlans]=useState(false)
+  const[selectedPlan,setSelectedPlan]=useState<'weekly'|'monthly'|'yearly'>('yearly')
+  const[email,setEmail]=useState('')
+  const[emailSent,setEmailSent]=useState(false)
 
-  useEffect(() => {
-    const p = localStorage.getItem('glowup_profile')
+  const isValidEmail=(e:string)=>/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(e)
+
+  useEffect(()=>{
+    const p=localStorage.getItem('glowup_profile')
     if(!p){router.push('/onboarding');return}
-    const parsed = JSON.parse(p); setProfile(parsed)
-    const result = calculateScore(parsed); setScore(result.total); setWeakest(result.weakest)
-    localStorage.setItem('glowup_live_score', JSON.stringify({score:result.total,lastDate:new Date().toDateString()}))
-    localStorage.setItem('glowup_score', JSON.stringify({total:result.total}))
-    localStorage.setItem('glowup_weakest', result.weakest)
+    const parsed=JSON.parse(p);setProfile(parsed)
+    const result=calculateScore(parsed);setScore(result.total);setWeakest(result.weakest)
+    localStorage.setItem('glowup_live_score',JSON.stringify({score:result.total,lastDate:new Date().toDateString()}))
+    localStorage.setItem('glowup_score',JSON.stringify({total:result.total}))
+    localStorage.setItem('glowup_weakest',result.weakest)
 
-    let stepIdx=0, prog=0
-    const progInterval = setInterval(()=>{prog+=1.8;setProgress(Math.min(prog,100))},100)
+    let stepIdx=0,prog=0
+    const progInterval=setInterval(()=>{prog+=1.8;setProgress(Math.min(prog,100))},100)
     const runStep=()=>{
       if(stepIdx>=ANALYSIS_STEPS.length){clearInterval(progInterval);setProgress(100);setTimeout(()=>setPhase('reveal'),500);return}
       setAnalysisStep(stepIdx)
@@ -86,22 +80,30 @@ export default function PaywallPage() {
     setTimeout(()=>requestAnimationFrame(go),400)
   },[phase,score])
 
-  if(!profile) return <div style={{height:'100svh',background:'#FFFFFF',display:'flex',alignItems:'center',justifyContent:'center'}}><div style={{width:24,height:24,border:'2px solid rgba(0,0,0,0.08)',borderTopColor:RED,borderRadius:'50%',animation:'spin 0.8s linear infinite'}}/><style>{`@keyframes spin{to{transform:rotate(360deg)}}`}</style></div>
+  const handleEmailSubmit=async()=>{
+    if(!isValidEmail(email))return
+    setEmailSent(true)
+    try{
+      await supabase.auth.signInWithOtp({email,options:{emailRedirectTo:`${window.location.origin}/auth/callback`}})
+    }catch(err){console.error('Email error:',err)}
+  }
 
-  // ANALYZING PHASE
+  if(!profile)return(<div style={{height:'100svh',background:'#FFFFFF',display:'flex',alignItems:'center',justifyContent:'center'}}><div style={{width:24,height:24,border:'2px solid rgba(0,0,0,0.08)',borderTopColor:ACCENT,borderRadius:'50%',animation:'spin 0.8s linear infinite'}}/><style>{`@keyframes spin{to{transform:rotate(360deg)}}`}</style></div>)
+
+  // ─── ANALYZING PHASE ───
   if(phase==='analyzing'){
     const step=ANALYSIS_STEPS[analysisStep]||ANALYSIS_STEPS[0]
     return(
       <main style={{height:'100svh',background:'#FFFFFF',fontFamily:sf,display:'flex',flexDirection:'column',alignItems:'center',justifyContent:'center',padding:'0 32px'}}>
-        <div style={{width:120,height:120,borderRadius:'50%',border:'3px solid rgba(255,69,58,0.15)',display:'flex',alignItems:'center',justifyContent:'center',marginBottom:32,animation:'pulse 2s ease-in-out infinite'}}>
-          <div style={{width:90,height:90,borderRadius:'50%',border:'3px solid rgba(255,69,58,0.3)',display:'flex',alignItems:'center',justifyContent:'center',animation:'pulse 2s ease-in-out infinite 0.3s'}}>
+        <div style={{width:120,height:120,borderRadius:'50%',border:`3px solid rgba(74,159,229,0.15)`,display:'flex',alignItems:'center',justifyContent:'center',marginBottom:32,animation:'pulse 2s ease-in-out infinite'}}>
+          <div style={{width:90,height:90,borderRadius:'50%',border:`3px solid rgba(74,159,229,0.3)`,display:'flex',alignItems:'center',justifyContent:'center',animation:'pulse 2s ease-in-out infinite 0.3s'}}>
             <span style={{fontSize:36,animation:'pulse 2s ease-in-out infinite 0.6s'}}>{step.icon}</span>
           </div>
         </div>
         <p style={{fontSize:16,fontWeight:600,color:'#1A1A1A',letterSpacing:-0.3,marginBottom:8,textAlign:'center'}}>{step.text}</p>
         <p style={{fontSize:12,color:'rgba(0,0,0,0.35)',marginBottom:24}}>Processing {profile.prenom}'s data...</p>
         <div style={{width:'100%',maxWidth:260,height:4,background:'rgba(0,0,0,0.06)',borderRadius:2,overflow:'hidden'}}>
-          <div style={{height:'100%',width:`${progress}%`,background:RED,borderRadius:2,transition:'width 0.1s linear'}}/>
+          <div style={{height:'100%',width:`${progress}%`,background:ACCENT,borderRadius:2,transition:'width 0.1s linear'}}/>
         </div>
         <p style={{fontSize:11,color:'rgba(0,0,0,0.25)',marginTop:8}}>{Math.round(progress)}%</p>
         <div style={{marginTop:32,display:'flex',flexDirection:'column',gap:6,width:'100%',maxWidth:260}}>
@@ -117,18 +119,17 @@ export default function PaywallPage() {
     )
   }
 
-  // REVEAL + PAYWALL
-  const pctAbove = getPercentileAbove(score)
-  const scoreColor = score>=70?'#30D158':score>=45?'#FF9F0A':'#FF453A'
-  const scoreLabel = score>=70?'Low cortisol 😌':score>=45?'Elevated ⚠️':score>=25?'Danger zone 🔴':'Cortisol overload 🚨'
+  // ─── REVEAL + EMAIL + PAYWALL (ALL IN ONE) ───
+  const pctAbove=getPercentileAbove(score)
+  const scoreColor=score>=70?'#30D158':score>=45?'#FF9F0A':RED
+  const scoreLabel=score>=70?'Low cortisol 😌':score>=45?'Elevated ⚠️':score>=25?'Danger zone 🔴':'Cortisol overload 🚨'
   const r=54,c=2*Math.PI*r,offset=c-(displayed/100)*c
-
   const w=300,h=100,bellPts:string[]=[]
   for(let i=0;i<=w;i++){const x=(i/w)*6-3;const y=Math.exp(-0.5*x*x)/Math.sqrt(2*Math.PI);bellPts.push(`${i},${h-y*h*2.2}`)}
   const markerPos=Math.min(Math.max(score,5),95),markerX=(markerPos/100)*w,mx=(markerPos/100)*6-3
   const markerY=h-(Math.exp(-0.5*mx*mx)/Math.sqrt(2*Math.PI))*h*2.2
-
   const weakLabels:Record<string,string>={sleep:'sleep',stress:'stress levels',exercise:'lack of movement',nutrition:'diet',water:'dehydration',outdoor:'lack of nature exposure'}
+
   const plans={
     weekly:{price:'$3.99',per:'/week',total:'$3.99 billed weekly',savings:''},
     monthly:{price:'$9.99',per:'/month',total:'$9.99 billed monthly',savings:'Save 38%'},
@@ -137,11 +138,12 @@ export default function PaywallPage() {
 
   return(
     <main style={{minHeight:'100svh',background:'#FFFFFF',fontFamily:sf,display:'flex',flexDirection:'column',alignItems:'center',padding:'60px 24px 40px',overflow:'auto'}}>
+
+      {/* SCORE */}
       <p style={{fontSize:13,color:'rgba(0,0,0,0.45)',letterSpacing:-0.2,marginBottom:8,animation:'fadeIn 0.5s ease'}}>
         {profile.prenom}, your Cortisol Score is
       </p>
-
-      <div style={{position:'relative',marginBottom:4,animation:'fadeIn 0.8s ease'}}>
+      <div style={{marginBottom:4,animation:'fadeIn 0.8s ease'}}>
         <svg width={160} height={160} viewBox="0 0 120 120">
           <circle cx="60" cy="60" r={r} fill="none" stroke="rgba(0,0,0,0.05)" strokeWidth="7"/>
           <circle cx="60" cy="60" r={r} fill="none" stroke={scoreColor} strokeWidth="7" strokeLinecap="round" strokeDasharray={c} strokeDashoffset={offset} transform="rotate(-90 60 60)" style={{transition:'stroke-dashoffset 0.03s'}}/>
@@ -149,9 +151,9 @@ export default function PaywallPage() {
           <text x="60" y="72" textAnchor="middle" dominantBaseline="middle" style={{fontFamily:sf,fontSize:8,fill:'rgba(0,0,0,0.3)',letterSpacing:0.5}}>/ 100</text>
         </svg>
       </div>
-
       <span style={{fontSize:20,fontWeight:800,color:scoreColor,letterSpacing:-0.5,marginBottom:4,animation:'fadeIn 1s ease'}}>{scoreLabel}</span>
 
+      {/* BELL CURVE */}
       <div style={{width:'100%',maxWidth:300,marginBottom:8,animation:'fadeIn 1.2s ease'}}>
         <svg viewBox={`0 0 ${w} ${h+30}`} style={{width:'100%',height:'auto'}}>
           <defs><linearGradient id="payGrad" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stopColor={scoreColor} stopOpacity="0.3"/><stop offset="100%" stopColor={scoreColor} stopOpacity="0.03"/></linearGradient></defs>
@@ -173,29 +175,78 @@ export default function PaywallPage() {
         Your personalized 30-day plan can reduce your cortisol by up to 95% and visibly slim your face.
       </p>
 
-      {/* BLURRED BREAKDOWN */}
-      <div style={{width:'100%',maxWidth:340,marginBottom:16,position:'relative'}}>
-        <div style={{filter:'blur(6px)',pointerEvents:'none',userSelect:'none',opacity:0.6}}>
+      {/* BLURRED DETAILED LIST */}
+      <div style={{width:'100%',maxWidth:340,marginBottom:12,position:'relative'}}>
+        <div style={{filter:'blur(5px)',pointerEvents:'none',userSelect:'none',opacity:0.55}}>
           {[
-            {icon:'😴',label:'Sleep',val:'4',max:'20',color:RED},
-            {icon:'😰',label:'Stress',val:'6',max:'18',color:'#FF9F0A'},
-            {icon:'🥗',label:'Nutrition',val:'7',max:'16',color:'#30D158'},
-          ].map(c=>(
-            <div key={c.label} style={{background:'rgba(0,0,0,0.04)',borderRadius:12,padding:'12px 14px',marginBottom:6,display:'flex',alignItems:'center',justifyContent:'space-between'}}>
-              <div style={{display:'flex',alignItems:'center',gap:8}}><span style={{fontSize:16}}>{c.icon}</span><span style={{fontSize:13,fontWeight:600,color:'#1A1A1A'}}>{c.label}</span></div>
-              <span style={{fontSize:16,fontWeight:700,color:c.color}}>{c.val}<span style={{fontSize:10,color:'rgba(0,0,0,0.3)'}}>/{c.max}</span></span>
+            {icon:'😴',label:'Sleep Recovery Score',val:'4/20',color:RED},
+            {icon:'😰',label:'Stress & Anxiety Level',val:'6/18',color:'#FF9F0A'},
+            {icon:'🏃',label:'Movement & Exercise',val:'12/16',color:'#30D158'},
+            {icon:'🥗',label:'Nutrition & Diet Quality',val:'7/16',color:'#30D158'},
+            {icon:'💧',label:'Hydration Level',val:'4/10',color:BLUE},
+            {icon:'🌿',label:'Nature & Outdoor Exposure',val:'3/10',color:'#64D2FF'},
+            {icon:'☕',label:'Caffeine Impact',val:'-6',color:RED},
+            {icon:'📊',label:'Cortisol Trend (7 days)',val:'↗ Rising',color:RED},
+            {icon:'🧬',label:'Skin Aging Risk',val:'High',color:RED},
+            {icon:'💤',label:'Recovery Quality',val:'Poor',color:'#FF9F0A'},
+            {icon:'🎯',label:'30-Day Improvement Plan',val:'Ready',color:'#30D158'},
+            {icon:'📈',label:'Projected Score in 30 days',val:'78/100',color:'#30D158'},
+          ].map((item,i)=>(
+            <div key={i} style={{display:'flex',alignItems:'center',justifyContent:'space-between',padding:'8px 12px',background:i%2===0?'rgba(0,0,0,0.03)':'transparent',borderRadius:8,marginBottom:2}}>
+              <div style={{display:'flex',alignItems:'center',gap:8}}>
+                <span style={{fontSize:14}}>{item.icon}</span>
+                <span style={{fontSize:12,fontWeight:500,color:'#1A1A1A'}}>{item.label}</span>
+              </div>
+              <span style={{fontSize:12,fontWeight:700,color:item.color}}>{item.val}</span>
             </div>
           ))}
         </div>
         <div style={{position:'absolute',inset:0,display:'flex',alignItems:'center',justifyContent:'center'}}>
-          <div style={{background:'rgba(255,255,255,0.9)',borderRadius:12,padding:'8px 16px',display:'flex',alignItems:'center',gap:6}}>
-            <span style={{fontSize:14}}>🔒</span>
-            <span style={{fontSize:12,fontWeight:600,color:'#1A1A1A'}}>Subscribe to reveal full report</span>
+          <div style={{background:'rgba(255,255,255,0.9)',borderRadius:16,padding:'10px 20px',display:'flex',alignItems:'center',gap:8,boxShadow:'0 2px 12px rgba(0,0,0,0.08)'}}>
+            <span style={{fontSize:16}}>🔒</span>
+            <span style={{fontSize:13,fontWeight:600,color:'#1A1A1A',letterSpacing:-0.3}}>12 insights waiting for you</span>
           </div>
         </div>
-        <button onClick={()=>document.querySelector('#pricing')?.scrollIntoView({behavior:'smooth'})} style={{width:'100%',padding:'12px',background:ACCENT,border:'none',borderRadius:12,color:'#FFFFFF',fontSize:13,fontWeight:600,cursor:'pointer',fontFamily:sf,letterSpacing:-0.2,marginTop:8}}>
-          Improve my cortisol score →
-        </button>
+      </div>
+
+      {/* CTA under blurred zone */}
+      <button onClick={()=>document.querySelector('#signup')?.scrollIntoView({behavior:'smooth'})} style={{width:'100%',maxWidth:340,padding:'12px',background:ACCENT,border:'none',borderRadius:12,color:'#FFFFFF',fontSize:14,fontWeight:600,cursor:'pointer',fontFamily:sf,letterSpacing:-0.2,marginBottom:20}}>
+        Improve my cortisol score →
+      </button>
+
+      {/* EMAIL + SAVE SECTION */}
+      <div id="signup" style={{width:'100%',maxWidth:340,marginBottom:16}}>
+        <p style={{fontSize:12,color:RED,fontWeight:500,textAlign:'center',marginBottom:4,letterSpacing:-0.2}}>
+          ⚠️ Your cortisol report expires in 10 minutes
+        </p>
+        <p style={{fontSize:11,color:'rgba(0,0,0,0.3)',textAlign:'center',marginBottom:10}}>
+          Enter your email to save your results and unlock your plan.
+        </p>
+
+        {!emailSent ? (
+          <div style={{display:'flex',flexDirection:'column',gap:8}}>
+            <button onClick={async()=>{
+              localStorage.setItem('glowup_email_done','true')
+              setEmailSent(true)
+              await supabase.auth.signInWithOAuth({provider:'google',options:{redirectTo:`${window.location.origin}/auth/callback`}})
+            }} style={{width:'100%',padding:'14px',background:'#F5F5F7',border:'none',borderRadius:14,color:'#000',fontSize:15,fontWeight:600,cursor:'pointer',fontFamily:sf,display:'flex',alignItems:'center',justifyContent:'center',gap:10}}>
+              <svg width="18" height="18" viewBox="0 0 18 18"><path fill="#4285F4" d="M16.51 8H8.98v3h4.3c-.18 1-.74 1.48-1.6 2.04v2.01h2.6a7.8 7.8 0 0 0 2.38-5.88c0-.57-.05-.66-.15-1.18z"/><path fill="#34A853" d="M8.98 17c2.16 0 3.97-.72 5.3-1.94l-2.6-2a4.8 4.8 0 0 1-7.18-2.54H1.83v2.07A8 8 0 0 0 8.98 17z"/><path fill="#FBBC05" d="M4.5 10.52a4.8 4.8 0 0 1 0-3.04V5.41H1.83a8 8 0 0 0 0 7.18l2.67-2.07z"/><path fill="#EA4335" d="M8.98 4.18c1.17 0 2.23.4 3.06 1.2l2.3-2.3A8 8 0 0 0 1.83 5.4L4.5 7.49a4.77 4.77 0 0 1 4.48-3.31z"/></svg>
+              Continue with Google
+            </button>
+            <div style={{display:'flex',alignItems:'center',gap:12}}><div style={{flex:1,height:'0.5px',background:'rgba(0,0,0,0.08)'}}/><span style={{fontSize:12,color:'rgba(0,0,0,0.3)'}}>or</span><div style={{flex:1,height:'0.5px',background:'rgba(0,0,0,0.08)'}}/></div>
+            <input type="email" placeholder="your@email.com" value={email} onChange={e=>setEmail(e.target.value)}
+              style={{width:'100%',padding:'14px 16px',background:'rgba(0,0,0,0.05)',border:`0.5px solid ${isValidEmail(email)?ACCENT:'rgba(0,0,0,0.1)'}`,borderRadius:14,color:'#1A1A1A',fontSize:16,fontFamily:sf,outline:'none',letterSpacing:-0.2}}/>
+            <button onClick={()=>{handleEmailSubmit();setEmailSent(true)}} disabled={!isValidEmail(email)}
+              style={{width:'100%',padding:'14px',background:!isValidEmail(email)?'rgba(0,0,0,0.07)':ACCENT,border:'none',borderRadius:14,color:!isValidEmail(email)?'rgba(0,0,0,0.3)':'#fff',fontSize:15,fontWeight:600,cursor:!isValidEmail(email)?'default':'pointer',fontFamily:sf,letterSpacing:-0.3}}>
+              Save my results
+            </button>
+          </div>
+        ) : (
+          <div style={{background:'rgba(48,209,88,0.08)',border:'0.5px solid rgba(48,209,88,0.2)',borderRadius:14,padding:'14px',textAlign:'center'}}>
+            <span style={{fontSize:20}}>✓</span>
+            <p style={{fontSize:13,fontWeight:600,color:'#30D158',marginTop:4}}>Results saved! Now unlock your plan ↓</p>
+          </div>
+        )}
       </div>
 
       {/* SOCIAL PROOF */}
@@ -218,15 +269,17 @@ export default function PaywallPage() {
             </div>
           </div>
 
+          {/* PLANS */}
           <div style={{display:'flex',flexDirection:'column',gap:8,marginBottom:16}}>
             {(['weekly','monthly','yearly'] as const).map(plan=>(
               <button key={plan} onClick={()=>setSelectedPlan(plan)} style={{
-                width:'100%',padding:'14px 16px',background:selectedPlan===plan?'rgba(255,69,58,0.08)':'rgba(0,0,0,0.04)',
+                width:'100%',padding:'14px 16px',background:selectedPlan===plan?'rgba(74,159,229,0.1)':'rgba(0,0,0,0.04)',
                 border:`1.5px solid ${selectedPlan===plan?ACCENT:'rgba(0,0,0,0.08)'}`,borderRadius:14,cursor:'pointer',fontFamily:sf,
-                display:'flex',alignItems:'center',justifyContent:'space-between',transition:'all 0.15s',
+                display:'flex',alignItems:'center',justifyContent:'space-between',transition:'all 0.15s',position:'relative',
               }}>
+                {plan==='yearly'&&<div style={{position:'absolute',top:-10,left:'50%',transform:'translateX(-50%)',background:'#30D158',borderRadius:20,padding:'2px 12px',fontSize:10,fontWeight:700,color:'#fff',letterSpacing:0.2,whiteSpace:'nowrap'}}>⭐ 93% of users choose this</div>}
                 <div style={{display:'flex',alignItems:'center',gap:10}}>
-                  <div style={{width:20,height:20,borderRadius:'50%',border:`2px solid ${selectedPlan===plan?RED:'rgba(0,0,0,0.15)'}`,background:selectedPlan===plan?ACCENT:'transparent',display:'flex',alignItems:'center',justifyContent:'center'}}>
+                  <div style={{width:20,height:20,borderRadius:'50%',border:`2px solid ${selectedPlan===plan?ACCENT:'rgba(0,0,0,0.15)'}`,background:selectedPlan===plan?ACCENT:'transparent',display:'flex',alignItems:'center',justifyContent:'center'}}>
                     {selectedPlan===plan&&<div style={{width:6,height:6,borderRadius:'50%',background:'#fff'}}/>}
                   </div>
                   <div style={{textAlign:'left'}}>

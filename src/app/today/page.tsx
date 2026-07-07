@@ -4,7 +4,7 @@ import { useRouter } from 'next/navigation'
 
 const sf = `-apple-system, BlinkMacSystemFont, 'SF Pro Display', 'Helvetica Neue', sans-serif`
 const BLUE = '#0A84FF'
-const ACCENT = '#90D5FF'
+const ACCENT = '#4A9FE5'
 const RED = '#FF453A'
 
 const FOCUS_MISSIONS:Record<string,Array<Array<{id:string,text:string,icon:string,why:string}>>>={

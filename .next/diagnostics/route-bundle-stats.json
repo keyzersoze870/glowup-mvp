@@ -1,11 +1,11 @@
 [
   {
-    "route": "/onboarding",
-    "firstLoadUncompressedJsBytes": 766357,
+    "route": "/paywall",
+    "firstLoadUncompressedJsBytes": 762894,
     "firstLoadChunkPaths": [
       ".next/static/chunks/05-c3ty_6dwfk.js",
       ".next/static/chunks/14mrh2-p_w84d.js",
-      ".next/static/chunks/0k8-x1w1n63tz.js",
+      ".next/static/chunks/2ex68kvdieovm.js",
       ".next/static/chunks/24imz2req6x4_.js",
       ".next/static/chunks/01dkdyukbdpqq.js",
       ".next/static/chunks/07-hzktxqjvzd.js",
@@ -35,7 +35,7 @@
     "firstLoadChunkPaths": [
       ".next/static/chunks/05-c3ty_6dwfk.js",
       ".next/static/chunks/14mrh2-p_w84d.js",
-      ".next/static/chunks/3t_ucoh0br64z.js",
+      ".next/static/chunks/3mh-25r2578iy.js",
       ".next/static/chunks/01dkdyukbdpqq.js",
       ".next/static/chunks/07-hzktxqjvzd.js",
       ".next/static/chunks/1-wnwsz3t8wqq.js",
@@ -44,12 +44,12 @@
     ]
   },
   {
-    "route": "/paywall",
-    "firstLoadUncompressedJsBytes": 529567,
+    "route": "/onboarding",
+    "firstLoadUncompressedJsBytes": 528752,
     "firstLoadChunkPaths": [
       ".next/static/chunks/05-c3ty_6dwfk.js",
       ".next/static/chunks/14mrh2-p_w84d.js",
-      ".next/static/chunks/1d40cvmv0ptzw.js",
+      ".next/static/chunks/2ahcrr6h91nh3.js",
       ".next/static/chunks/01dkdyukbdpqq.js",
       ".next/static/chunks/07-hzktxqjvzd.js",
       ".next/static/chunks/1-wnwsz3t8wqq.js",
@@ -63,7 +63,7 @@
     "firstLoadChunkPaths": [
       ".next/static/chunks/05-c3ty_6dwfk.js",
       ".next/static/chunks/14mrh2-p_w84d.js",
-      ".next/static/chunks/2u1npk3hwrk8g.js",
+      ".next/static/chunks/3hhen68x7v39l.js",
       ".next/static/chunks/01dkdyukbdpqq.js",
       ".next/static/chunks/07-hzktxqjvzd.js",
       ".next/static/chunks/1-wnwsz3t8wqq.js",
@@ -77,7 +77,7 @@
     "firstLoadChunkPaths": [
       ".next/static/chunks/05-c3ty_6dwfk.js",
       ".next/static/chunks/14mrh2-p_w84d.js",
-      ".next/static/chunks/42g12elje98n6.js",
+      ".next/static/chunks/1h70dtv4hqym6.js",
       ".next/static/chunks/01dkdyukbdpqq.js",
       ".next/static/chunks/07-hzktxqjvzd.js",
       ".next/static/chunks/1-wnwsz3t8wqq.js",
