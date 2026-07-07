@@ -12,6 +12,7 @@
   "/login/page": "/login",
   "/onboarding/page": "/onboarding",
   "/page": "/",
+  "/paywall/page": "/paywall",
   "/share/page": "/share",
   "/today/page": "/today"
 }

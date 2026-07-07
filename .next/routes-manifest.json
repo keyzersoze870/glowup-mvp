@@ -102,6 +102,12 @@
       "namedRegex": "^/onboarding(?:/)?$"
     },
     {
+      "page": "/paywall",
+      "regex": "^/paywall(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/paywall(?:/)?$"
+    },
+    {
       "page": "/share",
       "regex": "^/share(?:/)?$",
       "routeKeys": {},

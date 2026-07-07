@@ -12,6 +12,7 @@
   "/login/page": "app/login/page.js",
   "/onboarding/page": "app/onboarding/page.js",
   "/page": "app/page.js",
+  "/paywall/page": "app/paywall/page.js",
   "/share/page": "app/share/page.js",
   "/today/page": "app/today/page.js"
 }
