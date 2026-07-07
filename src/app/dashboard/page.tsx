@@ -256,6 +256,15 @@ export default function Dashboard() {
     setProfile(parsed)
     const result = calculateScore(parsed)
     setComputed(result)
+
+    // Save initial score if first time
+    if (!localStorage.getItem('glowup_live_score')) {
+      localStorage.setItem('glowup_live_score', JSON.stringify({
+        score: result.total,
+        lastDate: new Date().toDateString(),
+      }))
+      localStorage.setItem('glowup_score', JSON.stringify({ total: result.total }))
+    }
   }, [])
 
   if (!profile || !computed) return (
@@ -327,7 +336,7 @@ export default function Dashboard() {
           <p style={{ fontSize:13, color:'rgba(0,0,0,0.45)', letterSpacing:-0.2, lineHeight:1.5, maxWidth:280, textAlign:'center', margin:'0 auto 14px' }}>
             Start improving today by following the plan I created for you ⬇️
           </p>
-          <button onClick={() => setShowPaywall(true)}
+          <button onClick={() => router.push('/today')}
             style={{ padding:'11px 24px', background:BLUE, border:'none', borderRadius:12, color:'#FFFFFF', fontSize:13, fontWeight:600, cursor:'pointer', fontFamily:sf, letterSpacing:-0.2 }}>
             See my plan →
           </button>
@@ -364,7 +373,7 @@ export default function Dashboard() {
           })}
         </div>
 
-        <button onClick={() => setShowPaywall(true)}
+        <button onClick={() => router.push('/today')}
           style={{ width:'100%', padding:'14px', background:BLUE, border:'none', borderRadius:14, color:'#FFFFFF', fontSize:15, fontWeight:600, cursor:'pointer', fontFamily:sf, letterSpacing:-0.3, marginTop:16 }}>
           See my plan →
         </button>
