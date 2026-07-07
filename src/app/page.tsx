@@ -12,14 +12,15 @@ const GREEN = '#30D158'
 const PROFILES = [
   {
     img: '/selfie1.png',
-    metrics: [
-      { x: 50, y: 7,  label: 'Hydration', val: '92', color: BLUE,   side: 'left' },
-      { x: 67, y: 33, label: 'Sleep',     val: '61', color: PURPLE, side: 'right' },
-      { x: 22, y: 72, label: 'Fitness',       val: '85', color: ORANGE, side: 'left' },
-      { x: 78, y: 28, label: 'Stress',      val: '88', color: ORANGE, side: 'right' },
-      { x: 36, y: 36, label: 'Skincare',    val: '74', color: CYAN,   side: 'left' },
-      { x: 51, y: 60, label: 'Nutrition',   val: '79', color: GREEN,  side: 'right' },
-      { x: 30, y: 55, label: 'Sleep',       val: '65', color: PURPLE, side: 'left' },
+    leftMetrics: [
+      { label: 'Skincare', val: '74', color: CYAN },
+      { label: 'Fitness', val: '85', color: ORANGE },
+      { label: 'Hydration', val: '92', color: BLUE },
+    ],
+    rightMetrics: [
+      { label: 'Stress', val: '88', color: ORANGE },
+      { label: 'Sleep', val: '61', color: PURPLE },
+      { label: 'Nutrition', val: '79', color: GREEN },
     ],
     score: 78,
     rank: '47% of users have a higher score than you.',
@@ -61,14 +62,14 @@ export default function LandingPage() {
       if (p < 1) {
         rafRef.current = requestAnimationFrame(animateScan)
       } else {
-        setPhase('reveal')
-        profile.metrics.forEach((_, i) => setTimeout(() => setVisiblePoints(prev => [...prev, i]), i * 150))
+        setPhase('reveal');
+        [0,1,2,3,4,5].forEach((_, i) => setTimeout(() => setVisiblePoints(prev => [...prev, i]), i * 150))
         setTimeout(() => {
           let s = 0
           const iv = setInterval(() => { s += 4; setDisplayScore(Math.min(s, profile.score)); if (s >= profile.score) clearInterval(iv) }, 20)
-        }, profile.metrics.length * 150 + 80)
-        setTimeout(() => setShowRank(true), profile.metrics.length * 150 + 500)
-        setTimeout(() => setProfileIdx(idx => (idx + 1) % PROFILES.length), profile.metrics.length * 150 + 2500)
+        }, 6 * 150 + 80)
+        setTimeout(() => setShowRank(true), 6 * 150 + 500)
+        setTimeout(() => setProfileIdx(idx => (idx + 1) % PROFILES.length), 6 * 150 + 2500)
       }
     }
     rafRef.current = requestAnimationFrame(animateScan)
@@ -121,28 +122,33 @@ export default function LandingPage() {
             pointerEvents:'none' }} />
         )}
 
-        {/* Métriques */}
-        {profile.metrics.map((pt, i) => {
-          const visible = visiblePoints.includes(i)
-          const isRight = pt.side === 'right'
-          return (
-            <div key={i} style={{ position:'absolute',left:`${pt.x}%`,top:`${pt.y}%`,zIndex:16,
-              opacity:visible?1:0,transition:'opacity 0.3s ease',pointerEvents:'none' }}>
-              <div style={{ width:6,height:6,borderRadius:'50%',background:pt.color,
-                transform:'translate(-50%,-50%)',position:'absolute',boxShadow:`0 0 6px ${pt.color}` }} />
-              <div style={{ position:'absolute',top:'50%',[isRight?'left':'right']:8,
-                transform:'translateY(-50%)',display:'flex',flexDirection:isRight?'row':'row-reverse',alignItems:'center' }}>
-                <div style={{ width:18,height:0.5,background:pt.color,opacity:0.55,flexShrink:0 }} />
-                <div style={{ background:'rgba(255,255,255,0.92)',border:`0.5px solid rgba(0,0,0,0.07)`,borderRadius:7,padding:'2px 6px' }}>
-                  <div style={{ fontSize:12,fontWeight:700,color:pt.color,lineHeight:1,textAlign:isRight?'left':'right',letterSpacing:-0.3 }}>
-                    {pt.val}<span style={{ fontSize:8,opacity:0.4,fontWeight:400 }}>/100</span>
+        {/* Métriques — badges alignés gauche/droite */}
+        {phase === 'reveal' && (
+          <>
+            {/* Left badges */}
+            <div style={{ position:'absolute', left:8, top:'50%', transform:'translateY(-50%)', display:'flex', flexDirection:'column', gap:8, zIndex:16 }}>
+              {profile.leftMetrics.map((m, i) => (
+                <div key={i} style={{ background:'rgba(255,255,255,0.92)', border:'0.5px solid rgba(0,0,0,0.07)', borderRadius:8, padding:'4px 8px', opacity: visiblePoints.includes(i) ? 1 : 0, transition:'opacity 0.4s ease', transitionDelay:`${i * 0.15}s` }}>
+                  <div style={{ fontSize:13, fontWeight:700, color:m.color, letterSpacing:-0.3, lineHeight:1 }}>
+                    {m.val}<span style={{ fontSize:8, opacity:0.4, fontWeight:400 }}>/100</span>
                   </div>
-                  <div style={{ fontSize:8,fontWeight:500,color:'rgba(0,0,0,0.45)',marginTop:0,whiteSpace:'nowrap',textAlign:isRight?'left':'right' }}>{pt.label}</div>
+                  <div style={{ fontSize:8, fontWeight:500, color:'rgba(0,0,0,0.45)', marginTop:1 }}>{m.label}</div>
                 </div>
-              </div>
+              ))}
             </div>
-          )
-        })}
+            {/* Right badges */}
+            <div style={{ position:'absolute', right:8, top:'50%', transform:'translateY(-50%)', display:'flex', flexDirection:'column', gap:8, zIndex:16 }}>
+              {profile.rightMetrics.map((m, i) => (
+                <div key={i} style={{ background:'rgba(255,255,255,0.92)', border:'0.5px solid rgba(0,0,0,0.07)', borderRadius:8, padding:'4px 8px', textAlign:'right', opacity: visiblePoints.includes(i + 3) ? 1 : 0, transition:'opacity 0.4s ease', transitionDelay:`${(i + 3) * 0.15}s` }}>
+                  <div style={{ fontSize:13, fontWeight:700, color:m.color, letterSpacing:-0.3, lineHeight:1 }}>
+                    {m.val}<span style={{ fontSize:8, opacity:0.4, fontWeight:400 }}>/100</span>
+                  </div>
+                  <div style={{ fontSize:8, fontWeight:500, color:'rgba(0,0,0,0.45)', marginTop:1 }}>{m.label}</div>
+                </div>
+              ))}
+            </div>
+          </>
+        )}
       </div>
 
       {/* SCORE + CTA */}

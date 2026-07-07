@@ -39,13 +39,13 @@ function getPercentileAbove(score: number): number {
 
 // ─── ANALYSIS STEPS ───
 const ANALYSIS_STEPS = [
-  { text: 'Scanning facial structure...', icon: '🔬', duration: 700 },
-  { text: 'Analyzing skin texture...', icon: '✨', duration: 650 },
-  { text: 'Evaluating hydration levels...', icon: '💧', duration: 600 },
-  { text: 'Measuring stress markers...', icon: '🧘', duration: 700 },
-  { text: 'Calculating sleep impact...', icon: '🌙', duration: 600 },
-  { text: 'Assessing nutrition balance...', icon: '🥗', duration: 550 },
-  { text: 'Computing overall score...', icon: '⚡', duration: 700 },
+  { text: 'Scanning facial structure...', icon: '🔬', duration: 1800 },
+  { text: 'Analyzing skin texture...', icon: '✨', duration: 1500 },
+  { text: 'Evaluating hydration levels...', icon: '💧', duration: 1400 },
+  { text: 'Measuring stress markers...', icon: '🧘', duration: 1600 },
+  { text: 'Calculating sleep impact...', icon: '🌙', duration: 1300 },
+  { text: 'Assessing nutrition balance...', icon: '🥗', duration: 1200 },
+  { text: 'Computing overall score...', icon: '⚡', duration: 2000 },
 ]
 
 export default function PaywallPage() {
@@ -74,7 +74,7 @@ export default function PaywallPage() {
     let stepIdx = 0
     let prog = 0
     const progInterval = setInterval(() => {
-      prog += 1.8
+      prog += 0.8
       setProgress(Math.min(prog, 100))
     }, 100)
 
