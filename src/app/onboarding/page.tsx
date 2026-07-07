@@ -77,34 +77,21 @@ export default function OnboardingPage() {
     setAuthError('')
     try {
       const data = { prenom, objectifs, poids: Number(poids), taille: Number(taille), age: Number(age), sport, eau, skincare, sleep, nutrition, stress }
+      localStorage.setItem('glowup_profile', JSON.stringify(data))
       localStorage.setItem('glowup_profile_pending', JSON.stringify(data))
 
-      const res = await fetch('/api/generate-score', {
-        method: 'POST', headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(data),
-      })
-      const json = await res.json()
-      if (json.success) {
-        localStorage.setItem('glowup_profile', JSON.stringify(data))
-        localStorage.setItem('glowup_score', JSON.stringify(json.score))
-      }
-
+      // Send magic link in background (non-blocking)
       try {
-        const { error: emailError } = await supabase.auth.signInWithOtp({
+        await supabase.auth.signInWithOtp({
           email,
           options: { emailRedirectTo: `${window.location.origin}/auth/callback` }
         })
-        if (emailError) {
-          console.error('Email send error:', emailError)
-          if (emailError.message?.includes('rate limit') || emailError.status === 429) {
-            localStorage.setItem('glowup_auth_pending_error', 'rate_limit')
-          }
-        }
       } catch (emailErr) {
         console.error('Email send error:', emailErr)
       }
 
-      router.push('/dashboard')
+      // Go to paywall instead of dashboard
+      router.push('/paywall')
     } catch(e: any) {
       console.error(e)
       setAuthError("Something went wrong. Please try again.")
