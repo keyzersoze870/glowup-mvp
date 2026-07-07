@@ -70,6 +70,8 @@ export default function OnboardingPage() {
     reader.readAsDataURL(file)
   }
 
+  const isValidEmail = (e: string) => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(e)
+
   const submit = async () => {
     setLoading(true)
     setAuthError('')
@@ -424,8 +426,8 @@ export default function OnboardingPage() {
                     style={{ width:'100%', padding:'14px 16px', background:'rgba(0,0,0,0.05)', border:`0.5px solid ${email ? BLUE : 'rgba(0,0,0,0.1)'}`, borderRadius:14, color:'#1A1A1A', fontSize:16, fontFamily:sf, outline:'none', letterSpacing:-0.2 }}
                   />
 
-                  <button onClick={submit} disabled={loading || !email.trim()}
-                    style={{ width:'100%', padding:'16px', background:(!email.trim() || loading) ? 'rgba(0,0,0,0.07)' : BLUE, border:'none', borderRadius:14, color:(!email.trim() || loading) ? 'rgba(0,0,0,0.3)' : '#fff', fontSize:16, fontWeight:600, cursor:(!email.trim() || loading) ? 'default' : 'pointer', fontFamily:sf, letterSpacing:-0.3, display:'flex', alignItems:'center', justifyContent:'center', gap:8 }}>
+                  <button onClick={submit} disabled={loading || !isValidEmail(email)}
+                    style={{ width:'100%', padding:'16px', background:(!isValidEmail(email) || loading) ? 'rgba(0,0,0,0.07)' : BLUE, border:'none', borderRadius:14, color:(!isValidEmail(email) || loading) ? 'rgba(0,0,0,0.3)' : '#fff', fontSize:16, fontWeight:600, cursor:(!isValidEmail(email) || loading) ? 'default' : 'pointer', fontFamily:sf, letterSpacing:-0.3, display:'flex', alignItems:'center', justifyContent:'center', gap:8 }}>
                     {loading
                       ? <><span style={{ width:16,height:16,border:'2px solid rgba(0,0,0,0.3)',borderTopColor:'#1A1A1A',borderRadius:'50%',display:'inline-block',animation:'spin 0.8s linear infinite' }} />Generating your score...</>
                       : '⚡ Discover my Glow Up Score'}
