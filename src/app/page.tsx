@@ -1,6 +1,7 @@
 'use client'
 import Link from 'next/link'
 import { useState, useEffect, useRef } from 'react'
+import { useRouter } from 'next/navigation'
 
 const BLUE = '#0A84FF'
 const PURPLE = '#BF5AF2'
@@ -26,8 +27,14 @@ const PROFILES = [
 ]
 
 export default function LandingPage() {
+  const router = useRouter()
   const [profileIdx, setProfileIdx] = useState(0)
   const [phase, setPhase] = useState<'scan' | 'reveal'>('scan')
+
+  useEffect(() => {
+    const p = localStorage.getItem('glowup_profile')
+    if (p) { router.push('/today'); return }
+  }, [])
   const [scanY, setScanY] = useState(0)
   const [visiblePoints, setVisiblePoints] = useState<number[]>([])
   const [displayScore, setDisplayScore] = useState(0)
