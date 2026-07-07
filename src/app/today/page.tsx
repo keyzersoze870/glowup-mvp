@@ -4,6 +4,7 @@ import { useRouter } from 'next/navigation'
 
 const sf = `-apple-system, BlinkMacSystemFont, 'SF Pro Display', 'Helvetica Neue', sans-serif`
 const BLUE = '#0A84FF'
+const ACCENT = '#90D5FF'
 const RED = '#FF453A'
 
 const FOCUS_MISSIONS:Record<string,Array<Array<{id:string,text:string,icon:string,why:string}>>>={
@@ -87,8 +88,8 @@ export default function TodayPage(){
       <nav style={{flexShrink:0,padding:'56px 20px 12px',display:'flex',justifyContent:'space-between',alignItems:'center'}}>
         <button onClick={()=>router.push('/dashboard')} style={{background:'none',border:'none',color:'rgba(0,0,0,0.55)',fontSize:14,cursor:'pointer',fontFamily:sf}}>← Score</button>
         <span style={{fontSize:16,fontWeight:700,color:'#1A1A1A',letterSpacing:-0.5}}>Day {streak + 1} of 30</span>
-        <div style={{display:'flex',alignItems:'center',gap:6,background:'rgba(255,69,58,0.12)',border:'0.5px solid rgba(255,69,58,0.25)',padding:'4px 10px',borderRadius:20}}>
-          <span style={{fontSize:12}}>🔥</span><span style={{fontSize:12,fontWeight:600,color:RED}}>{streak}d</span>
+        <div style={{display:'flex',alignItems:'center',gap:6,background:'rgba(144,213,255,0.15)',border:'0.5px solid rgba(144,213,255,0.3)',padding:'4px 10px',borderRadius:20}}>
+          <span style={{fontSize:12}}>🔥</span><span style={{fontSize:12,fontWeight:600,color:ACCENT}}>{streak}d</span>
         </div>
       </nav>
       <div style={{flex:1,overflowY:'auto',padding:'0 20px 40px'}}>

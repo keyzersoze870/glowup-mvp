@@ -5,6 +5,7 @@ import { useRouter } from 'next/navigation'
 
 const sf = `-apple-system, BlinkMacSystemFont, 'SF Pro Display', 'Helvetica Neue', sans-serif`
 const BLUE = '#0A84FF'
+const ACCENT = '#90D5FF'
 const RED = '#FF453A'
 
 function BeforeAfterSlider() {
@@ -105,7 +106,7 @@ export default function LandingPage() {
       {/* NAV */}
       <nav style={{ flexShrink: 0, padding: '56px 20px 12px', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
         <span style={{ fontSize: 20, fontWeight: 700, color: '#1A1A1A', letterSpacing: -0.5 }}>GlowApp</span>
-        <Link href="/onboarding" style={{ background: RED, color: '#fff', border: 'none', borderRadius: 20, padding: '7px 16px', fontSize: 12, fontWeight: 600, textDecoration: 'none', letterSpacing: -0.2 }}>
+        <Link href="/onboarding" style={{ background: ACCENT, color: '#fff', border: 'none', borderRadius: 20, padding: '7px 16px', fontSize: 12, fontWeight: 600, textDecoration: 'none', letterSpacing: -0.2 }}>
           Start now
         </Link>
       </nav>
@@ -147,7 +148,7 @@ export default function LandingPage() {
       {/* CTA */}
       <div style={{ padding: '0 20px 24px' }}>
         <Link href="/onboarding" style={{
-          fontSize: 15, fontWeight: 600, color: '#FFFFFF', background: RED, padding: '14px 0', borderRadius: 14,
+          fontSize: 15, fontWeight: 600, color: '#FFFFFF', background: ACCENT, padding: '14px 0', borderRadius: 14,
           textDecoration: 'none', letterSpacing: -0.3, display: 'block', textAlign: 'center',
         }}>
           Check my cortisol level — Free

@@ -5,14 +5,15 @@ import { supabase } from '@/lib/supabase'
 
 const sf = `-apple-system, BlinkMacSystemFont, 'SF Pro Display', 'Helvetica Neue', sans-serif`
 const BLUE = '#0A84FF'
+const ACCENT = '#90D5FF'
 const RED = '#FF453A'
 const TOTAL_STEPS = 7
 
 function OptionCard({ label, icon, selected, onClick, sub }: { label: string, icon: string, selected: boolean, onClick: () => void, sub?: string }) {
   return (
     <button onClick={onClick} style={{
-      width:'100%', padding:'14px 16px', background: selected ? RED : 'rgba(0,0,0,0.04)',
-      border:`0.5px solid ${selected ? RED : 'rgba(0,0,0,0.08)'}`,
+      width:'100%', padding:'14px 16px', background: selected ? ACCENT : 'rgba(0,0,0,0.04)',
+      border:`0.5px solid ${selected ? ACCENT : 'rgba(0,0,0,0.08)'}`,
       borderRadius:12, cursor:'pointer', display:'flex', alignItems:'center', gap:12,
       transition:'all 0.15s ease', fontFamily:sf, textAlign:'left',
     }}>
@@ -103,7 +104,7 @@ export default function OnboardingPage() {
 
       <div style={{ flexShrink:0, padding:'0 20px 16px', display:'flex', gap:5 }}>
         {Array.from({ length: TOTAL_STEPS }).map((_, i) => (
-          <div key={i} style={{ flex:1, height:3, borderRadius:2, background: i <= step ? RED : 'rgba(0,0,0,0.1)', transition:'background 0.3s ease' }} />
+          <div key={i} style={{ flex:1, height:3, borderRadius:2, background: i <= step ? ACCENT : 'rgba(0,0,0,0.1)', transition:'background 0.3s ease' }} />
         ))}
       </div>
 
@@ -145,9 +146,9 @@ export default function OnboardingPage() {
           <div style={{ flex:1, display:'flex', flexDirection:'column', paddingTop:20, gap:16 }}>
             <StepHeader num={2} title="About you" sub="Cortisol impacts differ by age. This helps us calibrate your score." />
             <input type="text" placeholder="Your first name" value={prenom} onChange={e => setPrenom(e.target.value)} autoFocus
-              style={{ width:'100%', padding:'16px', background:'rgba(0,0,0,0.05)', border:`0.5px solid ${prenom ? RED : 'rgba(0,0,0,0.1)'}`, borderRadius:14, color:'#1A1A1A', fontSize:18, fontWeight:500, fontFamily:sf, outline:'none', letterSpacing:-0.3 }} />
+              style={{ width:'100%', padding:'16px', background:'rgba(0,0,0,0.05)', border:`0.5px solid ${prenom ? ACCENT : 'rgba(0,0,0,0.1)'}`, borderRadius:14, color:'#1A1A1A', fontSize:18, fontWeight:500, fontFamily:sf, outline:'none', letterSpacing:-0.3 }} />
             <input type="number" placeholder="Age" value={age} onChange={e => setAge(e.target.value)}
-              style={{ width:'100%', padding:'16px', background:'rgba(0,0,0,0.05)', border:`0.5px solid ${age ? RED : 'rgba(0,0,0,0.1)'}`, borderRadius:14, color:'#1A1A1A', fontSize:18, fontWeight:500, fontFamily:sf, outline:'none', letterSpacing:-0.3 }} />
+              style={{ width:'100%', padding:'16px', background:'rgba(0,0,0,0.05)', border:`0.5px solid ${age ? ACCENT : 'rgba(0,0,0,0.1)'}`, borderRadius:14, color:'#1A1A1A', fontSize:18, fontWeight:500, fontFamily:sf, outline:'none', letterSpacing:-0.3 }} />
             <Btn label="Continue" onClick={next} disabled={!prenom.trim() || !age} />
           </div>
         )}
@@ -313,6 +314,40 @@ export default function OnboardingPage() {
               🔒 No spam. Unsubscribe anytime.
             </p>
 
+            {/* DETAILED BLURRED LIST */}
+            <div style={{ position:'relative', marginBottom:14 }}>
+              <div style={{ filter:'blur(5px)', pointerEvents:'none', userSelect:'none', opacity:0.55 }}>
+                {[
+                  { icon:'😴', label:'Sleep Recovery Score', val:'4/20', color:RED },
+                  { icon:'😰', label:'Stress & Anxiety Level', val:'6/18', color:'#FF9F0A' },
+                  { icon:'🏃', label:'Movement & Exercise', val:'12/16', color:'#30D158' },
+                  { icon:'🥗', label:'Nutrition & Diet Quality', val:'7/16', color:'#30D158' },
+                  { icon:'💧', label:'Hydration Level', val:'4/10', color:BLUE },
+                  { icon:'🌿', label:'Nature & Outdoor Exposure', val:'3/10', color:'#64D2FF' },
+                  { icon:'☕', label:'Caffeine Impact', val:'-6', color:RED },
+                  { icon:'📊', label:'Cortisol Trend (7 days)', val:'↗ Rising', color:RED },
+                  { icon:'🧬', label:'Skin Aging Risk', val:'High', color:RED },
+                  { icon:'💤', label:'Recovery Quality', val:'Poor', color:'#FF9F0A' },
+                  { icon:'🎯', label:'30-Day Improvement Plan', val:'Ready', color:'#30D158' },
+                  { icon:'📈', label:'Projected Score in 30 days', val:'78/100', color:'#30D158' },
+                ].map((item, i) => (
+                  <div key={i} style={{ display:'flex', alignItems:'center', justifyContent:'space-between', padding:'8px 12px', background: i%2===0 ? 'rgba(0,0,0,0.03)' : 'transparent', borderRadius:8, marginBottom:2 }}>
+                    <div style={{ display:'flex', alignItems:'center', gap:8 }}>
+                      <span style={{ fontSize:14 }}>{item.icon}</span>
+                      <span style={{ fontSize:12, fontWeight:500, color:'#1A1A1A' }}>{item.label}</span>
+                    </div>
+                    <span style={{ fontSize:12, fontWeight:700, color:item.color }}>{item.val}</span>
+                  </div>
+                ))}
+              </div>
+              <div style={{ position:'absolute', inset:0, display:'flex', alignItems:'center', justifyContent:'center' }}>
+                <div style={{ background:'rgba(255,255,255,0.9)', borderRadius:16, padding:'10px 20px', display:'flex', alignItems:'center', gap:8, boxShadow:'0 2px 12px rgba(0,0,0,0.08)' }}>
+                  <span style={{ fontSize:16 }}>🔒</span>
+                  <span style={{ fontSize:13, fontWeight:600, color:'#1A1A1A', letterSpacing:-0.3 }}>12 insights waiting for you</span>
+                </div>
+              </div>
+            </div>
+
             <div style={{ display:'flex', flexDirection:'column', gap:10 }}>
               <button onClick={async () => {
                 const data = { prenom, age: Number(age), sleepHours, bedtime, stressLevel, relaxation, exercise, outdoor, diet, water, sugar, caffeine }
@@ -325,7 +360,7 @@ export default function OnboardingPage() {
               <div style={{ display:'flex', alignItems:'center', gap:12 }}><div style={{ flex:1, height:'0.5px', background:'rgba(0,0,0,0.08)' }} /><span style={{ fontSize:12, color:'rgba(0,0,0,0.3)' }}>or</span><div style={{ flex:1, height:'0.5px', background:'rgba(0,0,0,0.08)' }} /></div>
               {authError && <p style={{ fontSize:12, color:RED, textAlign:'center', background:'rgba(255,69,58,0.1)', padding:'10px 14px', borderRadius:10 }}>{authError}</p>}
               <input type="email" placeholder="your@email.com" value={email} onChange={e => setEmail(e.target.value)}
-                style={{ width:'100%', padding:'14px 16px', background:'rgba(0,0,0,0.05)', border:`0.5px solid ${isValidEmail(email) ? RED : 'rgba(0,0,0,0.1)'}`, borderRadius:14, color:'#1A1A1A', fontSize:16, fontFamily:sf, outline:'none', letterSpacing:-0.2 }} />
+                style={{ width:'100%', padding:'14px 16px', background:'rgba(0,0,0,0.05)', border:`0.5px solid ${isValidEmail(email) ? ACCENT : 'rgba(0,0,0,0.1)'}`, borderRadius:14, color:'#1A1A1A', fontSize:16, fontFamily:sf, outline:'none', letterSpacing:-0.2 }} />
               <button onClick={submit} disabled={loading || !isValidEmail(email)}
                 style={{ width:'100%', padding:'16px', background:(!isValidEmail(email) || loading) ? 'rgba(0,0,0,0.07)' : RED, border:'none', borderRadius:14, color:(!isValidEmail(email) || loading) ? 'rgba(0,0,0,0.3)' : '#fff', fontSize:16, fontWeight:600, cursor:(!isValidEmail(email) || loading) ? 'default' : 'pointer', fontFamily:sf, letterSpacing:-0.3, display:'flex', alignItems:'center', justifyContent:'center', gap:8 }}>
                 {loading ? <><span style={{ width:16,height:16,border:'2px solid rgba(255,255,255,0.3)',borderTopColor:'#fff',borderRadius:'50%',display:'inline-block',animation:'spin 0.8s linear infinite' }} />Analyzing...</> : '🔬 Reveal my Cortisol Score'}

@@ -4,6 +4,7 @@ import { useRouter } from 'next/navigation'
 
 const sf = `-apple-system, BlinkMacSystemFont, 'SF Pro Display', 'Helvetica Neue', sans-serif`
 const BLUE = '#0A84FF'
+const ACCENT = '#90D5FF'
 const RED = '#FF453A'
 
 function calculateScore(p: any) {
@@ -144,12 +145,9 @@ export default function PaywallPage() {
         <svg width={160} height={160} viewBox="0 0 120 120">
           <circle cx="60" cy="60" r={r} fill="none" stroke="rgba(0,0,0,0.05)" strokeWidth="7"/>
           <circle cx="60" cy="60" r={r} fill="none" stroke={scoreColor} strokeWidth="7" strokeLinecap="round" strokeDasharray={c} strokeDashoffset={offset} transform="rotate(-90 60 60)" style={{transition:'stroke-dashoffset 0.03s'}}/>
-          <text x="60" y="57" textAnchor="middle" dominantBaseline="middle" style={{fontFamily:sf,fontWeight:700,fontSize:28,fill:'#1A1A1A',letterSpacing:-1,filter:'blur(8px)'}}>{displayed}</text>
+          <text x="60" y="57" textAnchor="middle" dominantBaseline="middle" style={{fontFamily:sf,fontWeight:700,fontSize:28,fill:'#1A1A1A',letterSpacing:-1}}>{displayed}</text>
           <text x="60" y="72" textAnchor="middle" dominantBaseline="middle" style={{fontFamily:sf,fontSize:8,fill:'rgba(0,0,0,0.3)',letterSpacing:0.5}}>/ 100</text>
         </svg>
-        <div style={{position:'absolute',inset:0,display:'flex',alignItems:'center',justifyContent:'center'}}>
-          <span style={{fontSize:11,fontWeight:600,color:'rgba(0,0,0,0.4)',background:'rgba(255,255,255,0.8)',borderRadius:8,padding:'3px 10px'}}>🔒</span>
-        </div>
       </div>
 
       <span style={{fontSize:20,fontWeight:800,color:scoreColor,letterSpacing:-0.5,marginBottom:4,animation:'fadeIn 1s ease'}}>{scoreLabel}</span>
@@ -172,7 +170,7 @@ export default function PaywallPage() {
         Your main cortisol driver is <span style={{fontWeight:700,color:'#1A1A1A'}}>{weakLabels[weakest]}</span>. Left unchecked, elevated cortisol causes face puffiness, weight gain, breakouts, and premature aging.
       </p>
       <p style={{fontSize:13,color:'#1A1A1A',fontWeight:700,marginBottom:16,textAlign:'center',maxWidth:280,lineHeight:1.4}}>
-        Your 30-day plan can reduce your cortisol by up to 45% and visibly slim your face.
+        Your personalized 30-day plan can reduce your cortisol by up to 95% and visibly slim your face.
       </p>
 
       {/* BLURRED BREAKDOWN */}
@@ -195,16 +193,19 @@ export default function PaywallPage() {
             <span style={{fontSize:12,fontWeight:600,color:'#1A1A1A'}}>Subscribe to reveal full report</span>
           </div>
         </div>
+        <button onClick={()=>document.querySelector('#pricing')?.scrollIntoView({behavior:'smooth'})} style={{width:'100%',padding:'12px',background:ACCENT,border:'none',borderRadius:12,color:'#FFFFFF',fontSize:13,fontWeight:600,cursor:'pointer',fontFamily:sf,letterSpacing:-0.2,marginTop:8}}>
+          Improve my cortisol score →
+        </button>
       </div>
 
       {/* SOCIAL PROOF */}
       {showPlans && (
-        <div style={{width:'100%',maxWidth:340,animation:'fadeIn 0.5s ease'}}>
+        <div id="pricing" style={{width:'100%',maxWidth:340,animation:'fadeIn 0.5s ease'}}>
           <div style={{background:'rgba(48,209,88,0.06)',border:'0.5px solid rgba(48,209,88,0.15)',borderRadius:12,padding:'12px 16px',marginBottom:16}}>
             <div style={{display:'flex',flexDirection:'column',gap:8}}>
               <div style={{display:'flex',alignItems:'center',gap:8}}>
                 <span style={{fontSize:14}}>📉</span>
-                <p style={{fontSize:12,color:'rgba(0,0,0,0.55)',lineHeight:1.4}}><span style={{fontWeight:700,color:'#1A1A1A'}}>14,289 women</span> reduced their cortisol this month</p>
+                <p style={{fontSize:12,color:'rgba(0,0,0,0.55)',lineHeight:1.4}}><span style={{fontWeight:700,color:'#1A1A1A'}}>4,258 women</span> reduced their cortisol this month</p>
               </div>
               <div style={{display:'flex',alignItems:'center',gap:8}}>
                 <span style={{fontSize:14}}>✨</span>
@@ -212,7 +213,7 @@ export default function PaywallPage() {
               </div>
               <div style={{display:'flex',alignItems:'center',gap:8}}>
                 <span style={{fontSize:14}}>💬</span>
-                <p style={{fontSize:12,color:'rgba(0,0,0,0.55)',lineHeight:1.4,fontStyle:'italic'}}>"My jawline came back in 3 weeks. I look like a different person." — <span style={{fontWeight:600}}>Jessica, 28</span></p>
+                <p style={{fontSize:12,color:'rgba(0,0,0,0.55)',lineHeight:1.4,fontStyle:'italic'}}>"I tried everything — diets, face yoga, lymphatic massage. Nothing worked until I understood it was my cortisol. My jawline came back in 3 weeks. I look like a different person." — <span style={{fontWeight:600}}>Jessica, 28</span></p>
               </div>
             </div>
           </div>
@@ -221,11 +222,11 @@ export default function PaywallPage() {
             {(['weekly','monthly','yearly'] as const).map(plan=>(
               <button key={plan} onClick={()=>setSelectedPlan(plan)} style={{
                 width:'100%',padding:'14px 16px',background:selectedPlan===plan?'rgba(255,69,58,0.08)':'rgba(0,0,0,0.04)',
-                border:`1.5px solid ${selectedPlan===plan?RED:'rgba(0,0,0,0.08)'}`,borderRadius:14,cursor:'pointer',fontFamily:sf,
+                border:`1.5px solid ${selectedPlan===plan?ACCENT:'rgba(0,0,0,0.08)'}`,borderRadius:14,cursor:'pointer',fontFamily:sf,
                 display:'flex',alignItems:'center',justifyContent:'space-between',transition:'all 0.15s',
               }}>
                 <div style={{display:'flex',alignItems:'center',gap:10}}>
-                  <div style={{width:20,height:20,borderRadius:'50%',border:`2px solid ${selectedPlan===plan?RED:'rgba(0,0,0,0.15)'}`,background:selectedPlan===plan?RED:'transparent',display:'flex',alignItems:'center',justifyContent:'center'}}>
+                  <div style={{width:20,height:20,borderRadius:'50%',border:`2px solid ${selectedPlan===plan?RED:'rgba(0,0,0,0.15)'}`,background:selectedPlan===plan?ACCENT:'transparent',display:'flex',alignItems:'center',justifyContent:'center'}}>
                     {selectedPlan===plan&&<div style={{width:6,height:6,borderRadius:'50%',background:'#fff'}}/>}
                   </div>
                   <div style={{textAlign:'left'}}>
@@ -234,14 +235,14 @@ export default function PaywallPage() {
                   </div>
                 </div>
                 <div style={{textAlign:'right'}}>
-                  <p style={{fontSize:17,fontWeight:700,color:selectedPlan===plan?RED:'#1A1A1A',letterSpacing:-0.5}}>{plans[plan].price}</p>
+                  <p style={{fontSize:17,fontWeight:700,color:selectedPlan===plan?ACCENT:'#1A1A1A',letterSpacing:-0.5}}>{plans[plan].price}</p>
                   {plans[plan].savings&&<p style={{fontSize:10,fontWeight:600,color:'#30D158'}}>{plans[plan].savings}</p>}
                 </div>
               </button>
             ))}
           </div>
 
-          <button style={{width:'100%',padding:'16px',background:RED,border:'none',borderRadius:14,color:'#FFFFFF',fontSize:16,fontWeight:600,cursor:'pointer',fontFamily:sf,letterSpacing:-0.3,marginBottom:6}}>
+          <button style={{width:'100%',padding:'16px',background:ACCENT,border:'none',borderRadius:14,color:'#FFFFFF',fontSize:16,fontWeight:600,cursor:'pointer',fontFamily:sf,letterSpacing:-0.3,marginBottom:6}}>
             Start my 30-day cortisol reset
           </button>
           <p style={{fontSize:11,color:'rgba(0,0,0,0.3)',textAlign:'center',lineHeight:1.4}}>

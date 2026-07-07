@@ -4,6 +4,7 @@ import { useRouter } from 'next/navigation'
 
 const sf = `-apple-system, BlinkMacSystemFont, 'SF Pro Display', 'Helvetica Neue', sans-serif`
 const BLUE = '#0A84FF'
+const ACCENT = '#90D5FF'
 const RED = '#FF453A'
 
 function calculateScore(p:any){
@@ -79,7 +80,7 @@ export default function Dashboard(){
     <main style={{minHeight:'100svh',background:'#FFFFFF',fontFamily:sf,display:'flex',flexDirection:'column'}}>
       <nav style={{flexShrink:0,padding:'56px 20px 12px',display:'flex',justifyContent:'space-between',alignItems:'center'}}>
         <span style={{fontSize:20,fontWeight:700,color:'#1A1A1A',letterSpacing:-0.5}}>GlowApp</span>
-        <button onClick={()=>router.push('/share')} style={{background:'rgba(255,69,58,0.12)',border:'0.5px solid rgba(255,69,58,0.25)',borderRadius:20,padding:'6px 12px',color:RED,fontSize:12,fontWeight:600,cursor:'pointer',fontFamily:sf}}>⬆ Share</button>
+        <button onClick={()=>router.push('/share')} style={{background:'rgba(144,213,255,0.15)',border:'0.5px solid rgba(144,213,255,0.3)',borderRadius:20,padding:'6px 12px',color:RED,fontSize:12,fontWeight:600,cursor:'pointer',fontFamily:sf}}>⬆ Share</button>
       </nav>
       <div style={{flexShrink:0,display:'flex',flexDirection:'column',alignItems:'center',padding:'4px 20px 12px'}}>
         <p style={{fontSize:13,color:'rgba(0,0,0,0.45)',letterSpacing:-0.2,marginBottom:4}}>Hi {profile.prenom} 👋</p>
@@ -93,7 +94,7 @@ export default function Dashboard(){
             <span style={{fontWeight:700,color:'#1A1A1A'}}>{seg.hookBold}</span>
           </p>
           <p style={{fontSize:13,fontWeight:500,color:'rgba(0,0,0,0.55)',letterSpacing:-0.1,lineHeight:1.5,maxWidth:300,textAlign:'center',margin:'0 auto 12px'}}>{seg.message}</p>
-          <button onClick={()=>router.push('/today')} style={{padding:'11px 24px',background:RED,border:'none',borderRadius:12,color:'#FFFFFF',fontSize:13,fontWeight:600,cursor:'pointer',fontFamily:sf,letterSpacing:-0.2}}>
+          <button onClick={()=>router.push('/today')} style={{padding:'11px 24px',background:ACCENT,border:'none',borderRadius:12,color:'#FFFFFF',fontSize:13,fontWeight:600,cursor:'pointer',fontFamily:sf,letterSpacing:-0.2}}>
             Start my 30-day cortisol reset →
           </button>
         </div>
@@ -116,7 +117,7 @@ export default function Dashboard(){
             </div>)
           })}
         </div>
-        <button onClick={()=>router.push('/today')} style={{width:'100%',padding:'14px',background:RED,border:'none',borderRadius:14,color:'#FFFFFF',fontSize:15,fontWeight:600,cursor:'pointer',fontFamily:sf,letterSpacing:-0.3,marginTop:16}}>
+        <button onClick={()=>router.push('/today')} style={{width:'100%',padding:'14px',background:ACCENT,border:'none',borderRadius:14,color:'#FFFFFF',fontSize:15,fontWeight:600,cursor:'pointer',fontFamily:sf,letterSpacing:-0.3,marginTop:16}}>
           Start my 30-day cortisol reset →
         </button>
       </div>
