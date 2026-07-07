@@ -334,15 +334,61 @@ export default function OnboardingPage() {
               </>
             ) : (
               <>
-                <div style={{ textAlign:'center', marginBottom:8 }}>
-                  <div style={{ fontSize:40, marginBottom:12 }}>🔮</div>
-                  <h1 style={{ fontSize:26, fontWeight:700, color:'#1A1A1A', letterSpacing:-0.8, lineHeight:1.2, marginBottom:8 }}>
-                    Your score is ready
-                  </h1>
-                  <p style={{ fontSize:14, color:'rgba(0,0,0,0.45)', lineHeight:1.5, letterSpacing:-0.2 }}>
-                    Sign in to discover your Glow Up Score and save your progress.
-                  </p>
+                {/* BLURRED SCORE PREVIEW */}
+                <div style={{ position:'relative', marginBottom:16 }}>
+                  <div style={{ filter:'blur(8px)', pointerEvents:'none', userSelect:'none', opacity:0.7 }}>
+                    {/* Fake score ring */}
+                    <div style={{ display:'flex', justifyContent:'center', marginBottom:8 }}>
+                      <svg width={120} height={120} viewBox="0 0 120 120">
+                        <circle cx="60" cy="60" r="54" fill="none" stroke="rgba(0,0,0,0.05)" strokeWidth="7"/>
+                        <circle cx="60" cy="60" r="54" fill="none" stroke="#FF9F0A" strokeWidth="7"
+                          strokeLinecap="round" strokeDasharray={2 * Math.PI * 54} strokeDashoffset={2 * Math.PI * 54 * 0.48}
+                          transform="rotate(-90 60 60)"/>
+                        <text x="60" y="57" textAnchor="middle" dominantBaseline="middle"
+                          style={{ fontFamily:sf, fontWeight:700, fontSize:28, fill:'#1A1A1A' }}>52</text>
+                        <text x="60" y="72" textAnchor="middle" dominantBaseline="middle"
+                          style={{ fontFamily:sf, fontSize:8, fill:'rgba(0,0,0,0.3)' }}>/ 100</text>
+                      </svg>
+                    </div>
+                    {/* Fake bell curve */}
+                    <svg viewBox="0 0 300 130" style={{ width:'100%', maxWidth:280, display:'block', margin:'0 auto' }}>
+                      <defs>
+                        <linearGradient id="fakeGrad" x1="0" y1="0" x2="0" y2="1">
+                          <stop offset="0%" stopColor="#FF9F0A" stopOpacity="0.3" />
+                          <stop offset="100%" stopColor="#FF9F0A" stopOpacity="0.03" />
+                        </linearGradient>
+                      </defs>
+                      {(() => {
+                        const pts: string[] = []
+                        for (let i = 0; i <= 300; i++) {
+                          const x = (i / 300) * 6 - 3
+                          const y = Math.exp(-0.5 * x * x) / Math.sqrt(2 * Math.PI)
+                          pts.push(`${i},${100 - y * 220}`)
+                        }
+                        return <>
+                          <polygon points={`0,100 ${pts.join(' ')} 300,100`} fill="url(#fakeGrad)" />
+                          <polyline points={pts.join(' ')} fill="none" stroke="#FF9F0A" strokeWidth="2" />
+                        </>
+                      })()}
+                      <polygon points="150,104 156,104 153,98" fill="#1A1A1A" />
+                      <text x="153" y="120" textAnchor="middle" style={{ fontSize:10, fontWeight:600, fill:'#1A1A1A', fontFamily:sf }}>You're here</text>
+                    </svg>
+                  </div>
+                  {/* Lock overlay */}
+                  <div style={{ position:'absolute', inset:0, display:'flex', alignItems:'center', justifyContent:'center' }}>
+                    <div style={{ background:'rgba(255,255,255,0.85)', borderRadius:16, padding:'10px 20px', display:'flex', alignItems:'center', gap:8 }}>
+                      <span style={{ fontSize:18 }}>🔒</span>
+                      <span style={{ fontSize:14, fontWeight:600, color:'#1A1A1A', letterSpacing:-0.3 }}>Enter email to reveal</span>
+                    </div>
+                  </div>
                 </div>
+
+                <p style={{ fontSize:12, color:'#FF453A', fontWeight:500, textAlign:'center', marginBottom:4, letterSpacing:-0.2 }}>
+                  ⚠️ Your score will be deleted if you don't save it
+                </p>
+                <p style={{ fontSize:11, color:'rgba(0,0,0,0.3)', textAlign:'center', marginBottom:12 }}>
+                  🔒 No spam, ever. Unsubscribe anytime.
+                </p>
 
                 <div style={{ display:'flex', flexDirection:'column', gap:10 }}>
                   <button onClick={async () => {
