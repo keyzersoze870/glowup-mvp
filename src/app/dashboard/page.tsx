@@ -57,6 +57,99 @@ function getSegment(score:number,name:string,weakest:string,categories?:Record<s
   return{label:'Low cortisol 😌',color:'#30D158',hook:`${ep}% still scored lower than you.`,hookBold:'You\'re not out of the woods yet.',message:weakAreas.length>1?`${name}, your score is decent but your ${weakStr} are silent risks. Cortisol doesn't warn you before it spikes — one stressful week and your face puffs back up, your skin breaks out, and your sleep collapses. Without a daily plan, this score won't last.`:`${name}, your score is decent but your ${weakStr} is a vulnerability. It only takes one bad week for cortisol to undo months of progress — your face puffs up, your skin reacts, your energy crashes. A structured plan is the only way to lock this in.`}
 }
 
+// ─── DETAILED PERSONALIZED MESSAGE (post-payment) ───
+function getDetailedMessage(profile: any, score: number, weakest: string, categories: Record<string,number>) {
+  const name = profile.prenom
+  const maxes:Record<string,number> = {sleep:20,stress:18,exercise:16,nutrition:16,water:10,outdoor:10}
+  
+  // Find all problem areas (below 50% of max)
+  const problems: string[] = []
+  const okAreas: string[] = []
+  for (const [k,v] of Object.entries(categories)) {
+    if (v / maxes[k] < 0.5) problems.push(k)
+    else okAreas.push(k)
+  }
+
+  // Build specific observations based on quiz answers
+  const observations: string[] = []
+  const actions: string[] = []
+
+  // Sleep
+  if (profile.sleepHours === '<5' || profile.sleepHours === '5-6') {
+    observations.push(`You're sleeping ${profile.sleepHours === '<5' ? 'less than 5' : '5-6'} hours per night. Your body needs 7-8 hours to reset its cortisol cycle — right now, your cortisol never fully drops, which means you wake up already stressed.`)
+    actions.push('Gradually move your bedtime 15 minutes earlier every 3 days until you reach 7+ hours')
+  }
+  if (profile.bedtime === 'after12' || profile.bedtime === '11-12') {
+    observations.push(`Going to bed ${profile.bedtime === 'after12' ? 'after midnight' : 'between 11pm and midnight'} means you're missing the critical cortisol recovery window (10pm–2am). This is when your body does its deepest repair work.`)
+    actions.push('Set a phone alarm at 10pm as a "wind down" signal — no screens after that')
+  }
+
+  // Stress
+  if (profile.stressLevel === 'extreme' || profile.stressLevel === 'high') {
+    observations.push(`Your stress level is ${profile.stressLevel}. This means your body is producing cortisol almost constantly — not just during stressful moments, but as a baseline. This is what causes the facial puffiness and skin breakouts you might be noticing.`)
+    actions.push('Start with just 5 minutes of breathing exercises daily — this alone can reduce cortisol by 25%')
+  }
+  if (profile.relaxation === 'none') {
+    observations.push(`You currently have no relaxation practice. Without an active way to signal your nervous system to calm down, your cortisol has no "off switch". Your body stays in fight-or-flight mode all day.`)
+    actions.push('Pick one: 5-min meditation, gratitude journaling, or a 10-min walk in nature — do it at the same time every day')
+  }
+
+  // Caffeine
+  if (profile.caffeine === 'heavy') {
+    observations.push(`3+ cups of coffee daily is keeping your cortisol elevated for most of the day. Caffeine blocks adenosine (your body's natural "calm down" signal) and directly stimulates cortisol production for up to 6 hours per cup.`)
+    actions.push('Reduce to 1-2 cups max, only before noon. Replace afternoon coffee with herbal tea or water')
+  }
+
+  // Sugar
+  if (profile.sugar === 'high') {
+    observations.push(`High sugar intake creates a cortisol rollercoaster: every sugar spike is followed by a crash, and your body responds to each crash by releasing more cortisol. This cycle repeats multiple times per day, keeping your levels chronically elevated.`)
+    actions.push('Replace sugary snacks with nuts, dark chocolate (70%+), or fruit. Cut sodas completely')
+  }
+
+  // Diet
+  if (profile.diet === 'poor') {
+    observations.push(`A diet heavy in processed food and fast food is one of the strongest cortisol triggers. Processed foods contain inflammatory ingredients that your body treats as stressors, triggering cortisol release with every meal.`)
+    actions.push('Cook at least one meal from scratch per day. Focus on protein + vegetables + healthy fats')
+  }
+
+  // Water
+  if (profile.water === '<4') {
+    observations.push(`Drinking less than 4 cups of water daily puts your body in a state of chronic mild dehydration. Your body interprets dehydration as a physical threat and responds by — you guessed it — producing more cortisol.`)
+    actions.push('Keep a water bottle visible at all times. Drink a full glass first thing in the morning and before each meal')
+  }
+
+  // Exercise
+  if (profile.exercise === '0') {
+    observations.push(`Without any physical activity, your body has no outlet for the cortisol it produces. Movement is the natural way your body metabolizes and clears excess cortisol. Without it, cortisol just accumulates.`)
+    actions.push('Start with a 15-minute walk daily — this alone has been shown to reduce cortisol levels significantly')
+  }
+
+  // Outdoor
+  if (profile.outdoor === '<15') {
+    observations.push(`Less than 15 minutes outdoors means almost zero nature exposure. Studies show that spending time in natural environments lowers cortisol, blood pressure, and heart rate simultaneously — it's one of the most powerful cortisol reducers available, and it's free.`)
+    actions.push('Eat one meal outside, or take a 10-minute walk in a park or green space daily')
+  }
+
+  // If somehow no observations (very healthy person)
+  if (observations.length === 0) {
+    observations.push(`Your habits are already solid — but maintaining low cortisol requires consistency. Even small disruptions (a stressful week, a few bad nights of sleep) can spike cortisol rapidly. Your plan focuses on locking in your current habits and building resilience.`)
+  }
+  if (actions.length === 0) {
+    actions.push('Maintain your current routine and track your consistency — the calendar feature helps you stay accountable')
+  }
+
+  // Build the plan overview
+  const planWeeks: string[] = []
+  if (problems.includes('sleep')) planWeeks.push('Sleep optimization — fix your cortisol reset cycle')
+  if (problems.includes('stress')) planWeeks.push('Stress management — build your cortisol "off switch"')
+  if (problems.includes('nutrition') || profile.sugar === 'high' || profile.caffeine === 'heavy') planWeeks.push('Nutrition reset — eliminate cortisol triggers from your diet')
+  if (problems.includes('exercise') || problems.includes('outdoor')) planWeeks.push('Movement & nature — activate your body\'s natural cortisol regulation')
+  if (problems.includes('water')) planWeeks.push('Hydration protocol — remove dehydration as a stress trigger')
+  if (planWeeks.length === 0) planWeeks.push('Consistency & maintenance — protect your low cortisol status')
+
+  return { observations, actions, planWeeks }
+}
+
 const CATEGORIES=[
   {key:'sleep',label:'Sleep',icon:'😴',color:'#BF5AF2',max:20},
   {key:'stress',label:'Stress',icon:'😰',color:RED,max:18},
@@ -95,6 +188,7 @@ export default function Dashboard(){
   },[])
   if(!profile||!computed)return(<div style={{minHeight:'100svh',background:'#FFFFFF',display:'flex',alignItems:'center',justifyContent:'center'}}><div style={{width:24,height:24,border:'2px solid rgba(0,0,0,0.08)',borderTopColor:RED,borderRadius:'50%',animation:'spin 0.8s linear infinite'}}/><style>{`@keyframes spin{to{transform:rotate(360deg)}}`}</style></div>)
   const seg=getSegment(computed.total,profile.prenom,computed.weakest,computed.categories)
+  const detailed=getDetailedMessage(profile,computed.total,computed.weakest,computed.categories)
   return(
     <main style={{minHeight:'100svh',background:'#FFFFFF',fontFamily:sf,display:'flex',flexDirection:'column'}}>
       <nav style={{flexShrink:0,padding:'56px 20px 12px',display:'flex',justifyContent:'space-between',alignItems:'center'}}>
@@ -112,13 +206,53 @@ export default function Dashboard(){
             <span style={{color:RED,fontWeight:600}}>{seg.hook}</span>{' '}
             <span style={{fontWeight:700,color:'#1A1A1A'}}>{seg.hookBold}</span>
           </p>
-          <p style={{fontSize:13,fontWeight:500,color:'rgba(0,0,0,0.55)',letterSpacing:-0.1,lineHeight:1.5,maxWidth:300,textAlign:'center',margin:'0 auto 12px'}}>{seg.message}</p>
-          <button onClick={()=>router.push('/today')} style={{padding:'11px 24px',background:ACCENT,border:'none',borderRadius:12,color:'#FFFFFF',fontSize:13,fontWeight:600,cursor:'pointer',fontFamily:sf,letterSpacing:-0.2}}>
-            Start my 30-day cortisol reset →
-          </button>
+          <p style={{fontSize:13,fontWeight:500,color:'rgba(0,0,0,0.55)',letterSpacing:-0.1,lineHeight:1.5,maxWidth:300,textAlign:'center',margin:'0 auto 16px'}}>{seg.message}</p>
         </div>
       </div>
+
+      {/* DETAILED ANALYSIS */}
       <div style={{flex:1,overflowY:'auto',padding:'0 20px 40px'}}>
+
+        {/* WHAT WE FOUND */}
+        <p style={{fontSize:11,color:RED,letterSpacing:0.5,textTransform:'uppercase',marginBottom:10,fontWeight:600}}>⚠ What we found</p>
+        <div style={{display:'flex',flexDirection:'column',gap:10,marginBottom:24}}>
+          {detailed.observations.map((obs,i)=>(
+            <div key={i} style={{background:'rgba(0,0,0,0.03)',border:'0.5px solid rgba(0,0,0,0.07)',borderRadius:14,padding:'14px 16px'}}>
+              <p style={{fontSize:13,color:'#1A1A1A',lineHeight:1.6,letterSpacing:-0.2}}>{obs}</p>
+            </div>
+          ))}
+        </div>
+
+        {/* YOUR ACTION PLAN */}
+        <p style={{fontSize:11,color:ACCENT,letterSpacing:0.5,textTransform:'uppercase',marginBottom:10,fontWeight:600}}>✓ Your action plan</p>
+        <div style={{display:'flex',flexDirection:'column',gap:8,marginBottom:24}}>
+          {detailed.actions.map((act,i)=>(
+            <div key={i} style={{display:'flex',gap:10,alignItems:'flex-start',background:'rgba(74,159,229,0.06)',border:'0.5px solid rgba(74,159,229,0.15)',borderRadius:12,padding:'12px 14px'}}>
+              <span style={{color:ACCENT,fontSize:14,fontWeight:700,flexShrink:0,marginTop:1}}>{i+1}</span>
+              <p style={{fontSize:13,color:'#1A1A1A',lineHeight:1.5,letterSpacing:-0.2}}>{act}</p>
+            </div>
+          ))}
+        </div>
+
+        {/* 30-DAY PLAN OVERVIEW */}
+        <p style={{fontSize:11,color:'rgba(0,0,0,0.3)',letterSpacing:0.5,textTransform:'uppercase',marginBottom:10,fontWeight:500}}>Your 30-day focus areas</p>
+        <div style={{background:'rgba(0,0,0,0.03)',borderRadius:14,padding:'14px 16px',marginBottom:20}}>
+          {detailed.planWeeks.map((week,i)=>(
+            <div key={i} style={{display:'flex',alignItems:'center',gap:10,marginBottom:i<detailed.planWeeks.length-1?10:0}}>
+              <div style={{width:24,height:24,borderRadius:'50%',background:ACCENT,display:'flex',alignItems:'center',justifyContent:'center',flexShrink:0}}>
+                <span style={{fontSize:11,color:'#fff',fontWeight:700}}>{i+1}</span>
+              </div>
+              <p style={{fontSize:12,color:'#1A1A1A',letterSpacing:-0.2}}>{week}</p>
+            </div>
+          ))}
+        </div>
+
+        {/* CTA */}
+        <button onClick={()=>router.push('/today')} style={{width:'100%',padding:'14px',background:ACCENT,border:'none',borderRadius:14,color:'#FFFFFF',fontSize:15,fontWeight:600,cursor:'pointer',fontFamily:sf,letterSpacing:-0.3,marginBottom:20}}>
+          Start Day 1 →
+        </button>
+
+        {/* SCORE BREAKDOWN */}
         <p style={{fontSize:11,color:'rgba(0,0,0,0.3)',letterSpacing:0.5,textTransform:'uppercase',marginBottom:12}}>Cortisol breakdown</p>
         <div style={{display:'flex',flexDirection:'column',gap:8}}>
           {CATEGORIES.map(cat=>{
@@ -137,7 +271,7 @@ export default function Dashboard(){
           })}
         </div>
         <button onClick={()=>router.push('/today')} style={{width:'100%',padding:'14px',background:ACCENT,border:'none',borderRadius:14,color:'#FFFFFF',fontSize:15,fontWeight:600,cursor:'pointer',fontFamily:sf,letterSpacing:-0.3,marginTop:16}}>
-          Start my 30-day cortisol reset →
+          Start Day 1 →
         </button>
       </div>
       <style>{`@keyframes spin{to{transform:rotate(360deg)}} ::-webkit-scrollbar{display:none} *{box-sizing:border-box;margin:0;padding:0;}`}</style>
