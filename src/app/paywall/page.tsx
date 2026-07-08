@@ -159,7 +159,7 @@ export default function PaywallPage(){
         </svg>
       </div>
       <span style={{fontSize:20,fontWeight:800,color:scoreColor,letterSpacing:-0.5,marginBottom:4,animation:'fadeIn 1s ease'}}>{scoreLabel}</span>
-      <p style={{fontSize:13,color:RED,fontWeight:600,letterSpacing:-0.2,marginBottom:16}}>
+      <p style={{fontSize:13,color:RED,fontWeight:600,letterSpacing:-0.2,marginBottom:8}}>
         {pctAbove}% of women your age have lower cortisol than you.
       </p>
 
@@ -178,7 +178,7 @@ export default function PaywallPage(){
       </div>
 
       {/* LOCK CARD — normal flow */}
-      <div style={{width:'100%',maxWidth:300,background:'rgba(255,255,255,0.95)',borderRadius:20,padding:'16px 24px',display:'flex',flexDirection:'column',alignItems:'center',gap:10,boxShadow:'0 4px 20px rgba(0,0,0,0.08)',marginTop:-30,marginBottom:16,zIndex:10,position:'relative'}}>
+      <div style={{width:'100%',maxWidth:300,background:'rgba(255,255,255,0.95)',borderRadius:20,padding:'16px 24px',display:'flex',flexDirection:'column',alignItems:'center',gap:10,boxShadow:'0 4px 20px rgba(0,0,0,0.08)',marginTop:-40,marginBottom:12,zIndex:10,position:'relative'}}>
         <span style={{fontSize:28}}>🔒</span>
         <p style={{fontSize:15,fontWeight:700,color:'#1A1A1A',letterSpacing:-0.3,textAlign:'center'}}>10+ insights waiting for you</p>
         <div style={{display:'flex',flexDirection:'column',gap:6,width:'100%'}}>
@@ -190,7 +190,7 @@ export default function PaywallPage(){
       </div>
 
       {/* SOCIAL PROOF — right after lock */}
-      <div style={{width:'100%',maxWidth:340,background:'rgba(48,209,88,0.06)',border:'0.5px solid rgba(48,209,88,0.15)',borderRadius:12,padding:'12px 16px',marginBottom:12}}>
+      <div style={{width:'100%',maxWidth:340,background:'rgba(48,209,88,0.06)',border:'0.5px solid rgba(48,209,88,0.15)',borderRadius:12,padding:'12px 16px',marginBottom:10}}>
         <div style={{display:'flex',flexDirection:'column',gap:8}}>
           <div style={{display:'flex',alignItems:'center',gap:8}}>
             <span style={{fontSize:14}}>📉</span>
@@ -208,14 +208,14 @@ export default function PaywallPage(){
       </div>
 
       {/* CTA */}
-      <button onClick={()=>document.querySelector('#pricing')?.scrollIntoView({behavior:'smooth'})} style={{width:'100%',maxWidth:340,padding:'14px',background:ACCENT,border:'none',borderRadius:14,color:'#FFFFFF',fontSize:15,fontWeight:600,cursor:'pointer',fontFamily:sf,letterSpacing:-0.2,marginBottom:16}}>
-        Unlock my full cortisol report →
+      <button onClick={()=>document.querySelector('#pricing')?.scrollIntoView({behavior:'smooth'})} style={{width:'100%',maxWidth:340,padding:'14px',background:ACCENT,border:'none',borderRadius:14,color:'#FFFFFF',fontSize:15,fontWeight:600,cursor:'pointer',fontFamily:sf,letterSpacing:-0.2,marginBottom:8}}>
+        Start my 30-day cortisol reset →
       </button>
 
       {/* PLANS */}
       {showPlans && (
         <div id="pricing" style={{width:'100%',maxWidth:340,animation:'fadeIn 0.5s ease'}}>
-          <div style={{display:'flex',flexDirection:'column',gap:8,marginBottom:16}}>
+          <div style={{display:'flex',flexDirection:'column',gap:8,marginBottom:8}}>
             {(['weekly','monthly','yearly'] as const).map(plan=>(
               <button key={plan} onClick={()=>setSelectedPlan(plan)} style={{
                 width:'100%',padding:'14px 16px',background:selectedPlan===plan?'rgba(74,159,229,0.1)':'rgba(0,0,0,0.04)',
@@ -241,7 +241,7 @@ export default function PaywallPage(){
           </div>
 
           <button style={{width:'100%',padding:'16px',background:ACCENT,border:'none',borderRadius:14,color:'#FFFFFF',fontSize:16,fontWeight:600,cursor:'pointer',fontFamily:sf,letterSpacing:-0.3,marginBottom:6}}>
-            Start my 30-day cortisol reset
+            Start my 30-day cortisol reset →
           </button>
           <p style={{fontSize:11,color:'rgba(0,0,0,0.3)',textAlign:'center',lineHeight:1.4}}>
             then {plans[selectedPlan].price}{plans[selectedPlan].per} · Cancel anytime
