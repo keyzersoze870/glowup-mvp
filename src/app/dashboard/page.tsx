@@ -27,15 +27,34 @@ function calculateScore(p:any){
   return{total,categories:cats,weakest:w}
 }
 function getPercentileAbove(s:number):number{return Math.max(15,Math.round(100-(s*0.88+(s/100)*12)))}
-function getSegment(score:number,name:string,weakest:string){
+function getSegment(score:number,name:string,weakest:string,categories?:Record<string,number>){
   const pctAbove=getPercentileAbove(score)
+  const maxes:Record<string,number>={sleep:20,stress:18,exercise:16,nutrition:16,water:10,outdoor:10}
   const weakLabels:Record<string,string>={sleep:'sleep',stress:'stress',exercise:'movement',nutrition:'diet',water:'hydration',outdoor:'nature exposure'}
-  const wl=weakLabels[weakest]||'habits'
-  if(score<25){return{label:'Cortisol overload 🚨',color:RED,hook:`${pctAbove}% of women your age have lower cortisol.`,hookBold:'Your body is in chronic stress mode.',message:`${name}, your ${wl} is keeping your cortisol dangerously elevated. This causes face puffiness, belly fat storage, and accelerated skin aging. Every day without a plan, the damage compounds.`}}
-  if(score<45){return{label:'Danger zone 🔴',color:RED,hook:`${pctAbove}% of women your age have lower cortisol.`,hookBold:'Your cortisol is silently aging you.',message:`${name}, your ${wl} is your biggest cortisol trigger. Women in your range show visible face puffiness and stress-related breakouts within weeks. The good news: this is fixable in 30 days.`}}
-  if(score<70){return{label:'Elevated ⚠️',color:'#FF9F0A',hook:`${pctAbove}% of women your age have lower cortisol.`,hookBold:'You\'re close to balanced — but not there yet.',message:`${name}, your ${wl} is the one thing keeping your cortisol elevated. Fix this and you\'ll notice your face slimming down, better sleep, and calmer energy within 2-3 weeks.`}}
+
+  // Find ALL weak categories (below 40% of max)
+  const weakAreas:string[]=[]
+  if(categories){
+    for(const[k,v]of Object.entries(categories)){
+      if(v/maxes[k]<0.4) weakAreas.push(weakLabels[k]||k)
+    }
+  }
+  if(weakAreas.length===0) weakAreas.push(weakLabels[weakest]||'habits')
+
+  // Format weak areas as readable string
+  const weakStr = weakAreas.length===1 ? weakAreas[0]
+    : weakAreas.length===2 ? `${weakAreas[0]} and ${weakAreas[1]}`
+    : weakAreas.slice(0,-1).join(', ')+', and '+weakAreas[weakAreas.length-1]
+
+  if(score<25){return{label:'Cortisol overload 🚨',color:RED,hook:`${pctAbove}% of women your age have lower cortisol.`,hookBold:'Your body is in chronic stress mode.',message:`${name}, your ${weakStr} ${weakAreas.length>1?'are':'is'} keeping your cortisol dangerously elevated. This combination causes face puffiness, belly fat storage, breakouts, and accelerated skin aging. Every day without a plan, the damage compounds silently.`}}
+  if(score<45){return{label:'Danger zone 🔴',color:RED,hook:`${pctAbove}% of women your age have lower cortisol.`,hookBold:'Your cortisol is silently reshaping your face.',message:`${name}, your ${weakStr} ${weakAreas.length>1?'are your biggest cortisol triggers':'is your biggest cortisol trigger'}. Women in your range show visible face puffiness, jaw widening, and stress-related breakouts within weeks. The good news: this is reversible in 30 days.`}}
+  if(score<70){return{label:'Elevated ⚠️',color:'#FF9F0A',hook:`${pctAbove}% of women your age have lower cortisol.`,hookBold:'You\'re close to balanced — but not safe yet.',message:weakAreas.length>1?`${name}, your ${weakStr} are the combination keeping your cortisol above safe levels. Fix these together and you'll see your face slim down, your skin clear up, and your energy stabilize within 2-3 weeks.`:`${name}, your ${weakStr} is the one factor keeping your cortisol elevated. Address it and you'll notice visible changes in your face and energy within 2-3 weeks.`}}
   const ep=Math.max(pctAbove,15)
-  return{label:'Low cortisol 😌',color:'#30D158',hook:`Only ${ep}% have lower cortisol than you.`,hookBold:'You\'re in the calm zone. Stay there.',message:score>=90?`${name}, you're in the top 15%. But 91% of women in this range slip back within 60 days without a structured routine. The question isn't how you got here — it's whether you'll still be here next month.`:`${name}, you're doing great but your ${wl} is a weak spot. One slip and cortisol rebounds fast — it takes 72 hours for cortisol to re-elevate but 3 weeks to bring it back down.`}
+
+  // LOW CORTISOL — still push fear, don't congratulate
+  if(score>=90){return{label:'Low cortisol 😌',color:'#30D158',hook:`${ep}% still scored lower than you.`,hookBold:'Don\'t get comfortable.',message:`${name}, your score looks good on paper. But cortisol is the fastest hormone to spike back up — 72 hours of bad sleep or stress and you're back in the danger zone. 91% of women at your level lose it within 60 days without a structured plan. The real challenge isn't getting here. It's staying.`}}
+
+  return{label:'Low cortisol 😌',color:'#30D158',hook:`${ep}% still scored lower than you.`,hookBold:'You\'re not out of the woods yet.',message:weakAreas.length>1?`${name}, your score is decent but your ${weakStr} are silent risks. Cortisol doesn't warn you before it spikes — one stressful week and your face puffs back up, your skin breaks out, and your sleep collapses. Without a daily plan, this score won't last.`:`${name}, your score is decent but your ${weakStr} is a vulnerability. It only takes one bad week for cortisol to undo months of progress — your face puffs up, your skin reacts, your energy crashes. A structured plan is the only way to lock this in.`}
 }
 
 const CATEGORIES=[
@@ -75,7 +94,7 @@ export default function Dashboard(){
     }
   },[])
   if(!profile||!computed)return(<div style={{minHeight:'100svh',background:'#FFFFFF',display:'flex',alignItems:'center',justifyContent:'center'}}><div style={{width:24,height:24,border:'2px solid rgba(0,0,0,0.08)',borderTopColor:RED,borderRadius:'50%',animation:'spin 0.8s linear infinite'}}/><style>{`@keyframes spin{to{transform:rotate(360deg)}}`}</style></div>)
-  const seg=getSegment(computed.total,profile.prenom,computed.weakest)
+  const seg=getSegment(computed.total,profile.prenom,computed.weakest,computed.categories)
   return(
     <main style={{minHeight:'100svh',background:'#FFFFFF',fontFamily:sf,display:'flex',flexDirection:'column'}}>
       <nav style={{flexShrink:0,padding:'56px 20px 12px',display:'flex',justifyContent:'space-between',alignItems:'center'}}>

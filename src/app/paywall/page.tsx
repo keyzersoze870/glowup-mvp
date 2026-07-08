@@ -42,6 +42,7 @@ export default function PaywallPage(){
   const[profile,setProfile]=useState<any>(null)
   const[score,setScore]=useState(0)
   const[weakest,setWeakest]=useState('sleep')
+  const[weakAreas,setWeakAreas]=useState<string[]>(['sleep'])
   const[phase,setPhase]=useState<'analyzing'|'reveal'>('analyzing')
   const[analysisStep,setAnalysisStep]=useState(0)
   const[progress,setProgress]=useState(0)
@@ -58,6 +59,13 @@ export default function PaywallPage(){
     if(!p){router.push('/onboarding');return}
     const parsed=JSON.parse(p);setProfile(parsed)
     const result=calculateScore(parsed);setScore(result.total);setWeakest(result.weakest)
+    // Find all weak areas
+    const maxes:Record<string,number>={sleep:20,stress:18,exercise:16,nutrition:16,water:10,outdoor:10}
+    const wLabels:Record<string,string>={sleep:'sleep',stress:'stress',exercise:'lack of movement',nutrition:'diet',water:'dehydration',outdoor:'lack of nature exposure'}
+    const wa:string[]=[]
+    for(const[k,v]of Object.entries(result.categories)){if(v/(maxes[k]||1)<0.4)wa.push(wLabels[k]||k)}
+    if(wa.length===0)wa.push(wLabels[result.weakest]||'habits')
+    setWeakAreas(wa)
     localStorage.setItem('glowup_live_score',JSON.stringify({score:result.total,lastDate:new Date().toDateString()}))
     localStorage.setItem('glowup_score',JSON.stringify({total:result.total}))
     localStorage.setItem('glowup_weakest',result.weakest)
@@ -128,7 +136,6 @@ export default function PaywallPage(){
   for(let i=0;i<=w;i++){const x=(i/w)*6-3;const y=Math.exp(-0.5*x*x)/Math.sqrt(2*Math.PI);bellPts.push(`${i},${h-y*h*2.2}`)}
   const markerPos=Math.min(Math.max(score,5),95),markerX=(markerPos/100)*w,mx=(markerPos/100)*6-3
   const markerY=h-(Math.exp(-0.5*mx*mx)/Math.sqrt(2*Math.PI))*h*2.2
-  const weakLabels:Record<string,string>={sleep:'sleep',stress:'stress levels',exercise:'lack of movement',nutrition:'diet',water:'dehydration',outdoor:'lack of nature exposure'}
 
   const plans={
     weekly:{price:'$3.99',per:'/week',total:'$3.99 billed weekly',savings:''},
