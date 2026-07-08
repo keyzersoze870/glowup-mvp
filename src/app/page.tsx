@@ -118,7 +118,7 @@ export default function LandingPage() {
           <span style={{ fontSize: 11, fontWeight: 600, color: ACCENT, letterSpacing: 0.2 }}>VISIBLE RESULTS IN 21 DAYS</span>
         </div>
         <h1 style={{ fontSize: 24, fontWeight: 700, color: '#1A1A1A', letterSpacing: -0.8, lineHeight: 1.2, marginBottom: 8 }}>
-          High cortisol is puffing<br />your face <span style={{ color: ACCENT }}>right now</span>
+          Your face is swollen.<br /><span style={{ color: ACCENT }}>High cortisol is why.</span>
         </h1>
         <p style={{ fontSize: 11, color: 'rgba(0,0,0,0.4)', letterSpacing: 0.5, fontWeight: 500 }}>
           ✓ DERMATOLOGIST-VALIDATED METHOD
@@ -143,8 +143,8 @@ export default function LandingPage() {
           <p style={{ fontSize: 10, color: 'rgba(0,0,0,0.45)', marginTop: 2 }}>of women have elevated cortisol</p>
         </div>
         <div style={{ flex: 1, background: 'rgba(48,209,88,0.06)', border: '0.5px solid rgba(48,209,88,0.15)', borderRadius: 12, padding: '10px', textAlign: 'center' }}>
-          <p style={{ fontSize: 20, fontWeight: 700, color: '#30D158', letterSpacing: -1 }}>21 days</p>
-          <p style={{ fontSize: 10, color: 'rgba(0,0,0,0.45)', marginTop: 2 }}>to see visible face changes</p>
+          <p style={{ fontSize: 20, fontWeight: 700, color: '#30D158', letterSpacing: -1 }}>&lt; 30 days</p>
+          <p style={{ fontSize: 10, color: 'rgba(0,0,0,0.45)', marginTop: 2 }}>for a slimmer face & more defined jawline</p>
         </div>
       </div>
 
