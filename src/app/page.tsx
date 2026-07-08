@@ -140,7 +140,7 @@ export default function LandingPage() {
       <div style={{ padding: '0 20px', display: 'flex', gap: 8, marginBottom: 16 }}>
         <div style={{ flex: 1, background: 'rgba(255,69,58,0.06)', border: '0.5px solid rgba(255,69,58,0.15)', borderRadius: 12, padding: '10px', textAlign: 'center' }}>
           <p style={{ fontSize: 20, fontWeight: 700, color: RED, letterSpacing: -1 }}>78%</p>
-          <p style={{ fontSize: 10, color: 'rgba(0,0,0,0.45)', marginTop: 2 }}>of women have elevated cortisol</p>
+          <p style={{ fontSize: 10, color: 'rgba(0,0,0,0.45)', marginTop: 2 }}>of women have elevated cortisol — causing a puffy face & acne</p>
         </div>
         <div style={{ flex: 1, background: 'rgba(48,209,88,0.06)', border: '0.5px solid rgba(48,209,88,0.15)', borderRadius: 12, padding: '10px', textAlign: 'center' }}>
           <p style={{ fontSize: 20, fontWeight: 700, color: '#30D158', letterSpacing: -1 }}>&lt; 30 days</p>
