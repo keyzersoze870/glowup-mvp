@@ -67,7 +67,7 @@ function BeforeAfterSlider() {
         color: '#fff', letterSpacing: 0.3, fontFamily: sf,
       }}>HIGH CORTISOL</div>
       <div style={{
-        position: 'absolute', top: 12, right: 12, background: 'rgba(48,209,88,0.9)',
+        position: 'absolute', top: 12, right: 12, background: 'rgba(74,159,229,0.9)',
         borderRadius: 8, padding: '4px 10px', fontSize: 11, fontWeight: 600,
         color: '#fff', letterSpacing: 0.3, fontFamily: sf,
       }}>LOW CORTISOL</div>
@@ -113,12 +113,12 @@ export default function LandingPage() {
 
       {/* HERO TEXT */}
       <div style={{ padding: '4px 20px 12px', textAlign: 'center' }}>
-        <div style={{ display: 'inline-flex', alignItems: 'center', gap: 6, background: 'rgba(255,69,58,0.08)', border: '0.5px solid rgba(255,69,58,0.2)', borderRadius: 20, padding: '4px 12px', marginBottom: 10 }}>
-          <div style={{ width: 6, height: 6, borderRadius: '50%', background: RED, animation: 'blink 1.5s infinite' }} />
-          <span style={{ fontSize: 11, fontWeight: 600, color: RED, letterSpacing: 0.2 }}>CORTISOL FACE IS REAL</span>
+        <div style={{ display: 'inline-flex', alignItems: 'center', gap: 6, background: 'rgba(74,159,229,0.08)', border: '0.5px solid rgba(74,159,229,0.2)', borderRadius: 20, padding: '4px 12px', marginBottom: 10 }}>
+          <div style={{ width: 6, height: 6, borderRadius: '50%', background: ACCENT, animation: 'blink 1.5s infinite' }} />
+          <span style={{ fontSize: 11, fontWeight: 600, color: ACCENT, letterSpacing: 0.2 }}>VISIBLE RESULTS IN 21 DAYS</span>
         </div>
         <h1 style={{ fontSize: 24, fontWeight: 700, color: '#1A1A1A', letterSpacing: -0.8, lineHeight: 1.2, marginBottom: 6 }}>
-          High cortisol is puffing<br />your face <span style={{ color: RED }}>right now</span>
+          High cortisol is puffing<br />your face <span style={{ color: ACCENT }}>right now</span>
         </h1>
         <p style={{ fontSize: 13, color: 'rgba(0,0,0,0.45)', letterSpacing: -0.2, lineHeight: 1.5 }}>
           Slide to see the difference ↓
