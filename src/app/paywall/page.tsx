@@ -163,22 +163,21 @@ export default function PaywallPage(){
         {pctAbove}% of women your age have lower cortisol than you.
       </p>
 
-      {/* BLURRED CURVE */}
-      <div style={{width:'100%',maxWidth:340,marginBottom:0}}>
-        <div style={{filter:'blur(6px)',pointerEvents:'none',userSelect:'none',opacity:0.5}}>
+      {/* BLURRED CURVE — minimal height */}
+      <div style={{width:'100%',maxWidth:340,height:40,overflow:'hidden',marginBottom:0}}>
+        <div style={{filter:'blur(8px)',pointerEvents:'none',userSelect:'none',opacity:0.35,transform:'translateY(-15px)'}}>
           <div style={{width:'100%',maxWidth:300,margin:'0 auto'}}>
             <svg viewBox={`0 0 ${w} ${h+30}`} style={{width:'100%',height:'auto'}}>
               <defs><linearGradient id="payGrad" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stopColor={scoreColor} stopOpacity="0.3"/><stop offset="100%" stopColor={scoreColor} stopOpacity="0.03"/></linearGradient></defs>
               <polygon points={`0,${h} ${bellPts.join(' ')} ${w},${h}`} fill="url(#payGrad)"/>
               <polyline points={bellPts.join(' ')} fill="none" stroke={scoreColor} strokeWidth="2"/>
-              <polygon points={`${markerX-6},${h+4} ${markerX+6},${h+4} ${markerX},${h-2}`} fill="#1A1A1A"/>
             </svg>
           </div>
         </div>
       </div>
 
       {/* LOCK CARD — normal flow */}
-      <div style={{width:'100%',maxWidth:300,background:'rgba(255,255,255,0.95)',borderRadius:20,padding:'16px 24px',display:'flex',flexDirection:'column',alignItems:'center',gap:10,boxShadow:'0 4px 20px rgba(0,0,0,0.08)',marginTop:-50,marginBottom:10,zIndex:10,position:'relative'}}>
+      <div style={{width:'100%',maxWidth:300,background:'rgba(255,255,255,0.95)',borderRadius:20,padding:'16px 24px',display:'flex',flexDirection:'column',alignItems:'center',gap:10,boxShadow:'0 4px 20px rgba(0,0,0,0.08)',marginTop:-20,marginBottom:10,zIndex:10,position:'relative'}}>
         <span style={{fontSize:28}}>🔒</span>
         <p style={{fontSize:15,fontWeight:700,color:'#1A1A1A',letterSpacing:-0.3,textAlign:'center'}}>10+ insights waiting for you</p>
         <div style={{display:'flex',flexDirection:'column',gap:6,width:'100%'}}>
