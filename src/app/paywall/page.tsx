@@ -201,7 +201,7 @@ export default function PaywallPage(){
           </div>
           <div style={{display:'flex',alignItems:'center',gap:8}}>
             <span style={{fontSize:14}}>💬</span>
-            <p style={{fontSize:12,color:'rgba(0,0,0,0.55)',lineHeight:1.4,fontStyle:'italic'}}>"I tried everything — diets, face yoga, lymphatic massage. Nothing worked until I understood it was my cortisol. My jawline came back in 3 weeks. I look like a different person." — <span style={{fontWeight:600}}>Jessica, 28</span></p>
+            <p style={{fontSize:12,color:'rgba(0,0,0,0.55)',lineHeight:1.4,fontStyle:'italic'}}>"I tried everything. Turns out it was just cortisol. Face slimmed in 3 weeks." — <span style={{fontWeight:600}}>Jessica, 28</span></p>
           </div>
         </div>
       </div>
