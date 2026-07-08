@@ -210,8 +210,8 @@ export default function PaywallPage(){
           </div>
         </div>
 
-        {/* LOCK OVERLAY */}
-        <div style={{position:'absolute',inset:0,display:'flex',flexDirection:'column',alignItems:'center',justifyContent:'center',gap:12}}>
+        {/* LOCK OVERLAY — positioned higher, just below bell curve */}
+        <div style={{position:'absolute',top:60,left:0,right:0,display:'flex',flexDirection:'column',alignItems:'center',gap:12}}>
           <div style={{background:'rgba(255,255,255,0.92)',borderRadius:20,padding:'16px 24px',display:'flex',flexDirection:'column',alignItems:'center',gap:10,boxShadow:'0 4px 20px rgba(0,0,0,0.08)',maxWidth:300}}>
             <span style={{fontSize:28}}>🔒</span>
             <p style={{fontSize:15,fontWeight:700,color:'#1A1A1A',letterSpacing:-0.3,textAlign:'center'}}>10+ insights waiting for you</p>
@@ -237,32 +237,32 @@ export default function PaywallPage(){
         </div>
       </div>
 
-      {/* CTA under blurred zone */}
+      {/* SOCIAL PROOF — between lock and CTA */}
+      <div style={{width:'100%',maxWidth:340,background:'rgba(48,209,88,0.06)',border:'0.5px solid rgba(48,209,88,0.15)',borderRadius:12,padding:'12px 16px',marginBottom:12}}>
+        <div style={{display:'flex',flexDirection:'column',gap:8}}>
+          <div style={{display:'flex',alignItems:'center',gap:8}}>
+            <span style={{fontSize:14}}>📉</span>
+            <p style={{fontSize:12,color:'rgba(0,0,0,0.55)',lineHeight:1.4}}><span style={{fontWeight:700,color:'#1A1A1A'}}>4,258 women</span> reduced their cortisol this month</p>
+          </div>
+          <div style={{display:'flex',alignItems:'center',gap:8}}>
+            <span style={{fontSize:14}}>✨</span>
+            <p style={{fontSize:12,color:'rgba(0,0,0,0.55)',lineHeight:1.4}}>Average result: <span style={{fontWeight:700,color:'#30D158'}}>face visibly slimmer in 21 days</span></p>
+          </div>
+          <div style={{display:'flex',alignItems:'center',gap:8}}>
+            <span style={{fontSize:14}}>💬</span>
+            <p style={{fontSize:12,color:'rgba(0,0,0,0.55)',lineHeight:1.4,fontStyle:'italic'}}>"I tried everything — diets, face yoga, lymphatic massage. Nothing worked until I understood it was my cortisol. My jawline came back in 3 weeks. I look like a different person." — <span style={{fontWeight:600}}>Jessica, 28</span></p>
+          </div>
+        </div>
+      </div>
+
+      {/* CTA */}
       <button onClick={()=>document.querySelector('#pricing')?.scrollIntoView({behavior:'smooth'})} style={{width:'100%',maxWidth:340,padding:'14px',background:ACCENT,border:'none',borderRadius:14,color:'#FFFFFF',fontSize:15,fontWeight:600,cursor:'pointer',fontFamily:sf,letterSpacing:-0.2,marginBottom:20}}>
         Unlock my full cortisol report →
       </button>
 
-      {/* SOCIAL PROOF */}
+      {/* PLANS */}
       {showPlans && (
         <div id="pricing" style={{width:'100%',maxWidth:340,animation:'fadeIn 0.5s ease'}}>
-          <div style={{background:'rgba(48,209,88,0.06)',border:'0.5px solid rgba(48,209,88,0.15)',borderRadius:12,padding:'12px 16px',marginBottom:16}}>
-            <div style={{display:'flex',flexDirection:'column',gap:8}}>
-              <div style={{display:'flex',alignItems:'center',gap:8}}>
-                <span style={{fontSize:14}}>📉</span>
-                <p style={{fontSize:12,color:'rgba(0,0,0,0.55)',lineHeight:1.4}}><span style={{fontWeight:700,color:'#1A1A1A'}}>4,258 women</span> reduced their cortisol this month</p>
-              </div>
-              <div style={{display:'flex',alignItems:'center',gap:8}}>
-                <span style={{fontSize:14}}>✨</span>
-                <p style={{fontSize:12,color:'rgba(0,0,0,0.55)',lineHeight:1.4}}>Average result: <span style={{fontWeight:700,color:'#30D158'}}>face visibly slimmer in 21 days</span></p>
-              </div>
-              <div style={{display:'flex',alignItems:'center',gap:8}}>
-                <span style={{fontSize:14}}>💬</span>
-                <p style={{fontSize:12,color:'rgba(0,0,0,0.55)',lineHeight:1.4,fontStyle:'italic'}}>"I tried everything — diets, face yoga, lymphatic massage. Nothing worked until I understood it was my cortisol. My jawline came back in 3 weeks. I look like a different person." — <span style={{fontWeight:600}}>Jessica, 28</span></p>
-              </div>
-            </div>
-          </div>
-
-          {/* PLANS */}
           <div style={{display:'flex',flexDirection:'column',gap:8,marginBottom:16}}>
             {(['weekly','monthly','yearly'] as const).map(plan=>(
               <button key={plan} onClick={()=>setSelectedPlan(plan)} style={{

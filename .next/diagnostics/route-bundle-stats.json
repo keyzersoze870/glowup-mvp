@@ -1,11 +1,11 @@
 [
   {
     "route": "/paywall",
-    "firstLoadUncompressedJsBytes": 760712,
+    "firstLoadUncompressedJsBytes": 760728,
     "firstLoadChunkPaths": [
       ".next/static/chunks/05-c3ty_6dwfk.js",
       ".next/static/chunks/14mrh2-p_w84d.js",
-      ".next/static/chunks/38uv0_lnfqh44.js",
+      ".next/static/chunks/2hzt8oj5mfpsb.js",
       ".next/static/chunks/24imz2req6x4_.js",
       ".next/static/chunks/01dkdyukbdpqq.js",
       ".next/static/chunks/07-hzktxqjvzd.js",
