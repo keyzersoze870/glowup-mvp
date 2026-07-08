@@ -31,11 +31,11 @@
   },
   {
     "route": "/today",
-    "firstLoadUncompressedJsBytes": 533462,
+    "firstLoadUncompressedJsBytes": 533065,
     "firstLoadChunkPaths": [
       ".next/static/chunks/05-c3ty_6dwfk.js",
       ".next/static/chunks/14mrh2-p_w84d.js",
-      ".next/static/chunks/3mh-25r2578iy.js",
+      ".next/static/chunks/32uje_vrrw_er.js",
       ".next/static/chunks/01dkdyukbdpqq.js",
       ".next/static/chunks/07-hzktxqjvzd.js",
       ".next/static/chunks/1-wnwsz3t8wqq.js",
