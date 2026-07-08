@@ -147,19 +147,19 @@ export default function PaywallPage(){
     <main style={{minHeight:'100svh',background:'#FFFFFF',fontFamily:sf,display:'flex',flexDirection:'column',alignItems:'center',padding:'60px 24px 40px',overflow:'auto'}}>
 
       {/* SCORE — VISIBLE */}
-      <p style={{fontSize:13,color:'rgba(0,0,0,0.45)',letterSpacing:-0.2,marginBottom:8,animation:'fadeIn 0.5s ease'}}>
+      <p style={{fontSize:12,color:'rgba(0,0,0,0.45)',letterSpacing:-0.2,marginBottom:4,animation:'fadeIn 0.5s ease'}}>
         {profile.prenom}, your Cortisol Score is
       </p>
       <div style={{marginBottom:4,animation:'fadeIn 0.8s ease'}}>
-        <svg width={160} height={160} viewBox="0 0 120 120">
+        <svg width={100} height={100} viewBox="0 0 120 120">
           <circle cx="60" cy="60" r={r} fill="none" stroke="rgba(0,0,0,0.05)" strokeWidth="7"/>
           <circle cx="60" cy="60" r={r} fill="none" stroke={scoreColor} strokeWidth="7" strokeLinecap="round" strokeDasharray={c} strokeDashoffset={offset} transform="rotate(-90 60 60)" style={{transition:'stroke-dashoffset 0.03s'}}/>
           <text x="60" y="57" textAnchor="middle" dominantBaseline="middle" style={{fontFamily:sf,fontWeight:700,fontSize:28,fill:'#1A1A1A',letterSpacing:-1}}>{displayed}</text>
           <text x="60" y="72" textAnchor="middle" dominantBaseline="middle" style={{fontFamily:sf,fontSize:8,fill:'rgba(0,0,0,0.3)',letterSpacing:0.5}}>/ 100</text>
         </svg>
       </div>
-      <span style={{fontSize:20,fontWeight:800,color:scoreColor,letterSpacing:-0.5,marginBottom:4,animation:'fadeIn 1s ease'}}>{scoreLabel}</span>
-      <p style={{fontSize:13,color:RED,fontWeight:600,letterSpacing:-0.2,marginBottom:8}}>
+      <span style={{fontSize:16,fontWeight:800,color:scoreColor,letterSpacing:-0.5,marginBottom:2,animation:'fadeIn 1s ease'}}>{scoreLabel}</span>
+      <p style={{fontSize:11,color:RED,fontWeight:600,letterSpacing:-0.2,marginBottom:4}}>
         {pctAbove}% of women your age have lower cortisol than you.
       </p>
 
@@ -178,7 +178,7 @@ export default function PaywallPage(){
       </div>
 
       {/* LOCK CARD — normal flow */}
-      <div style={{width:'100%',maxWidth:300,background:'rgba(255,255,255,0.95)',borderRadius:20,padding:'16px 24px',display:'flex',flexDirection:'column',alignItems:'center',gap:10,boxShadow:'0 4px 20px rgba(0,0,0,0.08)',marginTop:-40,marginBottom:12,zIndex:10,position:'relative'}}>
+      <div style={{width:'100%',maxWidth:300,background:'rgba(255,255,255,0.95)',borderRadius:20,padding:'16px 24px',display:'flex',flexDirection:'column',alignItems:'center',gap:10,boxShadow:'0 4px 20px rgba(0,0,0,0.08)',marginTop:-50,marginBottom:10,zIndex:10,position:'relative'}}>
         <span style={{fontSize:28}}>🔒</span>
         <p style={{fontSize:15,fontWeight:700,color:'#1A1A1A',letterSpacing:-0.3,textAlign:'center'}}>10+ insights waiting for you</p>
         <div style={{display:'flex',flexDirection:'column',gap:6,width:'100%'}}>
@@ -208,14 +208,14 @@ export default function PaywallPage(){
       </div>
 
       {/* CTA */}
-      <button onClick={()=>document.querySelector('#pricing')?.scrollIntoView({behavior:'smooth'})} style={{width:'100%',maxWidth:340,padding:'14px',background:ACCENT,border:'none',borderRadius:14,color:'#FFFFFF',fontSize:15,fontWeight:600,cursor:'pointer',fontFamily:sf,letterSpacing:-0.2,marginBottom:8}}>
+      <button onClick={()=>document.querySelector('#pricing')?.scrollIntoView({behavior:'smooth'})} style={{width:'100%',maxWidth:340,padding:'14px',background:ACCENT,border:'none',borderRadius:14,color:'#FFFFFF',fontSize:15,fontWeight:600,cursor:'pointer',fontFamily:sf,letterSpacing:-0.2,marginBottom:4}}>
         Start my 30-day cortisol reset →
       </button>
 
       {/* PLANS */}
       {showPlans && (
         <div id="pricing" style={{width:'100%',maxWidth:340,animation:'fadeIn 0.5s ease'}}>
-          <div style={{display:'flex',flexDirection:'column',gap:8,marginBottom:8}}>
+          <div style={{display:'flex',flexDirection:'column',gap:8,marginBottom:4}}>
             {(['weekly','monthly','yearly'] as const).map(plan=>(
               <button key={plan} onClick={()=>setSelectedPlan(plan)} style={{
                 width:'100%',padding:'14px 16px',background:selectedPlan===plan?'rgba(74,159,229,0.1)':'rgba(0,0,0,0.04)',
