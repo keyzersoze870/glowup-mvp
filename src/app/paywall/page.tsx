@@ -163,10 +163,10 @@ export default function PaywallPage(){
         {pctAbove}% of women your age have lower cortisol than you.
       </p>
 
-      {/* BLURRED ZONE — compact */}
-      <div style={{width:'100%',maxWidth:340,marginBottom:0,position:'relative'}}>
+      {/* BLURRED CURVE */}
+      <div style={{width:'100%',maxWidth:340,marginBottom:0}}>
         <div style={{filter:'blur(6px)',pointerEvents:'none',userSelect:'none',opacity:0.5}}>
-          <div style={{width:'100%',maxWidth:300,margin:'0 auto 8px'}}>
+          <div style={{width:'100%',maxWidth:300,margin:'0 auto'}}>
             <svg viewBox={`0 0 ${w} ${h+30}`} style={{width:'100%',height:'auto'}}>
               <defs><linearGradient id="payGrad" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stopColor={scoreColor} stopOpacity="0.3"/><stop offset="100%" stopColor={scoreColor} stopOpacity="0.03"/></linearGradient></defs>
               <polygon points={`0,${h} ${bellPts.join(' ')} ${w},${h}`} fill="url(#payGrad)"/>
@@ -175,19 +175,17 @@ export default function PaywallPage(){
             </svg>
           </div>
         </div>
+      </div>
 
-        {/* LOCK — over the blurred curve */}
-        <div style={{position:'absolute',top:20,left:0,right:0,display:'flex',justifyContent:'center'}}>
-          <div style={{background:'rgba(255,255,255,0.92)',borderRadius:20,padding:'16px 24px',display:'flex',flexDirection:'column',alignItems:'center',gap:10,boxShadow:'0 4px 20px rgba(0,0,0,0.08)',maxWidth:300}}>
-            <span style={{fontSize:28}}>🔒</span>
-            <p style={{fontSize:15,fontWeight:700,color:'#1A1A1A',letterSpacing:-0.3,textAlign:'center'}}>10+ insights waiting for you</p>
-            <div style={{display:'flex',flexDirection:'column',gap:6,width:'100%'}}>
-              <div style={{display:'flex',alignItems:'center',gap:8}}><span style={{color:ACCENT,fontSize:13}}>✓</span><span style={{fontSize:12,color:'rgba(0,0,0,0.6)',lineHeight:1.3}}>Personalized analysis backed by clinical methodology</span></div>
-              <div style={{display:'flex',alignItems:'center',gap:8}}><span style={{color:ACCENT,fontSize:13}}>✓</span><span style={{fontSize:12,color:'rgba(0,0,0,0.6)',lineHeight:1.3}}>30-day plan guaranteed to slim your face</span></div>
-              <div style={{display:'flex',alignItems:'center',gap:8}}><span style={{color:ACCENT,fontSize:13}}>✓</span><span style={{fontSize:12,color:'rgba(0,0,0,0.6)',lineHeight:1.3}}>Full cortisol breakdown by category</span></div>
-              <div style={{display:'flex',alignItems:'center',gap:8}}><span style={{color:ACCENT,fontSize:13}}>✓</span><span style={{fontSize:12,color:'rgba(0,0,0,0.6)',lineHeight:1.3}}>Daily missions to lower your cortisol</span></div>
-            </div>
-          </div>
+      {/* LOCK CARD — normal flow */}
+      <div style={{width:'100%',maxWidth:300,background:'rgba(255,255,255,0.95)',borderRadius:20,padding:'16px 24px',display:'flex',flexDirection:'column',alignItems:'center',gap:10,boxShadow:'0 4px 20px rgba(0,0,0,0.08)',marginTop:-30,marginBottom:16,zIndex:10,position:'relative'}}>
+        <span style={{fontSize:28}}>🔒</span>
+        <p style={{fontSize:15,fontWeight:700,color:'#1A1A1A',letterSpacing:-0.3,textAlign:'center'}}>10+ insights waiting for you</p>
+        <div style={{display:'flex',flexDirection:'column',gap:6,width:'100%'}}>
+          <div style={{display:'flex',alignItems:'center',gap:8}}><span style={{color:ACCENT,fontSize:13}}>✓</span><span style={{fontSize:12,color:'rgba(0,0,0,0.6)',lineHeight:1.3}}>Personalized analysis backed by clinical methodology</span></div>
+          <div style={{display:'flex',alignItems:'center',gap:8}}><span style={{color:ACCENT,fontSize:13}}>✓</span><span style={{fontSize:12,color:'rgba(0,0,0,0.6)',lineHeight:1.3}}>30-day plan guaranteed to slim your face</span></div>
+          <div style={{display:'flex',alignItems:'center',gap:8}}><span style={{color:ACCENT,fontSize:13}}>✓</span><span style={{fontSize:12,color:'rgba(0,0,0,0.6)',lineHeight:1.3}}>Full cortisol breakdown by category</span></div>
+          <div style={{display:'flex',alignItems:'center',gap:8}}><span style={{color:ACCENT,fontSize:13}}>✓</span><span style={{fontSize:12,color:'rgba(0,0,0,0.6)',lineHeight:1.3}}>Daily missions to lower your cortisol</span></div>
         </div>
       </div>
 
