@@ -112,29 +112,32 @@ export default function LandingPage() {
       </nav>
 
       {/* HERO TEXT */}
-      <div style={{ padding: '4px 20px 12px', textAlign: 'center' }}>
+      <div style={{ padding: '8px 20px 16px', textAlign: 'center' }}>
         <div style={{ display: 'inline-flex', alignItems: 'center', gap: 6, background: 'rgba(74,159,229,0.08)', border: '0.5px solid rgba(74,159,229,0.2)', borderRadius: 20, padding: '4px 12px', marginBottom: 10 }}>
           <div style={{ width: 6, height: 6, borderRadius: '50%', background: ACCENT, animation: 'blink 1.5s infinite' }} />
           <span style={{ fontSize: 11, fontWeight: 600, color: ACCENT, letterSpacing: 0.2 }}>VISIBLE RESULTS IN 21 DAYS</span>
         </div>
-        <h1 style={{ fontSize: 24, fontWeight: 700, color: '#1A1A1A', letterSpacing: -0.8, lineHeight: 1.2, marginBottom: 6 }}>
+        <h1 style={{ fontSize: 24, fontWeight: 700, color: '#1A1A1A', letterSpacing: -0.8, lineHeight: 1.2, marginBottom: 8 }}>
           High cortisol is puffing<br />your face <span style={{ color: ACCENT }}>right now</span>
         </h1>
-        <p style={{ fontSize: 13, color: 'rgba(0,0,0,0.45)', letterSpacing: -0.2, lineHeight: 1.5 }}>
+        <p style={{ fontSize: 11, color: 'rgba(0,0,0,0.4)', letterSpacing: 0.5, fontWeight: 500 }}>
+          ✓ DERMATOLOGIST-VALIDATED METHOD
+        </p>
+        <p style={{ fontSize: 13, color: 'rgba(0,0,0,0.45)', letterSpacing: -0.2, lineHeight: 1.5, marginTop: 8 }}>
           Slide to see the difference ↓
         </p>
       </div>
 
       {/* BEFORE/AFTER SLIDER */}
-      <div style={{ padding: '0 20px', marginBottom: 12 }}>
+      <div style={{ padding: '0 20px', marginBottom: 16 }}>
         <BeforeAfterSlider />
-        <p style={{ fontSize: 11, color: 'rgba(0,0,0,0.3)', textAlign: 'center', marginTop: 6, letterSpacing: -0.1 }}>
+        <p style={{ fontSize: 11, color: 'rgba(0,0,0,0.3)', textAlign: 'center', marginTop: 8, letterSpacing: -0.1 }}>
           Same person. Same lighting. Only difference: cortisol levels.
         </p>
       </div>
 
       {/* STATS ROW */}
-      <div style={{ padding: '0 20px', display: 'flex', gap: 8, marginBottom: 12 }}>
+      <div style={{ padding: '0 20px', display: 'flex', gap: 8, marginBottom: 16 }}>
         <div style={{ flex: 1, background: 'rgba(255,69,58,0.06)', border: '0.5px solid rgba(255,69,58,0.15)', borderRadius: 12, padding: '10px', textAlign: 'center' }}>
           <p style={{ fontSize: 20, fontWeight: 700, color: RED, letterSpacing: -1 }}>78%</p>
           <p style={{ fontSize: 10, color: 'rgba(0,0,0,0.45)', marginTop: 2 }}>of women have elevated cortisol</p>
@@ -146,14 +149,14 @@ export default function LandingPage() {
       </div>
 
       {/* CTA */}
-      <div style={{ padding: '0 20px 24px' }}>
+      <div style={{ padding: '0 20px 32px' }}>
         <Link href="/onboarding" style={{
           fontSize: 15, fontWeight: 600, color: '#FFFFFF', background: ACCENT, padding: '14px 0', borderRadius: 14,
           textDecoration: 'none', letterSpacing: -0.3, display: 'block', textAlign: 'center',
         }}>
-          Check my cortisol level — Free
+          Check my cortisol level — in 2 minutes
         </Link>
-        <p style={{ fontSize: 11, color: 'rgba(0,0,0,0.2)', marginTop: 6, letterSpacing: -0.1, textAlign: 'center' }}>2 min · No credit card required</p>
+        <p style={{ fontSize: 11, color: 'rgba(0,0,0,0.2)', marginTop: 6, letterSpacing: -0.1, textAlign: 'center' }}>Free · No credit card required</p>
       </div>
 
       <style>{`
