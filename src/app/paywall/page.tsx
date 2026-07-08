@@ -163,12 +163,10 @@ export default function PaywallPage(){
         {pctAbove}% of women your age have lower cortisol than you.
       </p>
 
-      {/* EVERYTHING ELSE — BLURRED WITH LOCK */}
-      <div style={{width:'100%',maxWidth:340,marginBottom:16,position:'relative'}}>
+      {/* BLURRED ZONE — compact */}
+      <div style={{width:'100%',maxWidth:340,marginBottom:0,position:'relative'}}>
         <div style={{filter:'blur(6px)',pointerEvents:'none',userSelect:'none',opacity:0.5}}>
-
-          {/* Blurred bell curve */}
-          <div style={{width:'100%',maxWidth:300,margin:'0 auto 12px'}}>
+          <div style={{width:'100%',maxWidth:300,margin:'0 auto 8px'}}>
             <svg viewBox={`0 0 ${w} ${h+30}`} style={{width:'100%',height:'auto'}}>
               <defs><linearGradient id="payGrad" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stopColor={scoreColor} stopOpacity="0.3"/><stop offset="100%" stopColor={scoreColor} stopOpacity="0.03"/></linearGradient></defs>
               <polygon points={`0,${h} ${bellPts.join(' ')} ${w},${h}`} fill="url(#payGrad)"/>
@@ -176,68 +174,24 @@ export default function PaywallPage(){
               <polygon points={`${markerX-6},${h+4} ${markerX+6},${h+4} ${markerX},${h-2}`} fill="#1A1A1A"/>
             </svg>
           </div>
-
-          {/* Blurred message */}
-          <p style={{fontSize:13,color:'#1A1A1A',fontWeight:600,textAlign:'center',marginBottom:12,lineHeight:1.5}}>
-            Your main cortisol driver is stress levels. Left unchecked this causes face puffiness and premature aging.
-          </p>
-
-          {/* Blurred breakdown */}
-          {[
-            {icon:'😴',label:'Sleep Recovery Score',val:'4/20',color:RED},
-            {icon:'😰',label:'Stress & Anxiety Level',val:'6/18',color:'#FF9F0A'},
-            {icon:'🏃',label:'Movement & Exercise',val:'12/16',color:'#30D158'},
-            {icon:'🥗',label:'Nutrition & Diet Quality',val:'7/16',color:'#30D158'},
-            {icon:'💧',label:'Hydration Level',val:'4/10',color:ACCENT},
-            {icon:'🌿',label:'Nature & Outdoor Exposure',val:'3/10',color:'#64D2FF'},
-          ].map((item,i)=>(
-            <div key={i} style={{display:'flex',alignItems:'center',justifyContent:'space-between',padding:'8px 12px',background:i%2===0?'rgba(0,0,0,0.03)':'transparent',borderRadius:8,marginBottom:2}}>
-              <div style={{display:'flex',alignItems:'center',gap:8}}>
-                <span style={{fontSize:14}}>{item.icon}</span>
-                <span style={{fontSize:12,fontWeight:500,color:'#1A1A1A'}}>{item.label}</span>
-              </div>
-              <span style={{fontSize:12,fontWeight:700,color:item.color}}>{item.val}</span>
-            </div>
-          ))}
-
-          {/* Blurred plan preview */}
-          <div style={{marginTop:12,padding:'12px',background:'rgba(74,159,229,0.06)',borderRadius:12}}>
-            <p style={{fontSize:12,fontWeight:600,color:'#1A1A1A',marginBottom:6}}>Your 30-Day Cortisol Reset Plan</p>
-            <p style={{fontSize:11,color:'rgba(0,0,0,0.5)'}}>Week 1: Sleep optimization protocol</p>
-            <p style={{fontSize:11,color:'rgba(0,0,0,0.5)'}}>Week 2: Stress reduction routine</p>
-            <p style={{fontSize:11,color:'rgba(0,0,0,0.5)'}}>Week 3: Nutrition & hydration reset</p>
-            <p style={{fontSize:11,color:'rgba(0,0,0,0.5)'}}>Week 4: Maintenance & tracking</p>
-          </div>
         </div>
 
-        {/* LOCK OVERLAY — positioned higher, just below bell curve */}
-        <div style={{position:'absolute',top:60,left:0,right:0,display:'flex',flexDirection:'column',alignItems:'center',gap:12}}>
+        {/* LOCK — over the blurred curve */}
+        <div style={{position:'absolute',top:20,left:0,right:0,display:'flex',justifyContent:'center'}}>
           <div style={{background:'rgba(255,255,255,0.92)',borderRadius:20,padding:'16px 24px',display:'flex',flexDirection:'column',alignItems:'center',gap:10,boxShadow:'0 4px 20px rgba(0,0,0,0.08)',maxWidth:300}}>
             <span style={{fontSize:28}}>🔒</span>
             <p style={{fontSize:15,fontWeight:700,color:'#1A1A1A',letterSpacing:-0.3,textAlign:'center'}}>10+ insights waiting for you</p>
             <div style={{display:'flex',flexDirection:'column',gap:6,width:'100%'}}>
-              <div style={{display:'flex',alignItems:'center',gap:8}}>
-                <span style={{color:ACCENT,fontSize:13}}>✓</span>
-                <span style={{fontSize:12,color:'rgba(0,0,0,0.6)',lineHeight:1.3}}>Personalized analysis backed by clinical methodology</span>
-              </div>
-              <div style={{display:'flex',alignItems:'center',gap:8}}>
-                <span style={{color:ACCENT,fontSize:13}}>✓</span>
-                <span style={{fontSize:12,color:'rgba(0,0,0,0.6)',lineHeight:1.3}}>30-day plan guaranteed to slim your face</span>
-              </div>
-              <div style={{display:'flex',alignItems:'center',gap:8}}>
-                <span style={{color:ACCENT,fontSize:13}}>✓</span>
-                <span style={{fontSize:12,color:'rgba(0,0,0,0.6)',lineHeight:1.3}}>Full cortisol breakdown by category</span>
-              </div>
-              <div style={{display:'flex',alignItems:'center',gap:8}}>
-                <span style={{color:ACCENT,fontSize:13}}>✓</span>
-                <span style={{fontSize:12,color:'rgba(0,0,0,0.6)',lineHeight:1.3}}>Daily missions to lower your cortisol</span>
-              </div>
+              <div style={{display:'flex',alignItems:'center',gap:8}}><span style={{color:ACCENT,fontSize:13}}>✓</span><span style={{fontSize:12,color:'rgba(0,0,0,0.6)',lineHeight:1.3}}>Personalized analysis backed by clinical methodology</span></div>
+              <div style={{display:'flex',alignItems:'center',gap:8}}><span style={{color:ACCENT,fontSize:13}}>✓</span><span style={{fontSize:12,color:'rgba(0,0,0,0.6)',lineHeight:1.3}}>30-day plan guaranteed to slim your face</span></div>
+              <div style={{display:'flex',alignItems:'center',gap:8}}><span style={{color:ACCENT,fontSize:13}}>✓</span><span style={{fontSize:12,color:'rgba(0,0,0,0.6)',lineHeight:1.3}}>Full cortisol breakdown by category</span></div>
+              <div style={{display:'flex',alignItems:'center',gap:8}}><span style={{color:ACCENT,fontSize:13}}>✓</span><span style={{fontSize:12,color:'rgba(0,0,0,0.6)',lineHeight:1.3}}>Daily missions to lower your cortisol</span></div>
             </div>
           </div>
         </div>
       </div>
 
-      {/* SOCIAL PROOF — between lock and CTA */}
+      {/* SOCIAL PROOF — right after lock */}
       <div style={{width:'100%',maxWidth:340,background:'rgba(48,209,88,0.06)',border:'0.5px solid rgba(48,209,88,0.15)',borderRadius:12,padding:'12px 16px',marginBottom:12}}>
         <div style={{display:'flex',flexDirection:'column',gap:8}}>
           <div style={{display:'flex',alignItems:'center',gap:8}}>
@@ -256,7 +210,7 @@ export default function PaywallPage(){
       </div>
 
       {/* CTA */}
-      <button onClick={()=>document.querySelector('#pricing')?.scrollIntoView({behavior:'smooth'})} style={{width:'100%',maxWidth:340,padding:'14px',background:ACCENT,border:'none',borderRadius:14,color:'#FFFFFF',fontSize:15,fontWeight:600,cursor:'pointer',fontFamily:sf,letterSpacing:-0.2,marginBottom:20}}>
+      <button onClick={()=>document.querySelector('#pricing')?.scrollIntoView({behavior:'smooth'})} style={{width:'100%',maxWidth:340,padding:'14px',background:ACCENT,border:'none',borderRadius:14,color:'#FFFFFF',fontSize:15,fontWeight:600,cursor:'pointer',fontFamily:sf,letterSpacing:-0.2,marginBottom:16}}>
         Unlock my full cortisol report →
       </button>
 
