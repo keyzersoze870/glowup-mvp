@@ -179,7 +179,7 @@ export default function PaywallPage(){
       {/* LOCK CARD — normal flow */}
       <div style={{width:'100%',maxWidth:300,background:'rgba(255,255,255,0.95)',borderRadius:20,padding:'16px 24px',display:'flex',flexDirection:'column',alignItems:'center',gap:10,boxShadow:'0 4px 20px rgba(0,0,0,0.08)',marginTop:-20,marginBottom:10,zIndex:10,position:'relative'}}>
         <span style={{fontSize:28}}>🔒</span>
-        <p style={{fontSize:15,fontWeight:700,color:'#1A1A1A',letterSpacing:-0.3,textAlign:'center'}}>10+ insights waiting for you</p>
+        <p style={{fontSize:15,fontWeight:700,color:'#1A1A1A',letterSpacing:-0.3,textAlign:'center'}}>10+ warning signs found in your profile</p>
         <div style={{display:'flex',flexDirection:'column',gap:6,width:'100%'}}>
           <div style={{display:'flex',alignItems:'center',gap:8}}><span style={{color:ACCENT,fontSize:13}}>✓</span><span style={{fontSize:12,color:'rgba(0,0,0,0.6)',lineHeight:1.3}}>Personalized analysis backed by clinical methodology</span></div>
           <div style={{display:'flex',alignItems:'center',gap:8}}><span style={{color:ACCENT,fontSize:13}}>✓</span><span style={{fontSize:12,color:'rgba(0,0,0,0.6)',lineHeight:1.3}}>30-day plan guaranteed to slim your face</span></div>
