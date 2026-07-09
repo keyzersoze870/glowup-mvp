@@ -195,14 +195,14 @@ export default function PaywallPage(){
             <span style={{fontSize:14}}>📉</span>
             <p style={{fontSize:12,color:'rgba(0,0,0,0.55)',lineHeight:1.4}}><span style={{fontWeight:700,color:'#1A1A1A'}}>4,258 women</span> reduced their cortisol this month</p>
           </div>
-          <div style={{display:'flex',alignItems:'center',gap:8}}>
-            <span style={{fontSize:14}}>✨</span>
-            <p style={{fontSize:12,color:'rgba(0,0,0,0.55)',lineHeight:1.4}}>Average result: <span style={{fontWeight:700,color:'#30D158'}}>face visibly slimmer in 21 days</span></p>
+          <div style={{background:'rgba(48,209,88,0.1)',border:'0.5px solid rgba(48,209,88,0.25)',borderRadius:10,padding:'8px 12px'}}>
+            <p style={{fontSize:14,color:'#30D158',fontWeight:700,textAlign:'center',letterSpacing:-0.3}}>✨ Average result: face visibly slimmer in less than 30 days</p>
           </div>
           <div style={{display:'flex',alignItems:'center',gap:8}}>
             <span style={{fontSize:14}}>💬</span>
             <p style={{fontSize:12,color:'rgba(0,0,0,0.55)',lineHeight:1.4,fontStyle:'italic'}}>"I tried everything. Turns out it was just cortisol. Face slimmed in 3 weeks." — <span style={{fontWeight:600}}>Jessica, 28</span></p>
           </div>
+
         </div>
       </div>
 
@@ -234,16 +234,20 @@ export default function PaywallPage(){
                 <div style={{textAlign:'right'}}>
                   <p style={{fontSize:17,fontWeight:700,color:selectedPlan===plan?ACCENT:'#1A1A1A',letterSpacing:-0.5}}>{plans[plan].price}</p>
                   {plans[plan].savings&&<p style={{fontSize:10,fontWeight:600,color:'#30D158'}}>{plans[plan].savings}</p>}
+                  {plan==='yearly'&&<p style={{fontSize:10,color:'rgba(0,0,0,0.4)'}}>= $3.33/mo</p>}
                 </div>
               </button>
             ))}
           </div>
 
-          <button style={{width:'100%',padding:'16px',background:ACCENT,border:'none',borderRadius:14,color:'#FFFFFF',fontSize:16,fontWeight:600,cursor:'pointer',fontFamily:sf,letterSpacing:-0.3,marginBottom:6}}>
+          <button style={{width:'100%',padding:'16px',background:ACCENT,border:'none',borderRadius:14,color:'#FFFFFF',fontSize:16,fontWeight:600,cursor:'pointer',fontFamily:sf,letterSpacing:-0.3,marginBottom:4}}>
             Start my 30-day cortisol reset →
           </button>
+          <p style={{fontSize:12,color:'rgba(0,0,0,0.4)',textAlign:'center',fontWeight:500,marginBottom:4}}>
+            🔓 Cancel anytime in 10 seconds
+          </p>
           <p style={{fontSize:11,color:'rgba(0,0,0,0.3)',textAlign:'center',lineHeight:1.4}}>
-            then {plans[selectedPlan].price}{plans[selectedPlan].per} · Cancel anytime
+            then {plans[selectedPlan].price}{plans[selectedPlan].per}
           </p>
           <p style={{fontSize:10,color:'rgba(0,0,0,0.15)',textAlign:'center',marginTop:8}}>
             Recurring billing until canceled. Results vary.
