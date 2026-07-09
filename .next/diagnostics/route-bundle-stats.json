@@ -59,11 +59,11 @@
   },
   {
     "route": "/onboarding",
-    "firstLoadUncompressedJsBytes": 528912,
+    "firstLoadUncompressedJsBytes": 529036,
     "firstLoadChunkPaths": [
       ".next/static/chunks/05-c3ty_6dwfk.js",
       ".next/static/chunks/14mrh2-p_w84d.js",
-      ".next/static/chunks/0-eu_-m5nuxuu.js",
+      ".next/static/chunks/3houd8ufo_c3v.js",
       ".next/static/chunks/01dkdyukbdpqq.js",
       ".next/static/chunks/07-hzktxqjvzd.js",
       ".next/static/chunks/1-wnwsz3t8wqq.js",

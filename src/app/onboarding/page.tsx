@@ -49,6 +49,12 @@ export default function OnboardingPage() {
       // Last step — save profile and go to paywall
       const data = { prenom, age: Number(age), sleepHours, bedtime, stressLevel, relaxation, exercise, outdoor, diet, water, sugar, caffeine }
       localStorage.setItem('glowup_profile', JSON.stringify(data))
+      // Save to Supabase in background
+      fetch('/api/save-profile', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(data),
+      }).catch(() => {})
       router.push('/paywall')
       return
     }

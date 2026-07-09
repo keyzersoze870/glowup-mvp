@@ -6,6 +6,7 @@
   "/api/daily-missions/route": "app/api/daily-missions/route.js",
   "/api/daily-score/route": "app/api/daily-score/route.js",
   "/api/generate-score/route": "app/api/generate-score/route.js",
+  "/api/save-profile/route": "app/api/save-profile/route.js",
   "/auth/callback/route": "app/auth/callback/route.js",
   "/dashboard/page": "app/dashboard/page.js",
   "/favicon.ico/route": "app/favicon.ico/route.js",

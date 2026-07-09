@@ -6,6 +6,7 @@
   "/api/daily-missions/route": "/api/daily-missions",
   "/api/daily-score/route": "/api/daily-score",
   "/api/generate-score/route": "/api/generate-score",
+  "/api/save-profile/route": "/api/save-profile",
   "/auth/callback/route": "/auth/callback",
   "/dashboard/page": "/dashboard",
   "/favicon.ico/route": "/favicon.ico",

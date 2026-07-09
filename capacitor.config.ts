@@ -1,8 +1,8 @@
 import type { CapacitorConfig } from '@capacitor/cli';
 
 const config: CapacitorConfig = {
-  appId: 'com.glowapp.ios',
-  appName: 'GlowApp',
+  appId: 'com.cortilow.app',
+  appName: 'Cortilow',
   webDir: 'public',
   server: {
     // L'app charge ton site Vercel en direct.
