@@ -208,7 +208,7 @@ export default function PaywallPage(){
 
       {/* CTA */}
       <button onClick={()=>document.querySelector('#pricing')?.scrollIntoView({behavior:'smooth'})} style={{width:'100%',maxWidth:340,padding:'14px',background:ACCENT,border:'none',borderRadius:14,color:'#FFFFFF',fontSize:15,fontWeight:600,cursor:'pointer',fontFamily:sf,letterSpacing:-0.2,marginBottom:4}}>
-        Start my 30-day cortisol reset →
+        Start my transformation →
       </button>
 
       {/* PLANS */}
@@ -241,13 +241,13 @@ export default function PaywallPage(){
           </div>
 
           <button style={{width:'100%',padding:'16px',background:ACCENT,border:'none',borderRadius:14,color:'#FFFFFF',fontSize:16,fontWeight:600,cursor:'pointer',fontFamily:sf,letterSpacing:-0.3,marginBottom:4}}>
-            Start my 30-day cortisol reset →
+            Start my transformation →
           </button>
           <p style={{fontSize:12,color:'rgba(0,0,0,0.4)',textAlign:'center',fontWeight:500,marginBottom:4}}>
             🔓 Cancel anytime in 10 seconds
           </p>
           <p style={{fontSize:11,color:'rgba(0,0,0,0.3)',textAlign:'center',lineHeight:1.4}}>
-            then {plans[selectedPlan].price}{plans[selectedPlan].per}
+            Satisfaction guaranteed
           </p>
           <p style={{fontSize:10,color:'rgba(0,0,0,0.15)',textAlign:'center',marginTop:8}}>
             Recurring billing until canceled. Results vary.
