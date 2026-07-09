@@ -46,7 +46,7 @@ export default function LoginPage() {
 
         {/* Logo */}
         <div style={{ textAlign:'center', marginBottom:40 }}>
-          <h1 style={{ fontSize:28, fontWeight:700, color:'#1A1A1A', letterSpacing:-0.8, marginBottom:8 }}>GlowApp</h1>
+          <h1 style={{ fontSize:28, color:'#1A1A1A', letterSpacing:-0.8, marginBottom:8 }}><span style={{fontWeight:800}}>Corti</span><span style={{fontWeight:300,fontStyle:'italic',fontFamily:'Georgia,serif'}}>low</span></h1>
           <p style={{ fontSize:14, color:'rgba(0,0,0,0.45)', letterSpacing:-0.2 }}>
             Sign in to track your progress
           </p>

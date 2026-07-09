@@ -57,11 +57,11 @@ export default function SharePage() {
       if (navigator.share) {
         await navigator.share({
           title: 'Mon Glow Up Score',
-          text: `J'ai obtenu ${score?.total}/100 sur GlowApp 🔥 Calcule le tien !`,
+          text: `J'ai obtenu ${score?.total}/100 sur Cortilow 🔥 Calcule le tien !`,
           url: 'https://glowup-mvp.vercel.app',
         })
       } else {
-        await navigator.clipboard.writeText(`J'ai obtenu ${score?.total}/100 sur GlowApp 🔥 Calcule le tien sur glowup-mvp.vercel.app`)
+        await navigator.clipboard.writeText(`J'ai obtenu ${score?.total}/100 sur Cortilow 🔥 Calcule le tien sur glowup-mvp.vercel.app`)
         setCopied(true)
         setTimeout(() => setCopied(false), 2000)
       }
@@ -110,7 +110,7 @@ export default function SharePage() {
               <p style={{ fontSize:20, fontWeight:700, color:'#1A1A1A', letterSpacing:-0.5 }}>{profile.prenom}</p>
             </div>
             <div style={{ background:'rgba(10,132,255,0.15)', border:'0.5px solid rgba(10,132,255,0.3)', borderRadius:20, padding:'4px 12px' }}>
-              <span style={{ fontSize:11, color:'#0A84FF', fontWeight:600, letterSpacing:0.3 }}>GlowApp</span>
+              <span style={{ fontSize:11, color:'#0A84FF', fontWeight:600, letterSpacing:0.3 }}>Cortilow</span>
             </div>
           </div>
 
@@ -181,7 +181,7 @@ export default function SharePage() {
       {/* INSTRUCTIONS */}
       <div style={{ width:'100%', maxWidth:360, marginTop:16, padding:'14px', background:'rgba(0,0,0,0.03)', border:'0.5px solid rgba(0,0,0,0.07)', borderRadius:16, textAlign:'center' }}>
         <p style={{ fontSize:12, color:'rgba(0,0,0,0.45)', lineHeight:1.5 }}>
-          📸 Fais un screenshot de ta carte et poste-la sur TikTok avec <span style={{ color:'#0A84FF' }}>#GlowApp</span>
+          📸 Fais un screenshot de ta carte et poste-la sur TikTok avec <span style={{ color:'#0A84FF' }}>#Cortilow</span>
         </p>
       </div>
 

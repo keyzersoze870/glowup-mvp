@@ -1,6 +1,6 @@
 {
-  "name": "GlowApp",
-  "short_name": "GlowApp",
+  "name": "Cortilow",
+  "short_name": "Cortilow",
   "description": "Your AI-powered Glow Up Score",
   "start_url": "/dashboard",
   "display": "standalone",

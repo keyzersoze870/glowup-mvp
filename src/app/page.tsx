@@ -105,7 +105,7 @@ export default function LandingPage() {
 
       {/* NAV */}
       <nav style={{ flexShrink: 0, padding: '56px 20px 12px', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-        <span style={{ fontSize: 20, fontWeight: 700, color: '#1A1A1A', letterSpacing: -0.5 }}>GlowApp</span>
+        <span style={{ fontSize: 20, color: '#1A1A1A' }}><span style={{fontWeight:800,letterSpacing:-0.5}}>Corti</span><span style={{fontWeight:300,fontStyle:'italic',fontFamily:'Georgia,serif',letterSpacing:-0.3}}>low</span></span>
         <Link href="/onboarding" style={{ background: ACCENT, color: '#fff', border: 'none', borderRadius: 20, padding: '7px 16px', fontSize: 12, fontWeight: 600, textDecoration: 'none', letterSpacing: -0.2 }}>
           Start now
         </Link>

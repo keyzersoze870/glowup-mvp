@@ -85,7 +85,7 @@ export default function OnboardingPage() {
     <main style={{ height:'100svh', background:'#FFFFFF', fontFamily:sf, overflow:'hidden', display:'flex', flexDirection:'column' }}>
 
       <nav style={{ flexShrink:0, padding:'16px 20px 12px', display:'flex', justifyContent:'space-between', alignItems:'center', position:'sticky', top:0, zIndex:10, background:'#FFFFFF' }}>
-        <span style={{ fontSize:20, fontWeight:700, color:'#1A1A1A', letterSpacing:-0.5 }}>GlowApp</span>
+        <span style={{ fontSize:20, color:'#1A1A1A' }}><span style={{fontWeight:800,letterSpacing:-0.5}}>Corti</span><span style={{fontWeight:300,fontStyle:'italic',fontFamily:'Georgia,serif',letterSpacing:-0.3}}>low</span></span>
         {step > 0 && <button onClick={back} style={{ background:'none', border:'none', color:'rgba(0,0,0,0.55)', fontSize:14, cursor:'pointer', fontFamily:sf }}>← Back</button>}
       </nav>
 

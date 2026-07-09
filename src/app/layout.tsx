@@ -2,20 +2,20 @@ import type { Metadata, Viewport } from 'next'
 import './globals.css'
 
 export const metadata: Metadata = {
-  title: 'GlowApp — Ton Glow Up Score',
+  title: 'Cortilow — Your Cortisol Score',
   description: 'Ton Glow Up Score personnalisé. Corps, peau, mindset.',
   manifest: '/manifest.json',
   appleWebApp: {
     capable: true,
     statusBarStyle: 'black-translucent',
-    title: 'GlowApp',
+    title: 'Cortilow',
   },
   icons: {
     icon: '/icon-192.png',
     apple: '/icon-192.png',
   },
   openGraph: {
-    title: 'GlowApp',
+    title: 'Cortilow',
     description: 'Ton score de transformation holistique',
   }
 }

@@ -192,7 +192,7 @@ export default function Dashboard(){
   return(
     <main style={{minHeight:'100svh',background:'#FFFFFF',fontFamily:sf,display:'flex',flexDirection:'column'}}>
       <nav style={{flexShrink:0,padding:'56px 20px 12px',display:'flex',justifyContent:'space-between',alignItems:'center'}}>
-        <span style={{fontSize:20,fontWeight:700,color:'#1A1A1A',letterSpacing:-0.5}}>GlowApp</span>
+        <span style={{fontSize:20,color:'#1A1A1A'}}><span style={{fontWeight:800,letterSpacing:-0.5}}>Corti</span><span style={{fontWeight:300,fontStyle:'italic',fontFamily:'Georgia,serif',letterSpacing:-0.3}}>low</span></span>
         <button onClick={()=>router.push('/share')} style={{background:'rgba(144,213,255,0.15)',border:'0.5px solid rgba(144,213,255,0.3)',borderRadius:20,padding:'6px 12px',color:RED,fontSize:12,fontWeight:600,cursor:'pointer',fontFamily:sf}}>⬆ Share</button>
       </nav>
       <div style={{flexShrink:0,display:'flex',flexDirection:'column',alignItems:'center',padding:'4px 20px 12px'}}>
