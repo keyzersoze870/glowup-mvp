@@ -2,6 +2,7 @@
 import { useEffect, useState } from 'react'
 import { useRouter } from 'next/navigation'
 import { supabase } from '@/lib/supabase'
+import { initPurchases, purchasePackage, PRODUCT_IDS, restorePurchases } from '@/lib/purchases'
 
 const sf = `-apple-system, BlinkMacSystemFont, 'SF Pro Display', 'Helvetica Neue', sans-serif`
 const BLUE = '#0A84FF'
@@ -49,6 +50,8 @@ export default function PaywallPage(){
   const[displayed,setDisplayed]=useState(0)
   const[showPlans,setShowPlans]=useState(false)
   const[selectedPlan,setSelectedPlan]=useState<'weekly'|'monthly'|'yearly'>('yearly')
+  const[purchasing,setPurchasing]=useState(false)
+  const[purchaseError,setPurchaseError]=useState('')
   const[email,setEmail]=useState('')
   const[emailSent,setEmailSent]=useState(false)
 
@@ -69,6 +72,7 @@ export default function PaywallPage(){
     localStorage.setItem('glowup_live_score',JSON.stringify({score:result.total,lastDate:new Date().toDateString()}))
     localStorage.setItem('glowup_score',JSON.stringify({total:result.total}))
     localStorage.setItem('glowup_weakest',result.weakest)
+    initPurchases().catch(()=>{})
 
     let stepIdx=0,prog=0
     const progInterval=setInterval(()=>{prog+=1.8;setProgress(Math.min(prog,100))},100)
@@ -240,15 +244,23 @@ export default function PaywallPage(){
             ))}
           </div>
 
-          <button style={{width:'100%',padding:'16px',background:ACCENT,border:'none',borderRadius:14,color:'#FFFFFF',fontSize:16,fontWeight:600,cursor:'pointer',fontFamily:sf,letterSpacing:-0.3,marginBottom:4}}>
-            Start my transformation →
+          <button onClick={async()=>{
+            setPurchasing(true);setPurchaseError('')
+            const pid=selectedPlan==='weekly'?PRODUCT_IDS.weekly:selectedPlan==='monthly'?PRODUCT_IDS.monthly:PRODUCT_IDS.yearly
+            const result=await purchasePackage(pid)
+            setPurchasing(false)
+            if(result.success){router.push('/dashboard')}
+            else if(!result.cancelled){setPurchaseError('Payment failed. Please try again.')}
+          }} disabled={purchasing} style={{width:'100%',padding:'16px',background:purchasing?'rgba(0,0,0,0.2)':ACCENT,border:'none',borderRadius:14,color:'#FFFFFF',fontSize:16,fontWeight:600,cursor:purchasing?'default':'pointer',fontFamily:sf,letterSpacing:-0.3,marginBottom:4,display:'flex',alignItems:'center',justifyContent:'center',gap:8}}>
+            {purchasing?<><span style={{width:16,height:16,border:'2px solid rgba(255,255,255,0.3)',borderTopColor:'#fff',borderRadius:'50%',display:'inline-block',animation:'spin 0.8s linear infinite'}}/>Processing...</>:'Start my transformation →'}
           </button>
+          {purchaseError&&<p style={{fontSize:12,color:RED,textAlign:'center',marginBottom:4}}>{purchaseError}</p>}
           <p style={{fontSize:12,color:'rgba(0,0,0,0.4)',textAlign:'center',fontWeight:500,marginBottom:4}}>
             🔓 Cancel anytime in 10 seconds
           </p>
-          <p style={{fontSize:11,color:'rgba(0,0,0,0.3)',textAlign:'center',lineHeight:1.4}}>
-            Satisfaction guaranteed
-          </p>
+          <button onClick={async()=>{const ok=await restorePurchases();if(ok)router.push('/dashboard')}} style={{background:'none',border:'none',color:'rgba(0,0,0,0.3)',fontSize:11,cursor:'pointer',fontFamily:sf,display:'block',margin:'0 auto',padding:4}}>
+            Restore purchase
+          </button>
           <p style={{fontSize:10,color:'rgba(0,0,0,0.15)',textAlign:'center',marginTop:8}}>
             Recurring billing until canceled. Results vary.
           </p>

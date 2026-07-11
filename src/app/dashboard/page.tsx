@@ -179,6 +179,7 @@ export default function Dashboard(){
   useEffect(()=>{
     const p=localStorage.getItem('glowup_profile')
     if(!p){router.push('/onboarding');return}
+    if(localStorage.getItem('cortilow_premium')!=='true'){router.push('/paywall');return}
     const parsed=JSON.parse(p);setProfile(parsed)
     const result=calculateScore(parsed);setComputed(result)
     if(!localStorage.getItem('glowup_live_score')){

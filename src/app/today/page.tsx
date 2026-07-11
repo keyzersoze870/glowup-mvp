@@ -76,7 +76,10 @@ export default function TodayPage(){
   const[photos,setPhotos]=useState<Array<{date:string,src:string}>>([])
 
   useEffect(()=>{
-    const p=localStorage.getItem('glowup_profile');if(!p){router.push('/onboarding');return};setProfile(JSON.parse(p))
+    const p=localStorage.getItem('glowup_profile');if(!p){router.push('/onboarding');return}
+    // Check premium status
+    if(localStorage.getItem('cortilow_premium')!=='true'){router.push('/paywall');return}
+    setProfile(JSON.parse(p))
     const dayIdx=getDayOfYear()
     setDailyMissions(DAILY_SETS[dayIdx%DAILY_SETS.length])
 

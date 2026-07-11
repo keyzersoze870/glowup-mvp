@@ -14,6 +14,8 @@
   "/onboarding/page": "/onboarding",
   "/page": "/",
   "/paywall/page": "/paywall",
+  "/privacy/page": "/privacy",
   "/share/page": "/share",
+  "/terms/page": "/terms",
   "/today/page": "/today"
 }

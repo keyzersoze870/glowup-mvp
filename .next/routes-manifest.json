@@ -114,10 +114,22 @@
       "namedRegex": "^/paywall(?:/)?$"
     },
     {
+      "page": "/privacy",
+      "regex": "^/privacy(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/privacy(?:/)?$"
+    },
+    {
       "page": "/share",
       "regex": "^/share(?:/)?$",
       "routeKeys": {},
       "namedRegex": "^/share(?:/)?$"
+    },
+    {
+      "page": "/terms",
+      "regex": "^/terms(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/terms(?:/)?$"
     },
     {
       "page": "/today",
