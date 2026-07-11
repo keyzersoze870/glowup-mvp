@@ -6,7 +6,7 @@ export const PRODUCT_IDS = {
   yearly: 'cortilow_yearly_3999',
 }
 
-export const REVENUECAT_API_KEY = 'YOUR_REVENUECAT_PUBLIC_KEY' // Replace after RevenueCat setup
+export const REVENUECAT_API_KEY = 'appl_LVEiaCMDIFZEBkPgbQZfgUMGNOp' // Replace after RevenueCat setup
 
 let rcInitialized = false
 
@@ -51,7 +51,7 @@ export async function purchasePackage(productId: string) {
     const result = await Purchases.purchasePackage({ aPackage: pkg })
     
     // Check if the purchase was successful
-    if (result.customerInfo.entitlements.active['premium']) {
+    if (result.customerInfo.entitlements.active['Cortilow Pro']) {
       localStorage.setItem('cortilow_premium', 'true')
       return { success: true }
     }
@@ -73,7 +73,7 @@ export async function checkPremium() {
   try {
     const { Purchases } = await import('@revenuecat/purchases-capacitor')
     const info = await Purchases.getCustomerInfo()
-    const isPremium = !!info.customerInfo.entitlements.active['premium']
+    const isPremium = !!info.customerInfo.entitlements.active['Cortilow Pro']
     if (isPremium) localStorage.setItem('cortilow_premium', 'true')
     return isPremium
   } catch {
@@ -85,7 +85,7 @@ export async function restorePurchases() {
   try {
     const { Purchases } = await import('@revenuecat/purchases-capacitor')
     const info = await Purchases.restorePurchases()
-    const isPremium = !!info.customerInfo.entitlements.active['premium']
+    const isPremium = !!info.customerInfo.entitlements.active['Cortilow Pro']
     if (isPremium) localStorage.setItem('cortilow_premium', 'true')
     return isPremium
   } catch (err) {
