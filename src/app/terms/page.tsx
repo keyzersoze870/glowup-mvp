@@ -5,10 +5,10 @@ export default function TermsPage() {
       <p style={{ color: 'rgba(0,0,0,0.5)', marginBottom: 20 }}>Last updated: July 2026</p>
 
       <h2 style={{ fontSize: 18, fontWeight: 600, marginTop: 24, marginBottom: 8 }}>Overview</h2>
-      <p>Cortilow is a wellness app that provides a cortisol assessment and personalized daily missions to help you manage stress and improve your overall wellbeing. By using Cortilow, you agree to these terms.</p>
+      <p>Cortilow is a wellness app that provides a stress & recovery self-assessment and personalized daily missions to help you manage stress and improve your overall wellbeing. By using Cortilow, you agree to these terms.</p>
 
       <h2 style={{ fontSize: 18, fontWeight: 600, marginTop: 24, marginBottom: 8 }}>Not medical advice</h2>
-      <p>Cortilow is not a medical device and does not provide medical advice, diagnosis, or treatment. The Cortisol Score is an estimate based on lifestyle factors and is not a clinical measurement. Always consult a healthcare professional for medical concerns.</p>
+      <p>Cortilow is not a medical device and does not provide medical advice, diagnosis, or treatment. The Recovery Score is a self-reported wellness estimate based on lifestyle factors you provide, and is not a clinical or biological measurement of any kind. Cortilow does not measure hormone levels. Always consult a healthcare professional for medical concerns.</p>
 
       <h2 style={{ fontSize: 18, fontWeight: 600, marginTop: 24, marginBottom: 8 }}>Subscriptions</h2>
       <p>Cortilow offers auto-renewable subscriptions (weekly, monthly, yearly). Payment is charged to your Apple ID account at confirmation of purchase. Subscriptions automatically renew unless cancelled at least 24 hours before the end of the current period. You can manage and cancel subscriptions in your Apple ID account settings.</p>

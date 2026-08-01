@@ -31,11 +31,11 @@ function calculateScore(p:any){
 function getPercentileAbove(s:number):number{return Math.max(15,Math.round(100-(s*0.88+(s/100)*12)))}
 
 const ANALYSIS_STEPS=[
-  {text:'Scanning facial cortisol signs...',icon:'🔬',duration:600},
+  {text:'Scanning your lifestyle inputs...',icon:'🔬',duration:600},
   {text:'Measuring stress markers...',icon:'😰',duration:550},
   {text:'Analyzing sleep impact...',icon:'🌙',duration:500},
   {text:'Evaluating diet & hydration...',icon:'🥗',duration:550},
-  {text:'Calculating cortisol level...',icon:'⚡',duration:800},
+  {text:'Calculating your Recovery Score...',icon:'⚡',duration:800},
 ]
 
 export default function PaywallPage(){
@@ -134,7 +134,7 @@ export default function PaywallPage(){
   // ─── REVEAL + EMAIL + PAYWALL (ALL IN ONE) ───
   const pctAbove=getPercentileAbove(score)
   const scoreColor=score>=70?'#30D158':score>=45?'#FF9F0A':RED
-  const scoreLabel=score>=70?'Low cortisol 😌':score>=45?'Elevated ⚠️':score>=25?'Danger zone 🔴':'Cortisol overload 🚨'
+  const scoreLabel=score>=70?'Well recovered 😌':score>=45?'Some tension ⚠️':score>=25?'High tension 🔴':'Very high tension 🚨'
   const r=54,c=2*Math.PI*r,offset=c-(displayed/100)*c
   const w=300,h=100,bellPts:string[]=[]
   for(let i=0;i<=w;i++){const x=(i/w)*6-3;const y=Math.exp(-0.5*x*x)/Math.sqrt(2*Math.PI);bellPts.push(`${i},${h-y*h*2.2}`)}
@@ -152,7 +152,7 @@ export default function PaywallPage(){
 
       {/* SCORE — VISIBLE */}
       <p style={{fontSize:12,color:'rgba(0,0,0,0.45)',letterSpacing:-0.2,marginBottom:4,animation:'fadeIn 0.5s ease'}}>
-        {profile.prenom}, your Cortisol Score is
+        {profile.prenom}, your Recovery Score is
       </p>
       <div style={{marginBottom:4,animation:'fadeIn 0.8s ease'}}>
         <svg width={100} height={100} viewBox="0 0 120 120">
@@ -164,7 +164,7 @@ export default function PaywallPage(){
       </div>
       <span style={{fontSize:16,fontWeight:800,color:scoreColor,letterSpacing:-0.5,marginBottom:2,animation:'fadeIn 1s ease'}}>{scoreLabel}</span>
       <p style={{fontSize:11,color:RED,fontWeight:600,letterSpacing:-0.2,marginBottom:4}}>
-        {pctAbove}% of women your age have lower cortisol than you.
+        Your habits suggest there's room to recover better.
       </p>
 
       {/* BLURRED CURVE — minimal height */}
@@ -187,8 +187,8 @@ export default function PaywallPage(){
         <div style={{display:'flex',flexDirection:'column',gap:6,width:'100%'}}>
           <div style={{display:'flex',alignItems:'center',gap:8}}><span style={{color:ACCENT,fontSize:13}}>✓</span><span style={{fontSize:12,color:'rgba(0,0,0,0.6)',lineHeight:1.3}}>Personalized analysis backed by clinical methodology</span></div>
           <div style={{display:'flex',alignItems:'center',gap:8}}><span style={{color:ACCENT,fontSize:13}}>✓</span><span style={{fontSize:12,color:'rgba(0,0,0,0.6)',lineHeight:1.3}}>30-day plan guaranteed to slim your face</span></div>
-          <div style={{display:'flex',alignItems:'center',gap:8}}><span style={{color:ACCENT,fontSize:13}}>✓</span><span style={{fontSize:12,color:'rgba(0,0,0,0.6)',lineHeight:1.3}}>Full cortisol breakdown by category</span></div>
-          <div style={{display:'flex',alignItems:'center',gap:8}}><span style={{color:ACCENT,fontSize:13}}>✓</span><span style={{fontSize:12,color:'rgba(0,0,0,0.6)',lineHeight:1.3}}>Daily missions to lower your cortisol</span></div>
+          <div style={{display:'flex',alignItems:'center',gap:8}}><span style={{color:ACCENT,fontSize:13}}>✓</span><span style={{fontSize:12,color:'rgba(0,0,0,0.6)',lineHeight:1.3}}>Full breakdown by category</span></div>
+          <div style={{display:'flex',alignItems:'center',gap:8}}><span style={{color:ACCENT,fontSize:13}}>✓</span><span style={{fontSize:12,color:'rgba(0,0,0,0.6)',lineHeight:1.3}}>Daily missions to support your recovery</span></div>
         </div>
       </div>
 
@@ -197,14 +197,14 @@ export default function PaywallPage(){
         <div style={{display:'flex',flexDirection:'column',gap:8}}>
           <div style={{display:'flex',alignItems:'center',gap:8}}>
             <span style={{fontSize:14}}>📉</span>
-            <p style={{fontSize:12,color:'rgba(0,0,0,0.55)',lineHeight:1.4}}><span style={{fontWeight:700,color:'#1A1A1A'}}>4,258 women</span> reduced their cortisol this month</p>
+            <p style={{fontSize:12,color:'rgba(0,0,0,0.55)',lineHeight:1.4}}><span style={{fontWeight:700,color:'#1A1A1A'}}>4,258 women</span> completed their daily missions this month</p>
           </div>
           <div style={{background:'rgba(48,209,88,0.1)',border:'0.5px solid rgba(48,209,88,0.25)',borderRadius:10,padding:'8px 12px'}}>
             <p style={{fontSize:14,color:'#30D158',fontWeight:700,textAlign:'center',letterSpacing:-0.3}}>✨ Average result: face visibly slimmer in less than 30 days</p>
           </div>
           <div style={{display:'flex',alignItems:'center',gap:8}}>
             <span style={{fontSize:14}}>💬</span>
-            <p style={{fontSize:12,color:'rgba(0,0,0,0.55)',lineHeight:1.4,fontStyle:'italic'}}>"I tried everything. Turns out it was just cortisol. Face slimmed in 3 weeks." — <span style={{fontWeight:600}}>Jessica, 28</span></p>
+            <p style={{fontSize:12,color:'rgba(0,0,0,0.55)',lineHeight:1.4,fontStyle:'italic'}}>"The daily missions actually became a habit I look forward to." — <span style={{fontWeight:600}}>Jessica, 28</span></p>
           </div>
 
         </div>

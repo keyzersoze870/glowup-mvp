@@ -6,56 +6,56 @@ const sf = `-apple-system, BlinkMacSystemFont, 'SF Pro Display', 'Helvetica Neue
 const ACCENT = '#4A9FE5'
 const RED = '#FF453A'
 
-// ─── PRIORITY ACTIONS (same every day — the 3 cortisol pillars) ───
+// ─── PRIORITY ACTIONS (same every day — the 3 recovery pillars) ───
 const PRIORITIES = [
-  { id:'p1', text:'Sleep 7+ hours tonight', icon:'😴', why:'Cortisol resets during deep sleep — under 7h keeps it elevated all day' },
-  { id:'p2', text:'No sugar or processed food', icon:'🚫', why:'Sugar spikes cortisol within minutes and keeps it high for hours' },
-  { id:'p3', text:'No caffeine after 2pm', icon:'☕', why:'Late caffeine blocks your cortisol reset cycle at night' },
+  { id:'p1', text:'Sleep 7+ hours tonight', icon:'😴', why:'Deep sleep is when your body recovers best — aim for 7h+' },
+  { id:'p2', text:'No sugar or processed food', icon:'🚫', why:'Sugar can spike your energy and crash it just as fast' },
+  { id:'p3', text:'No caffeine after 2pm', icon:'☕', why:'Late caffeine can disrupt how well you wind down at night' },
 ]
 
-// ─── DAILY ACTIONS (rotate each day — combine cortisol factors) ───
+// ─── DAILY ACTIONS (rotate each day — combine recovery factors) ───
 const DAILY_SETS = [
   [
-    { id:'d1a', text:'10 min morning walk in sunlight', icon:'☀️', why:'Sunlight resets your cortisol clock + vitamin D' },
-    { id:'d1b', text:'5 min deep breathing before lunch', icon:'🫁', why:'Activates your parasympathetic system, drops cortisol 25%' },
-    { id:'d1c', text:'Eat omega-3 today (salmon, walnuts, chia)', icon:'🐟', why:'Omega-3 directly lowers cortisol production' },
-    { id:'d1d', text:'Phone on DND for 1 hour', icon:'🔇', why:'Notifications create micro-cortisol spikes all day' },
+    { id:'d1a', text:'10 min morning walk in sunlight', icon:'☀️', why:'Morning sunlight helps reset your body clock + vitamin D' },
+    { id:'d1b', text:'5 min deep breathing before lunch', icon:'🫁', why:'Helps activate your body's natural calming response' },
+    { id:'d1c', text:'Eat omega-3 today (salmon, walnuts, chia)', icon:'🐟', why:'Omega-3s are linked to better mood and recovery' },
+    { id:'d1d', text:'Phone on DND for 1 hour', icon:'🔇', why:'Notifications create small stress spikes all day' },
   ],
   [
-    { id:'d2a', text:'30 min walk, yoga, or light exercise', icon:'🧘', why:'Moderate movement lowers baseline cortisol' },
-    { id:'d2b', text:'Write 3 things you\'re grateful for', icon:'📝', why:'Gratitude journaling reduces cortisol by 23%' },
-    { id:'d2c', text:'Drink 8 cups of water', icon:'💧', why:'Dehydration is a physical stressor that raises cortisol' },
-    { id:'d2d', text:'Dim lights 1 hour before bed', icon:'💡', why:'Darkness triggers melatonin and drops cortisol' },
+    { id:'d2a', text:'30 min walk, yoga, or light exercise', icon:'🧘', why:'Moderate movement supports better stress recovery' },
+    { id:'d2b', text:'Write 3 things you\'re grateful for', icon:'📝', why:'Gratitude journaling is linked to lower stress levels' },
+    { id:'d2c', text:'Drink 8 cups of water', icon:'💧', why:'Dehydration is a physical stressor on your body' },
+    { id:'d2d', text:'Dim lights 1 hour before bed', icon:'💡', why:'Darkness helps trigger melatonin for better sleep' },
   ],
   [
-    { id:'d3a', text:'15 min outside in nature', icon:'🌿', why:'Nature lowers cortisol + blood pressure simultaneously' },
-    { id:'d3b', text:'Chamomile or herbal tea instead of coffee', icon:'🍵', why:'Chamomile reduces cortisol 15-20%' },
-    { id:'d3c', text:'10 min stretching during a break', icon:'🤸', why:'Stretching breaks cortisol accumulation in muscles' },
-    { id:'d3d', text:'No screen 30 min before bed', icon:'📵', why:'Blue light spikes cortisol right when it should drop' },
+    { id:'d3a', text:'15 min outside in nature', icon:'🌿', why:'Time in nature supports lower stress + blood pressure' },
+    { id:'d3b', text:'Chamomile or herbal tea instead of coffee', icon:'🍵', why:'Chamomile is traditionally used to support relaxation' },
+    { id:'d3c', text:'10 min stretching during a break', icon:'🤸', why:'Stretching helps release tension held in muscles' },
+    { id:'d3d', text:'No screen 30 min before bed', icon:'📵', why:'Blue light can interfere with winding down at night' },
   ],
   [
-    { id:'d4a', text:'Dance or do something fun for 10 min', icon:'💃', why:'Joyful movement lowers cortisol more than forced exercise' },
-    { id:'d4b', text:'Eat 3 different colored vegetables', icon:'🥦', why:'Antioxidants reduce oxidative stress + cortisol' },
-    { id:'d4c', text:'Call or text someone you love', icon:'💬', why:'Social connection directly lowers cortisol levels' },
-    { id:'d4d', text:'In bed by 10:30pm', icon:'🛏️', why:'Cortisol recovery peaks between 10pm-2am' },
+    { id:'d4a', text:'Dance or do something fun for 10 min', icon:'💃', why:'Joyful movement often feels easier than forced exercise' },
+    { id:'d4b', text:'Eat 3 different colored vegetables', icon:'🥦', why:'Antioxidants help your body handle everyday stress' },
+    { id:'d4c', text:'Call or text someone you love', icon:'💬', why:'Social connection is one of the fastest ways to feel calmer' },
+    { id:'d4d', text:'In bed by 10:30pm', icon:'🛏️', why:'Your body does its best recovery between 10pm-2am' },
   ],
   [
-    { id:'d5a', text:'Morning glass of lemon water', icon:'🍋', why:'Vitamin C helps metabolize excess cortisol' },
-    { id:'d5b', text:'5 min meditation or breathing', icon:'🧘', why:'Even 5 min of meditation measurably drops cortisol' },
-    { id:'d5c', text:'Walk after your biggest meal', icon:'🚶', why:'Post-meal walks reduce the cortisol spike from food' },
-    { id:'d5d', text:'Dark chocolate instead of candy', icon:'🍫', why:'Dark chocolate is clinically proven to reduce cortisol' },
+    { id:'d5a', text:'Morning glass of lemon water', icon:'🍋', why:'Vitamin C supports your body's stress response' },
+    { id:'d5b', text:'5 min meditation or breathing', icon:'🧘', why:'Even 5 min of meditation can help you feel calmer' },
+    { id:'d5c', text:'Walk after your biggest meal', icon:'🚶', why:'Post-meal walks help support digestion and energy' },
+    { id:'d5d', text:'Dark chocolate instead of candy', icon:'🍫', why:'Dark chocolate is a small treat that can help you relax' },
   ],
   [
-    { id:'d6a', text:'20 min swim, bike, or hike', icon:'🚴', why:'Aerobic exercise regulates your cortisol rhythm' },
-    { id:'d6b', text:'Laugh — watch something funny', icon:'😂', why:'Laughter reduces cortisol by up to 39%' },
-    { id:'d6c', text:'Eat a high-protein breakfast', icon:'🍳', why:'Protein stabilizes blood sugar = stable cortisol' },
-    { id:'d6d', text:'Watch sunset without phone', icon:'🌅', why:'Natural light + no screen = deep cortisol reset' },
+    { id:'d6a', text:'20 min swim, bike, or hike', icon:'🚴', why:'Aerobic exercise helps regulate your energy and mood' },
+    { id:'d6b', text:'Laugh — watch something funny', icon:'😂', why:'Laughter is one of the quickest ways to release tension' },
+    { id:'d6c', text:'Eat a high-protein breakfast', icon:'🍳', why:'Protein helps stabilize blood sugar and energy' },
+    { id:'d6d', text:'Watch sunset without phone', icon:'🌅', why:'Natural light + no screen helps you properly unwind' },
   ],
   [
-    { id:'d7a', text:'Active rest — gentle walk or yoga', icon:'🧘', why:'Rest days prevent exercise-induced cortisol spikes' },
-    { id:'d7b', text:'Cook a meal from scratch', icon:'👩‍🍳', why:'Home cooking = less sodium + processed ingredients = less cortisol' },
-    { id:'d7c', text:'Spend 15 min in a park or garden', icon:'🌳', why:'Green spaces lower cortisol by up to 21%' },
-    { id:'d7d', text:'Read 10 pages before bed', icon:'📖', why:'Reading lowers cortisol better than scrolling' },
+    { id:'d7a', text:'Active rest — gentle walk or yoga', icon:'🧘', why:'Rest days help your body recover between workouts' },
+    { id:'d7b', text:'Cook a meal from scratch', icon:'👩‍🍳', why:'Home cooking means less sodium + processed ingredients' },
+    { id:'d7c', text:'Spend 15 min in a park or garden', icon:'🌳', why:'Time in green spaces is linked to feeling calmer' },
+    { id:'d7d', text:'Read 10 pages before bed', icon:'📖', why:'Reading before bed beats scrolling for winding down' },
   ],
 ]
 
@@ -148,7 +148,7 @@ export default function TodayPage(){
   return(
     <main style={{height:'100svh',background:'#FFFFFF',fontFamily:sf,overflow:'hidden',display:'flex',flexDirection:'column'}}>
       {/* NAV */}
-      <nav style={{flexShrink:0,padding:'56px 20px 12px',display:'flex',justifyContent:'space-between',alignItems:'center'}}>
+      <nav style={{flexShrink:0,padding:'calc(env(safe-area-inset-top) + 12px) 20px 12px',display:'flex',justifyContent:'space-between',alignItems:'center'}}>
         <button onClick={()=>router.push('/dashboard')} style={{background:'none',border:'none',color:'rgba(0,0,0,0.55)',fontSize:14,cursor:'pointer',fontFamily:sf}}>← Score</button>
         <span style={{fontSize:16,fontWeight:700,color:'#1A1A1A',letterSpacing:-0.5}}>Day {streak+1} of 30</span>
         <div style={{display:'flex',alignItems:'center',gap:6,background:'rgba(74,159,229,0.12)',border:'0.5px solid rgba(74,159,229,0.25)',padding:'4px 10px',borderRadius:20}}>
@@ -163,7 +163,7 @@ export default function TodayPage(){
           <div style={{flex:1}}>
             <p style={{fontSize:12,color:'rgba(0,0,0,0.45)',marginBottom:4}}>{new Date().toLocaleDateString('en-US',{weekday:'long',month:'long',day:'numeric'})}</p>
             {scoreVar!==0&&<div style={{display:'inline-flex',alignItems:'center',gap:4,background:scoreVar>0?'rgba(48,209,88,0.12)':'rgba(255,69,58,0.12)',border:`0.5px solid ${scoreVar>0?'rgba(48,209,88,0.3)':'rgba(255,69,58,0.3)'}`,borderRadius:20,padding:'3px 10px',marginBottom:4}}><span style={{fontSize:12,fontWeight:700,color:scoreVar>0?'#30D158':RED}}>{scoreVar>0?'+':''}{scoreVar}</span></div>}
-            <p style={{fontSize:13,color:'rgba(0,0,0,0.65)',lineHeight:1.4}}>{allDone?'All done 🎉':`${tDone}/${tTotal} — lower your cortisol`}</p>
+            <p style={{fontSize:13,color:'rgba(0,0,0,0.65)',lineHeight:1.4}}>{allDone?'All done 🎉':`${tDone}/${tTotal} — support your recovery`}</p>
           </div>
         </div>
       </div>
@@ -203,7 +203,7 @@ export default function TodayPage(){
           </div>
 
           {/* DAILY ACTIONS */}
-          <p style={{fontSize:11,color:'rgba(0,0,0,0.3)',letterSpacing:0.5,textTransform:'uppercase',marginBottom:8,fontWeight:500}}>Today's cortisol-lowering actions</p>
+          <p style={{fontSize:11,color:'rgba(0,0,0,0.3)',letterSpacing:0.5,textTransform:'uppercase',marginBottom:8,fontWeight:500}}>Today's recovery actions</p>
           <div style={{display:'flex',flexDirection:'column',gap:8,marginBottom:16}}>
             {dailyMissions.map(m=>{const done=checked[m.id];return(
               <button key={m.id} onClick={()=>toggle(m.id)} style={{width:'100%',background:done?'rgba(48,209,88,0.08)':'rgba(0,0,0,0.04)',border:`0.5px solid ${done?'rgba(48,209,88,0.2)':'rgba(0,0,0,0.07)'}`,borderRadius:14,padding:'14px 16px',display:'flex',alignItems:'center',gap:12,cursor:'pointer',fontFamily:sf,transition:'all 0.15s',textAlign:'left'}}>
@@ -219,13 +219,13 @@ export default function TodayPage(){
             )})}
           </div>
 
-          {allDone&&<div style={{padding:'16px',background:'rgba(48,209,88,0.08)',border:'0.5px solid rgba(48,209,88,0.2)',borderRadius:16,textAlign:'center'}}><p style={{fontSize:24,marginBottom:8}}>😌</p><p style={{fontSize:14,fontWeight:600,color:'#30D158',letterSpacing:-0.3,marginBottom:4}}>Cortisol lowered today!</p><p style={{fontSize:13,color:'rgba(0,0,0,0.55)',lineHeight:1.5}}>Come back tomorrow. Missing a day raises cortisol by 15%.</p></div>}
+          {allDone&&<div style={{padding:'16px',background:'rgba(48,209,88,0.08)',border:'0.5px solid rgba(48,209,88,0.2)',borderRadius:16,textAlign:'center'}}><p style={{fontSize:24,marginBottom:8}}>😌</p><p style={{fontSize:14,fontWeight:600,color:'#30D158',letterSpacing:-0.3,marginBottom:4}}>Recovery boosted today!</p><p style={{fontSize:13,color:'rgba(0,0,0,0.55)',lineHeight:1.5}}>Come back tomorrow to keep your streak going.</p></div>}
         </>)}
 
         {/* ─── PROGRESS TAB (Calendar) ─── */}
         {tab==='progress'&&(<>
           <p style={{fontSize:15,fontWeight:700,color:'#1A1A1A',letterSpacing:-0.3,marginBottom:4}}>Your 30-day journey</p>
-          <p style={{fontSize:12,color:'rgba(0,0,0,0.45)',marginBottom:16}}>Each day counts. Consistency is how you lower cortisol permanently.</p>
+          <p style={{fontSize:12,color:'rgba(0,0,0,0.45)',marginBottom:16}}>Each day counts. Consistency is how you build lasting habits.</p>
 
           <div style={{display:'grid',gridTemplateColumns:'repeat(7,1fr)',gap:6,marginBottom:20}}>
             {['M','T','W','T','F','S','S'].map((d,i)=>(
@@ -252,14 +252,14 @@ export default function TodayPage(){
           <div style={{background:'rgba(0,0,0,0.03)',borderRadius:14,padding:'16px',textAlign:'center'}}>
             <p style={{fontSize:28,fontWeight:700,color:ACCENT,letterSpacing:-1}}>{streak}</p>
             <p style={{fontSize:12,color:'rgba(0,0,0,0.45)',marginTop:2}}>day streak</p>
-            <p style={{fontSize:11,color:'rgba(0,0,0,0.3)',marginTop:8,lineHeight:1.5}}>Missing a day raises cortisol by 15% and costs -2 points. Keep going.</p>
+            <p style={{fontSize:11,color:'rgba(0,0,0,0.3)',marginTop:8,lineHeight:1.5}}>Missing a day costs -2 points. Keep going.</p>
           </div>
         </>)}
 
         {/* ─── PHOTOS TAB (Face Log) ─── */}
         {tab==='photos'&&(<>
           <p style={{fontSize:15,fontWeight:700,color:'#1A1A1A',letterSpacing:-0.3,marginBottom:4}}>Face Log</p>
-          <p style={{fontSize:12,color:'rgba(0,0,0,0.45)',marginBottom:16,lineHeight:1.5}}>Take a selfie once a week to track visible changes. Lower cortisol = slimmer face, clearer skin, less puffiness.</p>
+          <p style={{fontSize:12,color:'rgba(0,0,0,0.45)',marginBottom:16,lineHeight:1.5}}>Take a selfie once a week to track how you feel you're progressing.</p>
 
           {/* Upload button */}
           <label style={{display:'block',width:'100%',padding:'20px',background:'rgba(74,159,229,0.06)',border:`1px dashed ${ACCENT}`,borderRadius:16,textAlign:'center',cursor:'pointer',marginBottom:20}}>

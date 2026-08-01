@@ -45,16 +45,16 @@ function BeforeAfterSlider() {
         border: '0.5px solid rgba(0,0,0,0.08)',
       }}
     >
-      {/* After (low cortisol) — full background */}
-      <img src="/before-low.jpg" alt="Low cortisol" style={{
+      {/* After (well recovered) — full background */}
+      <img src="/before-low.jpg" alt="Well recovered" style={{
         position: 'absolute', inset: 0, width: '100%', height: '100%', objectFit: 'cover',
       }} />
 
-      {/* Before (high cortisol) — clipped */}
+      {/* Before (high stress) — clipped */}
       <div style={{
         position: 'absolute', inset: 0, width: `${sliderPos}%`, overflow: 'hidden',
       }}>
-        <img src="/before-high.jpg" alt="High cortisol" style={{
+        <img src="/before-high.jpg" alt="High stress" style={{
           position: 'absolute', inset: 0, width: '100%', height: '100%', objectFit: 'cover',
           minWidth: `${100 / (sliderPos / 100)}%`, maxWidth: `${100 / (sliderPos / 100)}%`,
         }} />
@@ -65,12 +65,12 @@ function BeforeAfterSlider() {
         position: 'absolute', top: 12, left: 12, background: 'rgba(255,69,58,0.9)',
         borderRadius: 8, padding: '4px 10px', fontSize: 11, fontWeight: 600,
         color: '#fff', letterSpacing: 0.3, fontFamily: sf,
-      }}>HIGH CORTISOL</div>
+      }}>HIGH STRESS</div>
       <div style={{
         position: 'absolute', top: 12, right: 12, background: 'rgba(74,159,229,0.9)',
         borderRadius: 8, padding: '4px 10px', fontSize: 11, fontWeight: 600,
         color: '#fff', letterSpacing: 0.3, fontFamily: sf,
-      }}>LOW CORTISOL</div>
+      }}>WELL RECOVERED</div>
 
       {/* Slider line + handle */}
       <div style={{
@@ -104,7 +104,7 @@ export default function LandingPage() {
     <main style={{ minHeight: '100svh', background: '#FFFFFF', fontFamily: sf, display: 'flex', flexDirection: 'column' }}>
 
       {/* NAV */}
-      <nav style={{ flexShrink: 0, padding: '56px 20px 12px', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+      <nav style={{ flexShrink: 0, padding: 'calc(env(safe-area-inset-top) + 12px) 20px 12px', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
         <span style={{ fontSize: 20, color: '#1A1A1A' }}><span style={{fontWeight:800,letterSpacing:-0.5}}>Corti</span><span style={{fontWeight:300,fontStyle:'italic',fontFamily:'Georgia,serif',letterSpacing:-0.3}}>low</span></span>
         <Link href="/onboarding" style={{ background: ACCENT, color: '#fff', border: 'none', borderRadius: 20, padding: '7px 16px', fontSize: 12, fontWeight: 600, textDecoration: 'none', letterSpacing: -0.2 }}>
           Start now
@@ -118,7 +118,7 @@ export default function LandingPage() {
           <span style={{ fontSize: 11, fontWeight: 600, color: ACCENT, letterSpacing: 0.2 }}>VISIBLE RESULTS IN 21 DAYS</span>
         </div>
         <h1 style={{ fontSize: 24, fontWeight: 700, color: '#1A1A1A', letterSpacing: -0.8, lineHeight: 1.2, marginBottom: 8 }}>
-          Your face is swollen.<br /><span style={{ color: ACCENT }}>High cortisol is why.</span>
+          Your face is swollen.<br /><span style={{ color: ACCENT }}>High stress is why.</span>
         </h1>
         <p style={{ fontSize: 11, color: 'rgba(0,0,0,0.4)', letterSpacing: 0.5, fontWeight: 500 }}>
           ✓ DERMATOLOGIST-VALIDATED METHOD
@@ -132,7 +132,7 @@ export default function LandingPage() {
       <div style={{ padding: '0 20px', marginBottom: 16 }}>
         <BeforeAfterSlider />
         <p style={{ fontSize: 11, color: 'rgba(0,0,0,0.3)', textAlign: 'center', marginTop: 8, letterSpacing: -0.1 }}>
-          Same person. Same lighting. Only difference: cortisol levels.
+          Same person. Same lighting. Only difference: stress & recovery habits.
         </p>
       </div>
 
@@ -140,7 +140,7 @@ export default function LandingPage() {
       <div style={{ padding: '0 20px', display: 'flex', gap: 8, marginBottom: 16 }}>
         <div style={{ flex: 1, background: 'rgba(255,69,58,0.06)', border: '0.5px solid rgba(255,69,58,0.15)', borderRadius: 12, padding: '10px', textAlign: 'center' }}>
           <p style={{ fontSize: 20, fontWeight: 700, color: RED, letterSpacing: -1 }}>78%</p>
-          <p style={{ fontSize: 10, color: 'rgba(0,0,0,0.45)', marginTop: 2 }}>of women have elevated cortisol, causing a puffy face & acne</p>
+          <p style={{ fontSize: 10, color: 'rgba(0,0,0,0.45)', marginTop: 2 }}>of women say stress affects how their face looks</p>
         </div>
         <div style={{ flex: 1, background: 'rgba(48,209,88,0.06)', border: '0.5px solid rgba(48,209,88,0.15)', borderRadius: 12, padding: '10px', textAlign: 'center' }}>
           <p style={{ fontSize: 20, fontWeight: 700, color: '#30D158', letterSpacing: -1 }}>&lt; 30 days</p>
@@ -154,7 +154,7 @@ export default function LandingPage() {
           fontSize: 15, fontWeight: 600, color: '#FFFFFF', background: ACCENT, padding: '14px 0', borderRadius: 14,
           textDecoration: 'none', letterSpacing: -0.3, display: 'block', textAlign: 'center',
         }}>
-          Check my cortisol level — in 2 minutes
+          Check my Recovery Score — in 2 minutes
         </Link>
         <p style={{ fontSize: 11, color: 'rgba(0,0,0,0.2)', marginTop: 6, letterSpacing: -0.1, textAlign: 'center' }}>Free · No credit card required</p>
       </div>

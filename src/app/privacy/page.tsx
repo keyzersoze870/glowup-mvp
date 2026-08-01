@@ -5,13 +5,15 @@ export default function PrivacyPage() {
       <p style={{ color: 'rgba(0,0,0,0.5)', marginBottom: 20 }}>Last updated: July 2026</p>
 
       <h2 style={{ fontSize: 18, fontWeight: 600, marginTop: 24, marginBottom: 8 }}>What we collect</h2>
-      <p>Cortilow collects the answers you provide during the cortisol assessment quiz (sleep habits, stress level, exercise frequency, diet, hydration, and nature exposure). This data is used solely to calculate your Cortisol Score and generate your personalized plan.</p>
+      <p>Cortilow collects the answers you provide during the wellness assessment quiz (sleep habits, stress level, exercise frequency, diet, hydration, and nature exposure). This data is used solely to calculate your Recovery Score and generate your personalized plan.</p>
+      <h2>Photo / Face Data</h2>
+      <p>If you choose to take a photo during onboarding or in the app, that photo is stored only locally on your device. It is never uploaded, transmitted, sent to Cortilow's servers, or shared with any third party. Cortilow does not perform any facial analysis, biometric processing, or health-related interpretation of this photo — it exists solely so you can visually compare your own photos over time, entirely on your device. You can delete this photo at any time by removing it from the app or deleting the app itself, which permanently erases it.</p>
 
       <h2 style={{ fontSize: 18, fontWeight: 600, marginTop: 24, marginBottom: 8 }}>Photos</h2>
       <p>Selfies taken during the assessment are processed locally on your device and are never uploaded to our servers. Face Log photos are stored locally on your device only.</p>
 
       <h2 style={{ fontSize: 18, fontWeight: 600, marginTop: 24, marginBottom: 8 }}>Email</h2>
-      <p>If you provide your email address, it is used only for account authentication and to send you your cortisol report. We do not sell or share your email with third parties.</p>
+      <p>If you provide your email address, it is used only for account authentication and to send you your wellness report. We do not sell or share your email with third parties.</p>
 
       <h2 style={{ fontSize: 18, fontWeight: 600, marginTop: 24, marginBottom: 8 }}>Payments</h2>
       <p>Payments are processed by Apple through the App Store. We do not collect or store any payment information (credit card numbers, billing address, etc.).</p>

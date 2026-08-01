@@ -73,7 +73,7 @@ export async function checkPremium() {
   try {
     const { Purchases } = await import('@revenuecat/purchases-capacitor')
     const info = await Purchases.getCustomerInfo()
-    const isPremium = !!info.customerInfo.entitlements.active['Cortilow Pro']
+const isPremium = !!info.customerInfo.entitlements.active['Cortilow Pro']
     if (isPremium) localStorage.setItem('cortilow_premium', 'true')
     return isPremium
   } catch {
@@ -93,3 +93,4 @@ export async function restorePurchases() {
     return false
   }
 }
+

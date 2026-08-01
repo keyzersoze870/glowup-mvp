@@ -46,15 +46,15 @@ function getSegment(score:number,name:string,weakest:string,categories?:Record<s
     : weakAreas.length===2 ? `${weakAreas[0]} and ${weakAreas[1]}`
     : weakAreas.slice(0,-1).join(', ')+', and '+weakAreas[weakAreas.length-1]
 
-  if(score<25){return{label:'Cortisol overload 🚨',color:RED,hook:`${pctAbove}% of women your age have lower cortisol.`,hookBold:'Your body is in chronic stress mode.',message:`${name}, your ${weakStr} ${weakAreas.length>1?'are':'is'} keeping your cortisol dangerously elevated. This combination causes face puffiness, belly fat storage, breakouts, and accelerated skin aging. Every day without a plan, the damage compounds silently.`}}
-  if(score<45){return{label:'Danger zone 🔴',color:RED,hook:`${pctAbove}% of women your age have lower cortisol.`,hookBold:'Your cortisol is silently reshaping your face.',message:`${name}, your ${weakStr} ${weakAreas.length>1?'are your biggest cortisol triggers':'is your biggest cortisol trigger'}. Women in your range show visible face puffiness, jaw widening, and stress-related breakouts within weeks. The good news: this is reversible in 30 days.`}}
-  if(score<70){return{label:'Elevated ⚠️',color:'#FF9F0A',hook:`${pctAbove}% of women your age have lower cortisol.`,hookBold:'You\'re close to balanced — but not safe yet.',message:weakAreas.length>1?`${name}, your ${weakStr} are the combination keeping your cortisol above safe levels. Fix these together and you'll see your face slim down, your skin clear up, and your energy stabilize within 2-3 weeks.`:`${name}, your ${weakStr} is the one factor keeping your cortisol elevated. Address it and you'll notice visible changes in your face and energy within 2-3 weeks.`}}
+  if(score<25){return{label:'High tension 🚨',color:RED,hook:`Your habits suggest room to recover better.`,hookBold:'Your habits point to chronic stress mode.',message:`${name}, your ${weakStr} ${weakAreas.length>1?'are':'is'} keeping your stress levels high. Over time, unmanaged stress is commonly linked to a tired, puffy look and breakouts. Every day without a plan, small habits keep compounding.`}}
+  if(score<45){return{label:'Danger zone 🔴',color:RED,hook:`Your habits suggest room to recover better.`,hookBold:'Your habits are quietly working against you.',message:`${name}, your ${weakStr} ${weakAreas.length>1?'are your biggest stress triggers':'is your biggest stress trigger'}. Many people in your range notice puffiness and stress-related breakouts within weeks. The good news: habits are reversible in 30 days.`}}
+  if(score<70){return{label:'Elevated ⚠️',color:'#FF9F0A',hook:`Your habits suggest room to recover better.`,hookBold:'You\'re close to balanced — but not quite there.',message:weakAreas.length>1?`${name}, your ${weakStr} are the combination keeping your stress levels up. Work on these together and many people notice their skin clear up and energy stabilize within 2-3 weeks.`:`${name}, your ${weakStr} is the one factor keeping your stress elevated. Address it and you may notice visible changes in your energy within 2-3 weeks.`}}
   const ep=Math.max(pctAbove,15)
 
-  // LOW CORTISOL — still push fear, don't congratulate
-  if(score>=90){return{label:'Low cortisol 😌',color:'#30D158',hook:`${ep}% still scored lower than you.`,hookBold:'Don\'t get comfortable.',message:`${name}, your score looks good on paper. But cortisol is the fastest hormone to spike back up — 72 hours of bad sleep or stress and you're back in the danger zone. 91% of women at your level lose it within 60 days without a structured plan. The real challenge isn't getting here. It's staying.`}}
+  // WELL RECOVERED — still push urgency, don't fully congratulate
+  if(score>=90){return{label:'Well recovered 😌',color:'#30D158',hook:`${ep}% still scored lower than you.`,hookBold:'Don\'t get comfortable.',message:`${name}, your score looks good on paper. But stress levels can rise again quickly — a few nights of bad sleep and habits can slip. Staying consistent is what matters. The real challenge isn't getting here. It's staying.`}}
 
-  return{label:'Low cortisol 😌',color:'#30D158',hook:`${ep}% still scored lower than you.`,hookBold:'You\'re not out of the woods yet.',message:weakAreas.length>1?`${name}, your score is decent but your ${weakStr} are silent risks. Cortisol doesn't warn you before it spikes — one stressful week and your face puffs back up, your skin breaks out, and your sleep collapses. Without a daily plan, this score won't last.`:`${name}, your score is decent but your ${weakStr} is a vulnerability. It only takes one bad week for cortisol to undo months of progress — your face puffs up, your skin reacts, your energy crashes. A structured plan is the only way to lock this in.`}
+  return{label:'Well recovered 😌',color:'#30D158',hook:`${ep}% still scored lower than you.`,hookBold:'You\'re not out of the woods yet.',message:weakAreas.length>1?`${name}, your score is decent but your ${weakStr} are silent risks. Stress doesn't always warn you before it builds up — one stressful week and old habits can creep back in. Without a daily plan, this score won't last.`:`${name}, your score is decent but your ${weakStr} is a vulnerability. It only takes one bad week for old habits to undo months of progress. A structured plan is the only way to lock this in.`}
 }
 
 // ─── DETAILED PERSONALIZED MESSAGE (post-payment) ───
@@ -76,63 +76,63 @@ function getDetailedMessage(profile: any, score: number, weakest: string, catego
 
   // Sleep
   if (profile.sleepHours === '<5' || profile.sleepHours === '5-6') {
-    observations.push(`You're sleeping ${profile.sleepHours === '<5' ? 'less than 5' : '5-6'} hours per night. Your body needs 7-8 hours to reset its cortisol cycle — right now, your cortisol never fully drops, which means you wake up already stressed.`)
+    observations.push(`You're sleeping ${profile.sleepHours === '<5' ? 'less than 5' : '5-6'} hours per night. Your body typically needs 7-8 hours to fully recover — right now, you may be waking up already feeling stressed.`)
     actions.push('Gradually move your bedtime 15 minutes earlier every 3 days until you reach 7+ hours')
   }
   if (profile.bedtime === 'after12' || profile.bedtime === '11-12') {
-    observations.push(`Going to bed ${profile.bedtime === 'after12' ? 'after midnight' : 'between 11pm and midnight'} means you're missing the critical cortisol recovery window (10pm–2am). This is when your body does its deepest repair work.`)
+    observations.push(`Going to bed ${profile.bedtime === 'after12' ? 'after midnight' : 'between 11pm and midnight'} means you may be missing your body's prime recovery window (10pm–2am), when it typically does its deepest rest.`)
     actions.push('Set a phone alarm at 10pm as a "wind down" signal — no screens after that')
   }
 
   // Stress
   if (profile.stressLevel === 'extreme' || profile.stressLevel === 'high') {
-    observations.push(`Your stress level is ${profile.stressLevel}. This means your body is producing cortisol almost constantly — not just during stressful moments, but as a baseline. This is what causes the facial puffiness and skin breakouts you might be noticing.`)
-    actions.push('Start with just 5 minutes of breathing exercises daily — this alone can reduce cortisol by 25%')
+    observations.push(`Your stress level is ${profile.stressLevel}. This kind of ongoing stress is commonly linked to a tired, puffy look and breakouts for many people.`)
+    actions.push('Start with just 5 minutes of breathing exercises daily — many people find this genuinely helps them feel calmer')
   }
   if (profile.relaxation === 'none') {
-    observations.push(`You currently have no relaxation practice. Without an active way to signal your nervous system to calm down, your cortisol has no "off switch". Your body stays in fight-or-flight mode all day.`)
+    observations.push(`You currently have no relaxation practice. Without an active way to unwind, it's easy to stay in a wired, on-edge state all day.`)
     actions.push('Pick one: 5-min meditation, gratitude journaling, or a 10-min walk in nature — do it at the same time every day')
   }
 
   // Caffeine
   if (profile.caffeine === 'heavy') {
-    observations.push(`3+ cups of coffee daily is keeping your cortisol elevated for most of the day. Caffeine blocks adenosine (your body's natural "calm down" signal) and directly stimulates cortisol production for up to 6 hours per cup.`)
+    observations.push(`3+ cups of coffee daily can keep you feeling wired for most of the day, especially later in the afternoon.`)
     actions.push('Reduce to 1-2 cups max, only before noon. Replace afternoon coffee with herbal tea or water')
   }
 
   // Sugar
   if (profile.sugar === 'high') {
-    observations.push(`High sugar intake creates a cortisol rollercoaster: every sugar spike is followed by a crash, and your body responds to each crash by releasing more cortisol. This cycle repeats multiple times per day, keeping your levels chronically elevated.`)
+    observations.push(`High sugar intake often creates an energy rollercoaster: every spike is followed by a crash, which can repeat multiple times a day and leave you feeling drained.`)
     actions.push('Replace sugary snacks with nuts, dark chocolate (70%+), or fruit. Cut sodas completely')
   }
 
   // Diet
   if (profile.diet === 'poor') {
-    observations.push(`A diet heavy in processed food and fast food is one of the strongest cortisol triggers. Processed foods contain inflammatory ingredients that your body treats as stressors, triggering cortisol release with every meal.`)
+    observations.push(`A diet heavy in processed food and fast food is one of the most common factors linked to low energy and skin concerns.`)
     actions.push('Cook at least one meal from scratch per day. Focus on protein + vegetables + healthy fats')
   }
 
   // Water
   if (profile.water === '<4') {
-    observations.push(`Drinking less than 4 cups of water daily puts your body in a state of chronic mild dehydration. Your body interprets dehydration as a physical threat and responds by — you guessed it — producing more cortisol.`)
+    observations.push(`Drinking less than 4 cups of water daily can leave your body mildly dehydrated, which is often linked to feeling more tired and stressed.`)
     actions.push('Keep a water bottle visible at all times. Drink a full glass first thing in the morning and before each meal')
   }
 
   // Exercise
   if (profile.exercise === '0') {
-    observations.push(`Without any physical activity, your body has no outlet for the cortisol it produces. Movement is the natural way your body metabolizes and clears excess cortisol. Without it, cortisol just accumulates.`)
-    actions.push('Start with a 15-minute walk daily — this alone has been shown to reduce cortisol levels significantly')
+    observations.push(`Without regular physical activity, your body has less of a natural outlet to release built-up tension.`)
+    actions.push('Start with a 15-minute walk daily — many people notice a real difference in how they feel')
   }
 
   // Outdoor
   if (profile.outdoor === '<15') {
-    observations.push(`Less than 15 minutes outdoors means almost zero nature exposure. Studies show that spending time in natural environments lowers cortisol, blood pressure, and heart rate simultaneously — it's one of the most powerful cortisol reducers available, and it's free.`)
+    observations.push(`Less than 15 minutes outdoors means almost zero nature exposure. Time in natural environments is widely associated with feeling calmer — and it's free.`)
     actions.push('Eat one meal outside, or take a 10-minute walk in a park or green space daily')
   }
 
   // If somehow no observations (very healthy person)
   if (observations.length === 0) {
-    observations.push(`Your habits are already solid — but maintaining low cortisol requires consistency. Even small disruptions (a stressful week, a few bad nights of sleep) can spike cortisol rapidly. Your plan focuses on locking in your current habits and building resilience.`)
+    observations.push(`Your habits are already solid — but staying well recovered takes consistency. Even small disruptions (a stressful week, a few bad nights of sleep) can set you back. Your plan focuses on locking in your current habits and building resilience.`)
   }
   if (actions.length === 0) {
     actions.push('Maintain your current routine and track your consistency — the calendar feature helps you stay accountable')
@@ -140,12 +140,12 @@ function getDetailedMessage(profile: any, score: number, weakest: string, catego
 
   // Build the plan overview
   const planWeeks: string[] = []
-  if (problems.includes('sleep')) planWeeks.push('Sleep optimization — fix your cortisol reset cycle')
-  if (problems.includes('stress')) planWeeks.push('Stress management — build your cortisol "off switch"')
-  if (problems.includes('nutrition') || profile.sugar === 'high' || profile.caffeine === 'heavy') planWeeks.push('Nutrition reset — eliminate cortisol triggers from your diet')
-  if (problems.includes('exercise') || problems.includes('outdoor')) planWeeks.push('Movement & nature — activate your body\'s natural cortisol regulation')
+  if (problems.includes('sleep')) planWeeks.push('Sleep optimization — build a real recovery routine')
+  if (problems.includes('stress')) planWeeks.push('Stress management — build your daily "off switch"')
+  if (problems.includes('nutrition') || profile.sugar === 'high' || profile.caffeine === 'heavy') planWeeks.push('Nutrition reset — cut common energy-draining triggers')
+  if (problems.includes('exercise') || problems.includes('outdoor')) planWeeks.push('Movement & nature — build your natural recovery habits')
   if (problems.includes('water')) planWeeks.push('Hydration protocol — remove dehydration as a stress trigger')
-  if (planWeeks.length === 0) planWeeks.push('Consistency & maintenance — protect your low cortisol status')
+  if (planWeeks.length === 0) planWeeks.push('Consistency & maintenance — protect your recovery status')
 
   return { observations, actions, planWeeks }
 }
@@ -192,13 +192,13 @@ export default function Dashboard(){
   const detailed=getDetailedMessage(profile,computed.total,computed.weakest,computed.categories)
   return(
     <main style={{minHeight:'100svh',background:'#FFFFFF',fontFamily:sf,display:'flex',flexDirection:'column'}}>
-      <nav style={{flexShrink:0,padding:'56px 20px 12px',display:'flex',justifyContent:'space-between',alignItems:'center'}}>
+      <nav style={{flexShrink:0,padding:'calc(env(safe-area-inset-top) + 12px) 20px 12px',display:'flex',justifyContent:'space-between',alignItems:'center'}}>
         <span style={{fontSize:20,color:'#1A1A1A'}}><span style={{fontWeight:800,letterSpacing:-0.5}}>Corti</span><span style={{fontWeight:300,fontStyle:'italic',fontFamily:'Georgia,serif',letterSpacing:-0.3}}>low</span></span>
         <button onClick={()=>router.push('/share')} style={{background:'rgba(144,213,255,0.15)',border:'0.5px solid rgba(144,213,255,0.3)',borderRadius:20,padding:'6px 12px',color:RED,fontSize:12,fontWeight:600,cursor:'pointer',fontFamily:sf}}>⬆ Share</button>
       </nav>
       <div style={{flexShrink:0,display:'flex',flexDirection:'column',alignItems:'center',padding:'4px 20px 12px'}}>
         <p style={{fontSize:13,color:'rgba(0,0,0,0.45)',letterSpacing:-0.2,marginBottom:4}}>Hi {profile.prenom} 👋</p>
-        <p style={{fontSize:11,color:'rgba(0,0,0,0.3)',letterSpacing:0.3,textTransform:'uppercase',marginBottom:4}}>Cortisol Score</p>
+        <p style={{fontSize:11,color:'rgba(0,0,0,0.3)',letterSpacing:0.3,textTransform:'uppercase',marginBottom:4}}>Recovery Score</p>
         <ScoreRing score={computed.total} color={seg.color}/>
         <div style={{marginTop:4,textAlign:'center',width:'100%'}}>
           <span style={{fontSize:22,fontWeight:800,color:seg.color,letterSpacing:-0.5,display:'block',marginBottom:4}}>{seg.label}</span>
@@ -254,7 +254,7 @@ export default function Dashboard(){
         </button>
 
         {/* SCORE BREAKDOWN */}
-        <p style={{fontSize:11,color:'rgba(0,0,0,0.3)',letterSpacing:0.5,textTransform:'uppercase',marginBottom:12}}>Cortisol breakdown</p>
+        <p style={{fontSize:11,color:'rgba(0,0,0,0.3)',letterSpacing:0.5,textTransform:'uppercase',marginBottom:12}}>Recovery breakdown</p>
         <div style={{display:'flex',flexDirection:'column',gap:8}}>
           {CATEGORIES.map(cat=>{
             const val=computed.categories[cat.key] as number;const isWeak=computed.weakest===cat.key;const pct=(val/cat.max)*100
@@ -263,7 +263,7 @@ export default function Dashboard(){
                 <div style={{display:'flex',alignItems:'center',gap:10}}>
                   <span style={{fontSize:18}}>{cat.icon}</span>
                   <div><span style={{fontSize:14,fontWeight:600,color:'#1A1A1A',letterSpacing:-0.3}}>{cat.label}</span>
-                  {isWeak&&<span style={{display:'block',fontSize:10,color:RED,marginTop:1}}>⚠ Main cortisol driver</span>}</div>
+                  {isWeak&&<span style={{display:'block',fontSize:10,color:RED,marginTop:1}}>⚠ Main stress driver</span>}</div>
                 </div>
                 <span style={{fontSize:18,fontWeight:700,color:cat.color,letterSpacing:-0.5}}>{val}<span style={{fontSize:11,fontWeight:400,color:'rgba(0,0,0,0.3)'}}>/{cat.max}</span></span>
               </div>

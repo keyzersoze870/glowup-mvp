@@ -2,7 +2,7 @@ import type { Metadata, Viewport } from 'next'
 import './globals.css'
 
 export const metadata: Metadata = {
-  title: 'Cortilow — Your Cortisol Score',
+  title: 'Cortilow — Your Recovery Score',
   description: 'Ton Glow Up Score personnalisé. Corps, peau, mindset.',
   manifest: '/manifest.json',
   appleWebApp: {
