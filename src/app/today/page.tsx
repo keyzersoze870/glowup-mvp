@@ -17,7 +17,7 @@ const PRIORITIES = [
 const DAILY_SETS = [
   [
     { id:'d1a', text:'10 min morning walk in sunlight', icon:'☀️', why:'Morning sunlight helps reset your body clock + vitamin D' },
-    { id:'d1b', text:'5 min deep breathing before lunch', icon:'🫁', why:'Helps activate your body's natural calming response' },
+    { id:'d1b', text:'5 min deep breathing before lunch', icon:'🫁', why:'Helps activate the body\'s natural calming response' },
     { id:'d1c', text:'Eat omega-3 today (salmon, walnuts, chia)', icon:'🐟', why:'Omega-3s are linked to better mood and recovery' },
     { id:'d1d', text:'Phone on DND for 1 hour', icon:'🔇', why:'Notifications create small stress spikes all day' },
   ],
@@ -40,7 +40,7 @@ const DAILY_SETS = [
     { id:'d4d', text:'In bed by 10:30pm', icon:'🛏️', why:'Your body does its best recovery between 10pm-2am' },
   ],
   [
-    { id:'d5a', text:'Morning glass of lemon water', icon:'🍋', why:'Vitamin C supports your body's stress response' },
+    { id:'d5a', text:'Morning glass of lemon water', icon:'🍋', why:'Vitamin C supports the body\'s stress response' },
     { id:'d5b', text:'5 min meditation or breathing', icon:'🧘', why:'Even 5 min of meditation can help you feel calmer' },
     { id:'d5c', text:'Walk after your biggest meal', icon:'🚶', why:'Post-meal walks help support digestion and energy' },
     { id:'d5d', text:'Dark chocolate instead of candy', icon:'🍫', why:'Dark chocolate is a small treat that can help you relax' },
